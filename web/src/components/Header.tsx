@@ -8,19 +8,33 @@ function Header() {
                 <Link to="/">
                     <img 
                         src={logoImg} 
-                        alt="Company Logo" 
+                        alt="Logo" 
                         className="h-20 w-auto object-contain hover:opacity-80 transition-opacity" 
                     />
                 </Link>
             </div>
 
-            <nav>
+           <nav className="hidden md:flex flex-1 justify-center items-center px-4">
                 <ul className="flex items-center gap-10">
                     <NavItem to="/" text="Home" />
                     <NavItem to="/" text="Menu" />
                     <NavItem to="/" text="Productos" />
                 </ul>
             </nav>
+            <div className="ml-auto flex items-center gap-4">
+                <Link
+                    to="/login"
+                    className="text-sm font-semibold text-gray-600 hover:text-blue-600 transition-colors whitespace-nowrap"
+                >
+                    Iniciar Sesión
+                </Link>
+                <Link
+                    to="/register"
+                    className="px-5 py-2 text-sm font-semibold text-white bg-blue-600 rounded-full hover:bg-blue-700 transition-all shadow-sm hover:shadow-md active:scale-95 whitespace-nowrap"
+                >
+                    Registrarse
+                </Link>
+            </div>
         </header>
     );
 }
