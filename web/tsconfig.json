@@ -1,5 +1,5 @@
 {
-  "include": ["**/*.ts", "**/*.tsx", "eslint.config.js", "prettier.config.js", "vite.config.js", "src/routes/login.jsx", "src/routes/index.jsx", "src/components/pages/Hero.jsx", "src/routes/register.jsx"],
+  "include": ["**/*.ts", "**/*.tsx", "eslint.config.js", "prettier.config.js", "vite.config.js", "src/routes/login.tsx", "src/routes/index.tsx", "src/components/pages/Hero.tsx", "src/routes/register.tsx"],
   
   "compilerOptions": {
     "target": "ES2022",

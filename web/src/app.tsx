@@ -1,4 +1,4 @@
-import Home from './pages/Home';
+import Header from './components/Header'; 
 import { Outlet } from '@tanstack/react-router';
 
 function App() {

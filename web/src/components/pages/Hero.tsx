@@ -20,14 +20,14 @@ function Hero() {
 
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <Link 
-                            to="/productos" 
+                            to="/" 
                             className="px-8 py-4 text-center text-white bg-brand-orange rounded-full font-bold text-lg hover:bg-orange-600 transition-all shadow-lg hover:shadow-orange-500/30 active:scale-95"
                         >
                             Ver Ofertas
                         </Link>
                         
                         <Link 
-                            to="/menu" 
+                            to="/" 
                             className="px-8 py-4 text-center text-brand-blue bg-white border-2 border-brand-blue rounded-full font-bold text-lg hover:bg-brand-light transition-all active:scale-95"
                         >
                             Más Vendidos
