@@ -1,5 +1,7 @@
 import express from 'express'
 import config from './config/config.ts'
+import db from './db/db.ts'
+import { usersTable } from './db/schema.ts'
 
 const app = express()
 
@@ -7,8 +9,12 @@ const app = express()
 app.use(express.json())
 
 // Simple GET handler
-app.get('/', (req, res) => {
+app.get('/', async (req, res) => {
   res.json({ message: 'Hello from Electromundo API!' })
+
+  const users = await db.select().from(usersTable)
+
+  console.log(users)
 })
 
 // Simple POST handler
