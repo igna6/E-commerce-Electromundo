@@ -1,10 +1,4 @@
-type Product = {
-  id: number
-  name: string
-  price: number
-  description: string | null
-  image: string | null
-}
+import type { Product } from '../../../types/product'
 
 type ProductCardProps = {
   product: Product
@@ -59,4 +53,3 @@ function ProductCard({ product }: ProductCardProps) {
 }
 
 export default ProductCard
-export type { Product }

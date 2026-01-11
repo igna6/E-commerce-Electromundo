@@ -14,7 +14,7 @@ const EyeOffIcon = () => (
   </svg>
 )
 
-function Register() {
+function RegisterForm() {
   const [formData, setFormData] = useState({
     email: '',
     emailConfirm: '',
@@ -187,4 +187,4 @@ function Register() {
   )
 }
 
-export default Register
+export default RegisterForm

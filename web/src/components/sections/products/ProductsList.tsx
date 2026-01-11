@@ -1,21 +1,8 @@
 import { useEffect, useState } from 'react'
-import ProductCard, { type Product } from './ProductCard'
-
-type Pagination = {
-  page: number
-  limit: number
-  total: number
-  totalPages: number
-  hasNext: boolean
-  hasPrev: boolean
-}
-
-type ProductsResponse = {
-  data: Product[]
-  pagination: Pagination
-}
-
-const API_URL = 'http://localhost:9000'
+import ProductCard from './ProductCard'
+import { getProducts } from '../../../services/products.service'
+import type { Product } from '../../../types/product'
+import type { Pagination } from '../../../types/api'
 
 function ProductsList() {
   const [products, setProducts] = useState<Product[]>([])
@@ -30,17 +17,9 @@ function ProductsList() {
       setError(null)
 
       try {
-        const response = await fetch(
-          `${API_URL}/api/products?page=${page}&limit=12`,
-        )
-
-        if (!response.ok) {
-          throw new Error('Error al cargar productos')
-        }
-
-        const data: ProductsResponse = await response.json()
-        setProducts(data.data)
-        setPagination(data.pagination)
+        const response = await getProducts({ page, limit: 12 })
+        setProducts(response.data)
+        setPagination(response.pagination)
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Error desconocido')
       } finally {
