@@ -1,9 +1,14 @@
 import express from 'express'
+import cors from 'cors'
 import config from './config/config.ts'
 import db from './db/db.ts'
 import { usersTable } from './db/schema.ts'
+import productsRouter from './routes/products.ts'
 
 const app = express()
+
+// Enable CORS for frontend requests
+app.use(cors())
 
 // Middleware to parse JSON bodies
 app.use(express.json())
@@ -24,6 +29,9 @@ app.post('/api/data', (req, res) => {
     data: req.body,
   })
 })
+
+// Products API
+app.use('/api/products', productsRouter)
 
 app.listen(config.port, () => {
   console.log(`Server is running on port ${config.port}`)
