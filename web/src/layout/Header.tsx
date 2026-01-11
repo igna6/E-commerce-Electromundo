@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import logoImg from '../../logo.png'
+import logoImg from '../logo.png'
 
 function Header() {
   return (

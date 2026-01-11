@@ -1,4 +1,4 @@
-import type { Product } from '../../../types/product'
+import type { Product } from '@/types/product'
 import { Card, CardContent } from '@/components/ui/card'
 
 type ProductCardProps = {
