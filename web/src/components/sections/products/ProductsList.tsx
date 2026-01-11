@@ -3,6 +3,8 @@ import ProductCard from './ProductCard'
 import { getProducts } from '../../../services/products.service'
 import type { Product } from '../../../types/product'
 import type { Pagination } from '../../../types/api'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 
 function ProductsList() {
   const [products, setProducts] = useState<Product[]>([])
@@ -10,6 +12,7 @@ function ProductsList() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [page, setPage] = useState(1)
+  const [searchQuery, setSearchQuery] = useState('')
 
   useEffect(() => {
     async function fetchProducts() {
@@ -29,6 +32,12 @@ function ProductsList() {
 
     fetchProducts()
   }, [page])
+
+  const filteredProducts = products.filter(
+    (product) =>
+      product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      product.description?.toLowerCase().includes(searchQuery.toLowerCase()),
+  )
 
   if (loading) {
     return (
@@ -65,12 +74,12 @@ function ProductsList() {
             Nuestros Productos
           </h2>
           <p className="text-red-500">{error}</p>
-          <button
+          <Button
             onClick={() => setPage(1)}
-            className="mt-4 px-6 py-2 bg-brand-blue text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="mt-4 bg-brand-blue hover:bg-blue-700"
           >
             Reintentar
-          </button>
+          </Button>
         </div>
       </section>
     )
@@ -96,33 +105,68 @@ function ProductsList() {
           Nuestros Productos
         </h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {products.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
+        <div className="max-w-md mx-auto mb-32">
+          <div className="relative">
+            <Input
+              type="text"
+              placeholder="Buscar productos..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-10 pr-4"
+            />
+            <svg
+              className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+          </div>
         </div>
+
+        {filteredProducts.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-gray-500">
+              No se encontraron productos que coincidan con tu búsqueda.
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {filteredProducts.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        )}
 
         {pagination && pagination.totalPages > 1 && (
           <div className="mt-12 flex justify-center items-center gap-4">
-            <button
+            <Button
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={!pagination.hasPrev}
-              className="px-4 py-2 rounded-lg bg-white border border-gray-300 text-brand-dark font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors"
+              variant="outline"
+              className="font-medium"
             >
               Anterior
-            </button>
+            </Button>
 
             <span className="text-gray-600">
               Página {pagination.page} de {pagination.totalPages}
             </span>
 
-            <button
+            <Button
               onClick={() => setPage((p) => p + 1)}
               disabled={!pagination.hasNext}
-              className="px-4 py-2 rounded-lg bg-white border border-gray-300 text-brand-dark font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors"
+              variant="outline"
+              className="font-medium"
             >
               Siguiente
-            </button>
+            </Button>
           </div>
         )}
       </div>

@@ -1,4 +1,5 @@
 import { Link } from '@tanstack/react-router'
+import { Button } from '@/components/ui/button'
 
 function LoginForm() {
   return (
@@ -74,12 +75,13 @@ function LoginForm() {
           </div>
 
           <div>
-                <button
+                <Button
                     type="submit"
-                    className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-bold rounded-full text-white bg-brand-orange hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-orange transition-all shadow-lg hover:shadow-orange-500/30 active:scale-95"
+                    className="w-full py-3 font-bold rounded-full bg-brand-orange hover:bg-orange-600 shadow-lg hover:shadow-orange-500/30 active:scale-95"
+                    size="lg"
                 >
               Iniciar Sesión
-            </button>
+            </Button>
           </div>
         </form>
       </div>

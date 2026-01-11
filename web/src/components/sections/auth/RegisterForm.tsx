@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link } from '@tanstack/react-router'
+import { Button } from '@/components/ui/button'
 
 const EyeIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
@@ -133,13 +134,15 @@ function RegisterForm() {
                   placeholder="••••••••"
                 />
                 
-                <button
+                <Button
                   type="button"
+                  variant="ghost"
+                  size="icon"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-brand-blue transition-colors cursor-pointer"
+                  className="absolute inset-y-0 right-0 h-full text-gray-400 hover:text-brand-blue"
                 >
                   {showPassword ? <EyeOffIcon /> : <EyeIcon />}
-                </button>
+                </Button>
               </div>
             </div>
 
@@ -163,24 +166,27 @@ function RegisterForm() {
                   placeholder="Repite tu contraseña"
                 />
                 
-                <button
+                <Button
                   type="button"
+                  variant="ghost"
+                  size="icon"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-brand-blue transition-colors cursor-pointer"
+                  className="absolute inset-y-0 right-0 h-full text-gray-400 hover:text-brand-blue"
                 >
                   {showPassword ? <EyeOffIcon /> : <EyeIcon />}
-                </button>
+                </Button>
               </div>
             </div>
 
           </div>
 
-          <button
+          <Button
             type="submit"
-            className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-bold rounded-full text-white bg-brand-orange hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-orange transition-all shadow-lg active:scale-95"
+            className="w-full py-3 font-bold rounded-full bg-brand-orange hover:bg-orange-600 shadow-lg active:scale-95"
+            size="lg"
           >
             Registrarse
-          </button>
+          </Button>
         </form>
       </div>
     </div>

@@ -1,4 +1,5 @@
 import type { Product } from '../../../types/product'
+import { Card, CardContent } from '@/components/ui/card'
 
 type ProductCardProps = {
   product: Product
@@ -11,7 +12,7 @@ function ProductCard({ product }: ProductCardProps) {
   }).format(product.price / 100)
 
   return (
-    <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden group">
+    <Card className="hover:shadow-xl transition-shadow duration-300 overflow-hidden group">
       <div className="aspect-square bg-gray-100 relative overflow-hidden">
         {product.image ? (
           <img
@@ -37,7 +38,7 @@ function ProductCard({ product }: ProductCardProps) {
           </div>
         )}
       </div>
-      <div className="p-4">
+      <CardContent className="p-4">
         <h3 className="font-semibold text-brand-dark text-lg mb-1 truncate">
           {product.name}
         </h3>
@@ -47,8 +48,8 @@ function ProductCard({ product }: ProductCardProps) {
           </p>
         )}
         <p className="text-brand-orange font-bold text-xl">{formattedPrice}</p>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   )
 }
 
