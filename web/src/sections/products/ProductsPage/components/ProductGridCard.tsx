@@ -1,61 +1,71 @@
 import { useState } from 'react'
 import { Link } from '@tanstack/react-router'
+import { Heart, Eye, ShoppingCart, Check, Star, Minus, Plus, Zap } from 'lucide-react'
 import type { Product } from '@/types/product'
-import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 
 type ProductGridCardProps = {
   product: Product
   viewMode: 'grid' | 'list'
+  index?: number
 }
 
-function ProductGridCard({ product, viewMode }: ProductGridCardProps) {
+function ProductGridCard({ product, viewMode, index = 0 }: ProductGridCardProps) {
   const [isHovered, setIsHovered] = useState(false)
   const [quantity, setQuantity] = useState(1)
   const [isAdding, setIsAdding] = useState(false)
+  const [isWishlisted, setIsWishlisted] = useState(false)
 
   const formattedPrice = new Intl.NumberFormat('es-AR', {
     style: 'currency',
     currency: 'ARS',
   }).format(product.price / 100)
 
+  const originalPrice = new Intl.NumberFormat('es-AR', {
+    style: 'currency',
+    currency: 'ARS',
+  }).format((product.price * 1.15) / 100)
+
   const handleAddToCart = () => {
     setIsAdding(true)
-    // Visual feedback only - no actual logic
-    setTimeout(() => setIsAdding(false), 600)
+    setTimeout(() => setIsAdding(false), 800)
   }
+
+  // Staggered animation delay based on index
+  const animationDelay = `${(index % 6) * 100}ms`
 
   if (viewMode === 'list') {
     return (
-      <Card className="flex flex-col sm:flex-row overflow-hidden hover:shadow-lg transition-shadow duration-300 border-gray-200">
+      <div
+        className="group glass rounded-2xl overflow-hidden flex flex-col sm:flex-row opacity-0 animate-slide-up"
+        style={{ animationDelay }}
+      >
         <Link
           to="/products/$productId"
           params={{ productId: String(product.id) }}
-          className="sm:w-48 flex-shrink-0"
+          className="sm:w-56 flex-shrink-0 relative overflow-hidden"
         >
-          <div className="aspect-square sm:aspect-auto sm:h-full bg-gray-100 relative overflow-hidden">
+          <div className="aspect-square sm:aspect-auto sm:h-full bg-gradient-to-br from-slate-800 to-slate-900 relative">
             {product.image ? (
               <img
                 src={product.image}
                 alt={product.name}
-                className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               />
             ) : (
-              <div className="w-full h-full flex items-center justify-center text-gray-400">
-                <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                  />
-                </svg>
+              <div className="w-full h-full flex items-center justify-center">
+                <div className="w-20 h-20 rounded-2xl bg-slate-800 flex items-center justify-center">
+                  <Zap className="w-10 h-10 text-slate-600" />
+                </div>
               </div>
             )}
+            {/* Overlay gradient */}
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-900/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           </div>
         </Link>
-        <CardContent className="flex-1 p-4 sm:p-5 flex flex-col justify-between">
+
+        <div className="flex-1 p-5 flex flex-col justify-between">
           <div>
             <div className="flex items-start justify-between gap-4">
               <div>
@@ -63,218 +73,228 @@ function ProductGridCard({ product, viewMode }: ProductGridCardProps) {
                   to="/products/$productId"
                   params={{ productId: String(product.id) }}
                 >
-                  <h3 className="font-semibold text-brand-dark text-lg hover:text-brand-blue transition-colors">
+                  <h3 className="font-semibold text-white text-lg group-hover:text-cyan-400 transition-colors">
                     {product.name}
                   </h3>
                 </Link>
-                <Badge variant="secondary" className="mt-1">
+                <Badge className="mt-2 bg-slate-800 text-slate-400 border border-slate-700 hover:bg-slate-700">
                   Electrónica
                 </Badge>
               </div>
-              <p className="text-brand-orange font-bold text-xl whitespace-nowrap">
-                {formattedPrice}
-              </p>
+              <div className="text-right flex-shrink-0">
+                <p className="text-gradient-warm font-bold text-xl">{formattedPrice}</p>
+                <p className="text-slate-500 text-sm line-through">{originalPrice}</p>
+              </div>
             </div>
             {product.description && (
-              <p className="text-gray-500 text-sm mt-2 line-clamp-2">
+              <p className="text-slate-400 text-sm mt-3 line-clamp-2">
                 {product.description}
               </p>
             )}
           </div>
+
           <div className="flex items-center gap-3 mt-4">
-            <div className="flex items-center border border-gray-200 rounded-lg">
+            {/* Quantity selector */}
+            <div className="flex items-center rounded-xl border border-slate-700 bg-slate-800/50 overflow-hidden">
               <button
                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                className="px-3 py-1.5 text-gray-600 hover:bg-gray-100 transition-colors rounded-l-lg"
+                className="px-3 py-2 text-slate-400 hover:text-white hover:bg-slate-700 transition-colors"
               >
-                -
+                <Minus className="w-4 h-4" />
               </button>
-              <span className="px-4 py-1.5 border-x border-gray-200 font-medium min-w-[3rem] text-center">
+              <span className="px-4 py-2 border-x border-slate-700 font-medium text-white min-w-[3rem] text-center">
                 {quantity}
               </span>
               <button
                 onClick={() => setQuantity(quantity + 1)}
-                className="px-3 py-1.5 text-gray-600 hover:bg-gray-100 transition-colors rounded-r-lg"
+                className="px-3 py-2 text-slate-400 hover:text-white hover:bg-slate-700 transition-colors"
               >
-                +
+                <Plus className="w-4 h-4" />
               </button>
             </div>
+
+            {/* Add to cart button */}
             <Button
               onClick={handleAddToCart}
-              className={`flex-1 transition-all ${
+              className={`flex-1 h-11 rounded-xl font-semibold transition-all duration-300 ${
                 isAdding
-                  ? 'bg-green-500 hover:bg-green-600'
-                  : 'bg-brand-orange hover:bg-orange-600'
+                  ? 'bg-emerald-500 hover:bg-emerald-400 text-white'
+                  : 'bg-gradient-to-r from-cyan-500 to-cyan-400 hover:from-cyan-400 hover:to-emerald-400 text-slate-900'
               }`}
             >
               {isAdding ? (
-                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
+                <>
+                  <Check className="w-5 h-5 mr-2" />
+                  Agregado!
+                </>
               ) : (
-                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                  />
-                </svg>
+                <>
+                  <ShoppingCart className="w-5 h-5 mr-2" />
+                  Agregar al Carrito
+                </>
               )}
-              {isAdding ? 'Agregado!' : 'Agregar al Carrito'}
             </Button>
+
+            {/* Wishlist button */}
+            <button
+              onClick={() => setIsWishlisted(!isWishlisted)}
+              className={`p-3 rounded-xl border transition-all duration-300 ${
+                isWishlisted
+                  ? 'bg-pink-500/20 border-pink-500/50 text-pink-400'
+                  : 'border-slate-700 text-slate-400 hover:border-pink-500/50 hover:text-pink-400 hover:bg-pink-500/10'
+              }`}
+            >
+              <Heart className={`w-5 h-5 ${isWishlisted ? 'fill-current' : ''}`} />
+            </button>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     )
   }
 
   return (
-    <Card
-      className="overflow-hidden group hover:shadow-xl transition-all duration-300 border-gray-200 relative"
+    <div
+      className="group relative rounded-2xl overflow-hidden opacity-0 animate-scale-in"
+      style={{ animationDelay }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Quick Action Buttons */}
+      {/* Glow effect on hover */}
       <div
-        className={`absolute top-3 right-3 flex flex-col gap-2 z-10 transition-all duration-300 ${
-          isHovered ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4'
+        className={`absolute -inset-px rounded-2xl transition-opacity duration-500 ${
+          isHovered ? 'opacity-100' : 'opacity-0'
         }`}
-      >
-        <button className="p-2 bg-white rounded-full shadow-lg hover:bg-brand-blue hover:text-white transition-colors">
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-            />
-          </svg>
-        </button>
-        <button className="p-2 bg-white rounded-full shadow-lg hover:bg-brand-blue hover:text-white transition-colors">
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-            />
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-            />
-          </svg>
-        </button>
-      </div>
+        style={{
+          background: 'linear-gradient(135deg, rgba(0, 212, 255, 0.3), transparent 50%, rgba(255, 107, 53, 0.2))',
+        }}
+      />
 
-      {/* Sale Badge */}
-      <Badge className="absolute top-3 left-3 bg-red-500 hover:bg-red-600 z-10">
-        -15%
-      </Badge>
-
-      <Link to="/products/$productId" params={{ productId: String(product.id) }}>
-        <div className="aspect-square bg-gray-100 relative overflow-hidden">
-          {product.image ? (
-            <img
-              src={product.image}
-              alt={product.name}
-              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center text-gray-400">
-              <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1.5}
-                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                />
-              </svg>
-            </div>
-          )}
-        </div>
-      </Link>
-
-      <CardContent className="p-4">
-        <Link to="/products/$productId" params={{ productId: String(product.id) }}>
-          <h3 className="font-semibold text-brand-dark text-lg mb-1 truncate hover:text-brand-blue transition-colors">
-            {product.name}
-          </h3>
-        </Link>
-
-        {/* Star Rating */}
-        <div className="flex items-center gap-1 mb-2">
-          {[...Array(5)].map((_, i) => (
-            <svg
-              key={i}
-              className={`w-4 h-4 ${i < 4 ? 'text-yellow-400' : 'text-gray-300'}`}
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-            </svg>
-          ))}
-          <span className="text-xs text-gray-500 ml-1">(128)</span>
-        </div>
-
-        <div className="flex items-baseline gap-2 mb-3">
-          <p className="text-brand-orange font-bold text-xl">{formattedPrice}</p>
-          <p className="text-gray-400 text-sm line-through">
-            {new Intl.NumberFormat('es-AR', {
-              style: 'currency',
-              currency: 'ARS',
-            }).format((product.price * 1.15) / 100)}
-          </p>
-        </div>
-
-        {/* Quantity and Add to Cart */}
-        <div className="flex items-center gap-2">
-          <div className="flex items-center border border-gray-200 rounded-lg">
-            <button
-              onClick={() => setQuantity(Math.max(1, quantity - 1))}
-              className="px-2.5 py-1 text-gray-600 hover:bg-gray-100 transition-colors rounded-l-lg"
-            >
-              -
-            </button>
-            <span className="px-3 py-1 border-x border-gray-200 font-medium text-sm">
-              {quantity}
-            </span>
-            <button
-              onClick={() => setQuantity(quantity + 1)}
-              className="px-2.5 py-1 text-gray-600 hover:bg-gray-100 transition-colors rounded-r-lg"
-            >
-              +
-            </button>
-          </div>
-          <Button
-            onClick={handleAddToCart}
-            size="sm"
-            className={`flex-1 transition-all ${
-              isAdding
-                ? 'bg-green-500 hover:bg-green-600'
-                : 'bg-brand-orange hover:bg-orange-600'
+      {/* Card content */}
+      <div className="relative glass rounded-2xl overflow-hidden">
+        {/* Quick action buttons */}
+        <div
+          className={`absolute top-4 right-4 flex flex-col gap-2 z-20 transition-all duration-300 ${
+            isHovered ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4'
+          }`}
+        >
+          <button
+            onClick={() => setIsWishlisted(!isWishlisted)}
+            className={`p-2.5 rounded-xl backdrop-blur-sm transition-all duration-200 ${
+              isWishlisted
+                ? 'bg-pink-500/30 text-pink-400 border border-pink-500/50'
+                : 'bg-slate-900/80 text-slate-300 border border-white/10 hover:text-pink-400 hover:border-pink-500/50'
             }`}
           >
-            {isAdding ? (
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-            ) : (
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                />
-              </svg>
-            )}
-          </Button>
+            <Heart className={`w-4 h-4 ${isWishlisted ? 'fill-current' : ''}`} />
+          </button>
+          <Link
+            to="/products/$productId"
+            params={{ productId: String(product.id) }}
+            className="p-2.5 rounded-xl bg-slate-900/80 backdrop-blur-sm border border-white/10 text-slate-300 hover:text-cyan-400 hover:border-cyan-500/50 transition-all duration-200"
+          >
+            <Eye className="w-4 h-4" />
+          </Link>
         </div>
-      </CardContent>
-    </Card>
+
+        {/* Sale badge */}
+        <Badge className="absolute top-4 left-4 z-20 bg-gradient-to-r from-orange-500 to-amber-500 text-white border-0 shadow-glow-orange">
+          -15%
+        </Badge>
+
+        {/* Product image */}
+        <Link to="/products/$productId" params={{ productId: String(product.id) }}>
+          <div className="aspect-square bg-gradient-to-br from-slate-800 to-slate-900 relative overflow-hidden">
+            {product.image ? (
+              <img
+                src={product.image}
+                alt={product.name}
+                className={`w-full h-full object-cover transition-transform duration-700 ease-out ${
+                  isHovered ? 'scale-110' : 'scale-100'
+                }`}
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center">
+                <div className="w-24 h-24 rounded-2xl bg-slate-800/50 flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
+                  <Zap className="w-12 h-12 text-slate-600" />
+                </div>
+              </div>
+            )}
+
+            {/* Gradient overlay */}
+            <div
+              className={`absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent transition-opacity duration-300 ${
+                isHovered ? 'opacity-70' : 'opacity-40'
+              }`}
+            />
+          </div>
+        </Link>
+
+        {/* Card content */}
+        <div className="p-5">
+          <Link to="/products/$productId" params={{ productId: String(product.id) }}>
+            <h3 className="font-semibold text-white text-lg mb-2 truncate group-hover:text-cyan-400 transition-colors">
+              {product.name}
+            </h3>
+          </Link>
+
+          {/* Star rating */}
+          <div className="flex items-center gap-1.5 mb-3">
+            {[...Array(5)].map((_, i) => (
+              <Star
+                key={i}
+                className={`w-4 h-4 ${
+                  i < 4 ? 'text-amber-400 fill-amber-400' : 'text-slate-600'
+                }`}
+              />
+            ))}
+            <span className="text-xs text-slate-500 ml-1">(128)</span>
+          </div>
+
+          {/* Price */}
+          <div className="flex items-baseline gap-2 mb-4">
+            <p className="text-gradient-warm font-bold text-xl">{formattedPrice}</p>
+            <p className="text-slate-500 text-sm line-through">{originalPrice}</p>
+          </div>
+
+          {/* Quantity and Add to Cart */}
+          <div className="flex items-center gap-2">
+            <div className="flex items-center rounded-xl border border-slate-700 bg-slate-800/50 overflow-hidden">
+              <button
+                onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                className="px-2.5 py-1.5 text-slate-400 hover:text-white hover:bg-slate-700 transition-colors"
+              >
+                <Minus className="w-3.5 h-3.5" />
+              </button>
+              <span className="px-3 py-1.5 border-x border-slate-700 font-medium text-white text-sm min-w-[2.5rem] text-center">
+                {quantity}
+              </span>
+              <button
+                onClick={() => setQuantity(quantity + 1)}
+                className="px-2.5 py-1.5 text-slate-400 hover:text-white hover:bg-slate-700 transition-colors"
+              >
+                <Plus className="w-3.5 h-3.5" />
+              </button>
+            </div>
+
+            <Button
+              onClick={handleAddToCart}
+              size="sm"
+              className={`flex-1 h-9 rounded-xl font-semibold transition-all duration-300 ${
+                isAdding
+                  ? 'bg-emerald-500 hover:bg-emerald-400 text-white'
+                  : 'bg-gradient-to-r from-cyan-500 to-cyan-400 hover:from-cyan-400 hover:to-emerald-400 text-slate-900 hover:shadow-glow-sm'
+              }`}
+            >
+              {isAdding ? (
+                <Check className="w-4 h-4" />
+              ) : (
+                <ShoppingCart className="w-4 h-4" />
+              )}
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }
 
