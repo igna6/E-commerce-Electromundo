@@ -1,40 +1,20 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import ProductCard from './components/ProductCard'
 import ProductsLoading from './components/ProductsLoading'
 import ProductsError from './components/ProductsError'
 import ProductsEmpty from './components/ProductsEmpty'
 import ProductsSearchBar from './components/ProductsSearchBar'
 import ProductsPagination from './components/ProductsPagination'
-import { getProducts } from '@/services/products.service'
-import type { Product } from '@/types/product'
-import type { Pagination } from '@/types/api'
+import { useProducts } from '@/hooks/useProducts'
 
 function ProductsList() {
-  const [products, setProducts] = useState<Product[]>([])
-  const [pagination, setPagination] = useState<Pagination | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
   const [page, setPage] = useState(1)
   const [searchQuery, setSearchQuery] = useState('')
 
-  useEffect(() => {
-    async function fetchProducts() {
-      setLoading(true)
-      setError(null)
+  const { data, isLoading, error, refetch } = useProducts({ page, limit: 12 })
 
-      try {
-        const response = await getProducts({ page, limit: 12 })
-        setProducts(response.data)
-        setPagination(response.pagination)
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Error desconocido')
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchProducts()
-  }, [page])
+  const products = data?.data ?? []
+  const pagination = data?.pagination ?? null
 
   const filteredProducts = products.filter(
     (product) =>
@@ -42,12 +22,20 @@ function ProductsList() {
       product.description?.toLowerCase().includes(searchQuery.toLowerCase()),
   )
 
-  if (loading) {
+  if (isLoading) {
     return <ProductsLoading />
   }
 
   if (error) {
-    return <ProductsError error={error} onRetry={() => setPage(1)} />
+    return (
+      <ProductsError
+        error={error instanceof Error ? error.message : 'Error desconocido'}
+        onRetry={() => {
+          setPage(1)
+          refetch()
+        }}
+      />
+    )
   }
 
   if (products.length === 0) {
