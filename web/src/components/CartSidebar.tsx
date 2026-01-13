@@ -56,14 +56,14 @@ function CartSidebar({ children }: CartSidebarProps) {
   return (
     <Sheet>
       <SheetTrigger asChild>{children}</SheetTrigger>
-      <SheetContent className="w-full sm:max-w-md flex flex-col bg-slate-900 border-slate-800 p-0">
-        <SheetHeader className="p-6 border-b border-slate-800">
-          <SheetTitle className="flex items-center gap-3 text-white">
-            <div className="p-2 rounded-xl bg-cyan-500/20 border border-cyan-500/30">
-              <ShoppingCart className="w-5 h-5 text-cyan-400" />
+      <SheetContent className="w-full sm:max-w-md flex flex-col bg-white border-slate-200 p-0">
+        <SheetHeader className="p-6 border-b border-slate-100">
+          <SheetTitle className="flex items-center gap-3 text-slate-900">
+            <div className="p-2 rounded-xl bg-primary/10 border border-primary/20">
+              <ShoppingCart className="w-5 h-5 text-primary" />
             </div>
             <span className="font-display">Mi Carrito</span>
-            <Badge className="bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 hover:bg-cyan-500/30">
+            <Badge className="bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20">
               {itemCount} items
             </Badge>
           </SheetTitle>
@@ -71,18 +71,18 @@ function CartSidebar({ children }: CartSidebarProps) {
 
         {demoCartItems.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center text-center p-8">
-            <div className="w-24 h-24 rounded-2xl bg-slate-800 flex items-center justify-center mb-6">
-              <ShoppingCart className="w-12 h-12 text-slate-600" />
+            <div className="w-24 h-24 rounded-2xl bg-slate-100 flex items-center justify-center mb-6">
+              <ShoppingCart className="w-12 h-12 text-slate-400" />
             </div>
-            <h3 className="text-lg font-semibold text-white mb-2">
+            <h3 className="text-lg font-semibold text-slate-900 mb-2">
               Tu carrito está vacío
             </h3>
-            <p className="text-slate-400 text-sm mb-8 max-w-xs">
+            <p className="text-slate-500 text-sm mb-8 max-w-xs">
               ¡Agrega productos a tu carrito para comenzar tu compra!
             </p>
             <Button
               asChild
-              className="bg-gradient-to-r from-cyan-500 to-cyan-400 text-slate-900 hover:from-cyan-400 hover:to-emerald-400 font-semibold rounded-xl"
+              className="bg-primary hover:bg-primary/90 text-white font-semibold rounded-xl"
             >
               <Link to="/products" className="flex items-center gap-2">
                 <Zap className="w-4 h-4" />
@@ -97,13 +97,13 @@ function CartSidebar({ children }: CartSidebarProps) {
               {demoCartItems.map((item) => (
                 <div
                   key={item.product.id}
-                  className="group glass rounded-xl p-4 transition-all duration-300 hover:bg-white/10"
+                  className="group bg-slate-50 rounded-xl p-4 transition-all duration-300 hover:bg-slate-100 border border-slate-100"
                 >
                   <div className="flex gap-4">
                     <Link
                       to="/products/$productId"
                       params={{ productId: String(item.product.id) }}
-                      className="w-20 h-20 bg-slate-800 rounded-xl overflow-hidden flex-shrink-0"
+                      className="w-20 h-20 bg-white rounded-xl overflow-hidden flex-shrink-0 border border-slate-200"
                     >
                       {item.product.image ? (
                         <img
@@ -113,7 +113,7 @@ function CartSidebar({ children }: CartSidebarProps) {
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center">
-                          <Package className="w-8 h-8 text-slate-600" />
+                          <Package className="w-8 h-8 text-slate-400" />
                         </div>
                       )}
                     </Link>
@@ -122,28 +122,28 @@ function CartSidebar({ children }: CartSidebarProps) {
                       <Link
                         to="/products/$productId"
                         params={{ productId: String(item.product.id) }}
-                        className="font-medium text-white hover:text-cyan-400 transition-colors line-clamp-2 text-sm"
+                        className="font-medium text-slate-900 hover:text-primary transition-colors line-clamp-2 text-sm"
                       >
                         {item.product.name}
                       </Link>
-                      <p className="text-gradient-warm font-bold mt-1">
+                      <p className="text-primary font-bold mt-1">
                         {formatPrice(item.product.price / 100)}
                       </p>
 
                       <div className="flex items-center justify-between mt-3">
-                        <div className="flex items-center rounded-lg border border-slate-700 bg-slate-800/50 overflow-hidden">
-                          <button className="px-2.5 py-1.5 text-slate-400 hover:text-white hover:bg-slate-700 transition-colors">
+                        <div className="flex items-center rounded-lg border border-slate-200 bg-white overflow-hidden">
+                          <button className="px-2.5 py-1.5 text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-colors">
                             <Minus className="w-3.5 h-3.5" />
                           </button>
-                          <span className="px-3 py-1.5 border-x border-slate-700 text-sm font-medium text-white min-w-[2.5rem] text-center">
+                          <span className="px-3 py-1.5 border-x border-slate-200 text-sm font-medium text-slate-900 min-w-[2.5rem] text-center">
                             {item.quantity}
                           </span>
-                          <button className="px-2.5 py-1.5 text-slate-400 hover:text-white hover:bg-slate-700 transition-colors">
+                          <button className="px-2.5 py-1.5 text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-colors">
                             <Plus className="w-3.5 h-3.5" />
                           </button>
                         </div>
 
-                        <button className="p-2 text-slate-500 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all">
+                        <button className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all">
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
@@ -155,24 +155,24 @@ function CartSidebar({ children }: CartSidebarProps) {
 
             {/* Free Shipping Progress */}
             <div className="px-6">
-              <div className="glass rounded-xl p-4">
+              <div className="bg-slate-50 rounded-xl p-4 border border-slate-100">
                 <div className="flex items-center gap-3 mb-3">
                   <div
-                    className={`p-2 rounded-lg ${remainingForFreeShipping === 0 ? 'bg-emerald-500/20 border border-emerald-500/30' : 'bg-cyan-500/20 border border-cyan-500/30'}`}
+                    className={`p-2 rounded-lg ${remainingForFreeShipping === 0 ? 'bg-emerald-100 border border-emerald-200' : 'bg-primary/10 border border-primary/20'}`}
                   >
                     <Truck
-                      className={`w-4 h-4 ${remainingForFreeShipping === 0 ? 'text-emerald-400' : 'text-cyan-400'}`}
+                      className={`w-4 h-4 ${remainingForFreeShipping === 0 ? 'text-emerald-600' : 'text-primary'}`}
                     />
                   </div>
-                  <p className="text-sm text-slate-300">
+                  <p className="text-sm text-slate-600">
                     {remainingForFreeShipping === 0 ? (
-                      <span className="text-emerald-400 font-medium">
+                      <span className="text-emerald-600 font-medium">
                         ¡Envío gratis desbloqueado!
                       </span>
                     ) : (
                       <>
                         Agrega{' '}
-                        <span className="text-cyan-400 font-semibold">
+                        <span className="text-primary font-semibold">
                           {formatPrice(remainingForFreeShipping)}
                         </span>{' '}
                         más para envío gratis
@@ -180,9 +180,9 @@ function CartSidebar({ children }: CartSidebarProps) {
                     )}
                   </p>
                 </div>
-                <div className="h-2 rounded-full bg-slate-800 overflow-hidden">
+                <div className="h-2 rounded-full bg-slate-200 overflow-hidden">
                   <div
-                    className={`h-full rounded-full transition-all duration-500 ${remainingForFreeShipping === 0 ? 'bg-gradient-to-r from-emerald-500 to-emerald-400' : 'bg-gradient-to-r from-cyan-500 to-cyan-400'}`}
+                    className={`h-full rounded-full transition-all duration-500 ${remainingForFreeShipping === 0 ? 'bg-emerald-500' : 'bg-primary'}`}
                     style={{ width: `${freeShippingProgress}%` }}
                   />
                 </div>
@@ -190,27 +190,27 @@ function CartSidebar({ children }: CartSidebarProps) {
             </div>
 
             {/* Footer */}
-            <SheetFooter className="p-6 border-t border-slate-800 flex-col gap-4 sm:flex-col">
+            <SheetFooter className="p-6 border-t border-slate-100 flex-col gap-4 sm:flex-col">
               <div className="flex justify-between items-center w-full">
-                <span className="text-slate-400">Subtotal</span>
-                <span className="text-2xl font-bold text-gradient">
+                <span className="text-slate-500">Subtotal</span>
+                <span className="text-2xl font-bold text-primary">
                   {formatPrice(subtotal)}
                 </span>
               </div>
-              <p className="text-xs text-slate-500 text-center">
+              <p className="text-xs text-slate-400 text-center">
                 Impuestos y envío calculados en el checkout
               </p>
               <div className="flex gap-3 w-full">
                 <Button
                   asChild
                   variant="outline"
-                  className="flex-1 border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white rounded-xl"
+                  className="flex-1 border-slate-200 text-slate-600 hover:bg-slate-100 hover:text-slate-900 rounded-xl"
                 >
                   <Link to="/cart">Ver Carrito</Link>
                 </Button>
                 <Button
                   asChild
-                  className="flex-1 bg-gradient-to-r from-orange-500 to-amber-500 text-white hover:from-orange-400 hover:to-amber-400 font-semibold rounded-xl shadow-glow-orange"
+                  className="flex-1 bg-primary hover:bg-primary/90 text-white font-semibold rounded-xl"
                 >
                   <Link
                     to="/checkout"
