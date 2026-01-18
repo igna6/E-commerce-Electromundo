@@ -1,0 +1,25 @@
+import { integer, pgTable, text, timestamp, varchar } from 'drizzle-orm/pg-core'
+
+export const ordersTable = pgTable('orders', {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  email: varchar({ length: 255 }).notNull(),
+  phone: varchar({ length: 50 }).notNull(),
+  firstName: varchar({ length: 100 }).notNull(),
+  lastName: varchar({ length: 100 }).notNull(),
+  address: varchar({ length: 255 }).notNull(),
+  apartment: varchar({ length: 100 }),
+  city: varchar({ length: 100 }).notNull(),
+  province: varchar({ length: 100 }).notNull(),
+  zipCode: varchar({ length: 20 }).notNull(),
+  shippingMethod: varchar({ length: 50 }).notNull(),
+  paymentMethod: varchar({ length: 50 }).notNull(),
+  subtotal: integer().notNull(),
+  shippingCost: integer().notNull(),
+  tax: integer().notNull(),
+  total: integer().notNull(),
+  status: varchar({ length: 50 }).notNull().default('pending'),
+  orderText: text().notNull(),
+  createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
+  deletedAt: timestamp({ withTimezone: true }),
+})
