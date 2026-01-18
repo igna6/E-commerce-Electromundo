@@ -13,12 +13,14 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
 import { useProducts } from '@/hooks/useProducts'
+import { useCart } from '@/contexts/CartContext'
 
 function ProductDetail() {
   const { productId } = useParams({ from: '/products/$productId' })
   const [selectedImage, setSelectedImage] = useState(0)
   const [quantity, setQuantity] = useState(1)
   const [isAdding, setIsAdding] = useState(false)
+  const { addItem } = useCart()
 
   const { data } = useProducts({ page: 1, limit: 20 })
   const product = data?.data.find((p) => p.id === Number(productId))
@@ -43,8 +45,14 @@ function ProductDetail() {
     : '$0'
 
   const handleAddToCart = () => {
-    setIsAdding(true)
-    setTimeout(() => setIsAdding(false), 600)
+    if (product) {
+      addItem(product, quantity)
+      setIsAdding(true)
+      setTimeout(() => {
+        setIsAdding(false)
+        setQuantity(1) // Reset quantity after adding
+      }, 600)
+    }
   }
 
   if (!product) {
