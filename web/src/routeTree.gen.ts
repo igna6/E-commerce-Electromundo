@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as ProductsRouteImport } from './routes/products'
+import { Route as OrderConfirmationRouteImport } from './routes/order-confirmation'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as CartRouteImport } from './routes/cart'
@@ -25,6 +26,11 @@ const RegisterRoute = RegisterRouteImport.update({
 const ProductsRoute = ProductsRouteImport.update({
   id: '/products',
   path: '/products',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OrderConfirmationRoute = OrderConfirmationRouteImport.update({
+  id: '/order-confirmation',
+  path: '/order-confirmation',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -58,6 +64,7 @@ export interface FileRoutesByFullPath {
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
   '/login': typeof LoginRoute
+  '/order-confirmation': typeof OrderConfirmationRoute
   '/products': typeof ProductsRouteWithChildren
   '/register': typeof RegisterRoute
   '/products/$productId': typeof ProductsProductIdRoute
@@ -67,6 +74,7 @@ export interface FileRoutesByTo {
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
   '/login': typeof LoginRoute
+  '/order-confirmation': typeof OrderConfirmationRoute
   '/products': typeof ProductsRouteWithChildren
   '/register': typeof RegisterRoute
   '/products/$productId': typeof ProductsProductIdRoute
@@ -77,6 +85,7 @@ export interface FileRoutesById {
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
   '/login': typeof LoginRoute
+  '/order-confirmation': typeof OrderConfirmationRoute
   '/products': typeof ProductsRouteWithChildren
   '/register': typeof RegisterRoute
   '/products/$productId': typeof ProductsProductIdRoute
@@ -88,6 +97,7 @@ export interface FileRouteTypes {
     | '/cart'
     | '/checkout'
     | '/login'
+    | '/order-confirmation'
     | '/products'
     | '/register'
     | '/products/$productId'
@@ -97,6 +107,7 @@ export interface FileRouteTypes {
     | '/cart'
     | '/checkout'
     | '/login'
+    | '/order-confirmation'
     | '/products'
     | '/register'
     | '/products/$productId'
@@ -106,6 +117,7 @@ export interface FileRouteTypes {
     | '/cart'
     | '/checkout'
     | '/login'
+    | '/order-confirmation'
     | '/products'
     | '/register'
     | '/products/$productId'
@@ -116,6 +128,7 @@ export interface RootRouteChildren {
   CartRoute: typeof CartRoute
   CheckoutRoute: typeof CheckoutRoute
   LoginRoute: typeof LoginRoute
+  OrderConfirmationRoute: typeof OrderConfirmationRoute
   ProductsRoute: typeof ProductsRouteWithChildren
   RegisterRoute: typeof RegisterRoute
 }
@@ -134,6 +147,13 @@ declare module '@tanstack/react-router' {
       path: '/products'
       fullPath: '/products'
       preLoaderRoute: typeof ProductsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/order-confirmation': {
+      id: '/order-confirmation'
+      path: '/order-confirmation'
+      fullPath: '/order-confirmation'
+      preLoaderRoute: typeof OrderConfirmationRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -191,6 +211,7 @@ const rootRouteChildren: RootRouteChildren = {
   CartRoute: CartRoute,
   CheckoutRoute: CheckoutRoute,
   LoginRoute: LoginRoute,
+  OrderConfirmationRoute: OrderConfirmationRoute,
   ProductsRoute: ProductsRouteWithChildren,
   RegisterRoute: RegisterRoute,
 }

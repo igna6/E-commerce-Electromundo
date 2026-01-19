@@ -4,6 +4,7 @@ import { Heart, Eye, ShoppingCart, Check, Star, Minus, Plus, Zap } from 'lucide-
 import type { Product } from '@/types/product'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import { useCart } from '@/contexts/CartContext'
 
 type ProductGridCardProps = {
   product: Product
@@ -16,6 +17,7 @@ function ProductGridCard({ product, viewMode, index = 0 }: ProductGridCardProps)
   const [quantity, setQuantity] = useState(1)
   const [isAdding, setIsAdding] = useState(false)
   const [isWishlisted, setIsWishlisted] = useState(false)
+  const { addItem } = useCart()
 
   const formattedPrice = new Intl.NumberFormat('es-AR', {
     style: 'currency',
@@ -28,8 +30,12 @@ function ProductGridCard({ product, viewMode, index = 0 }: ProductGridCardProps)
   }).format((product.price * 1.15) / 100)
 
   const handleAddToCart = () => {
+    addItem(product, quantity)
     setIsAdding(true)
-    setTimeout(() => setIsAdding(false), 800)
+    setTimeout(() => {
+      setIsAdding(false)
+      setQuantity(1)
+    }, 800)
   }
 
   // Staggered animation delay based on index

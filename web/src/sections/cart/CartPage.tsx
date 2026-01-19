@@ -12,25 +12,17 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
-import { useProducts } from '@/hooks/useProducts'
+import { useCart } from '@/contexts/CartContext'
 
 function CartPage() {
-  const { data } = useProducts({ page: 1, limit: 10 })
+  const { items, subtotal, totalItems, updateQuantity, removeItem, clearCart } = useCart()
   const [couponCode, setCouponCode] = useState('')
 
-  // Demo cart items from fetched products
-  const demoCartItems = data?.data.slice(0, 3).map((product, index) => ({
-    product,
-    quantity: index + 1,
-  })) || []
-
-  const subtotal = demoCartItems.reduce(
-    (sum, item) => sum + (item.product.price / 100) * item.quantity,
-    0
-  )
-  const shipping = subtotal > 50000 ? 0 : 5000
+  // Convert subtotal from cents to display value
+  const subtotalDisplay = subtotal / 100
+  const shipping = subtotalDisplay > 50000 ? 0 : 5000
   const discount = 0
-  const total = subtotal + shipping - discount
+  const total = subtotalDisplay + shipping - discount
 
   const formatPrice = (price: number) =>
     new Intl.NumberFormat('es-AR', {
@@ -38,7 +30,7 @@ function CartPage() {
       currency: 'ARS',
     }).format(price)
 
-  if (demoCartItems.length === 0) {
+  if (items.length === 0) {
     return (
       <div className="min-h-screen bg-gray-50">
         {/* Breadcrumb */}
@@ -111,7 +103,7 @@ function CartPage() {
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-3xl font-bold text-brand-dark">Mi Carrito</h1>
           <Badge variant="secondary" className="text-lg px-4 py-1">
-            {demoCartItems.reduce((sum, item) => sum + item.quantity, 0)} productos
+            {totalItems} productos
           </Badge>
         </div>
 
@@ -127,7 +119,7 @@ function CartPage() {
             </div>
 
             {/* Cart Items */}
-            {demoCartItems.map((item) => (
+            {items.map((item) => (
               <div
                 key={item.product.id}
                 className="bg-white rounded-xl border border-gray-200 p-4 md:p-6 hover:shadow-md transition-shadow"
@@ -181,7 +173,10 @@ function CartPage() {
                           Guardar
                         </button>
                         <span className="text-gray-300">|</span>
-                        <button className="text-sm text-red-500 hover:text-red-600 transition-colors flex items-center gap-1">
+                        <button
+                          onClick={() => removeItem(item.product.id)}
+                          className="text-sm text-red-500 hover:text-red-600 transition-colors flex items-center gap-1"
+                        >
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path
                               strokeLinecap="round"
@@ -207,7 +202,10 @@ function CartPage() {
                   {/* Quantity */}
                   <div className="md:col-span-2 flex items-center justify-center">
                     <div className="flex items-center border border-gray-200 rounded-lg">
-                      <button className="px-3 py-1.5 text-gray-600 hover:bg-gray-100 transition-colors rounded-l-lg">
+                      <button
+                        onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
+                        className="px-3 py-1.5 text-gray-600 hover:bg-gray-100 transition-colors rounded-l-lg"
+                      >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
                         </svg>
@@ -215,7 +213,10 @@ function CartPage() {
                       <span className="px-4 py-1.5 border-x border-gray-200 font-medium min-w-[3rem] text-center">
                         {item.quantity}
                       </span>
-                      <button className="px-3 py-1.5 text-gray-600 hover:bg-gray-100 transition-colors rounded-r-lg">
+                      <button
+                        onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
+                        className="px-3 py-1.5 text-gray-600 hover:bg-gray-100 transition-colors rounded-r-lg"
+                      >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                         </svg>
@@ -244,7 +245,11 @@ function CartPage() {
                   Seguir Comprando
                 </Link>
               </Button>
-              <Button variant="ghost" className="text-red-500 hover:text-red-600 hover:bg-red-50">
+              <Button
+                onClick={clearCart}
+                variant="ghost"
+                className="text-red-500 hover:text-red-600 hover:bg-red-50"
+              >
                 <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     strokeLinecap="round"
@@ -285,7 +290,7 @@ function CartPage() {
               <div className="space-y-3">
                 <div className="flex justify-between text-gray-600">
                   <span>Subtotal</span>
-                  <span>{formatPrice(subtotal)}</span>
+                  <span>{formatPrice(subtotalDisplay)}</span>
                 </div>
                 <div className="flex justify-between text-gray-600">
                   <span className="flex items-center gap-1">

@@ -2,10 +2,12 @@ import { Link } from '@tanstack/react-router'
 import { ShoppingCart, User, Menu, X, Zap } from 'lucide-react'
 import { useState } from 'react'
 import CartSidebar from '@/components/CartSidebar'
+import { useCart } from '@/contexts/CartContext'
 
 function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const cartItemCount = 3
+  const { totalItems } = useCart()
+  const cartItemCount = totalItems
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50">

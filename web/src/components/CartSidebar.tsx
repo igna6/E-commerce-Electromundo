@@ -19,32 +19,23 @@ import {
   SheetFooter,
 } from '@/components/ui/sheet'
 import { Badge } from '@/components/ui/badge'
-import { useProducts } from '@/hooks/useProducts'
+import { useCart } from '@/contexts/CartContext'
 
 type CartSidebarProps = {
   children: React.ReactNode
 }
 
 function CartSidebar({ children }: CartSidebarProps) {
-  const { data } = useProducts({ page: 1, limit: 10 })
+  const { items, subtotal, totalItems, updateQuantity, removeItem } = useCart()
 
-  // Demo cart items
-  const demoCartItems =
-    data?.data.slice(0, 3).map((product, index) => ({
-      product,
-      quantity: index + 1,
-    })) || []
-
-  const subtotal = demoCartItems.reduce(
-    (sum, item) => sum + (item.product.price / 100) * item.quantity,
-    0,
-  )
-  const itemCount = demoCartItems.reduce((sum, item) => sum + item.quantity, 0)
+  // Convert subtotal from cents to display value
+  const subtotalDisplay = subtotal / 100
+  const itemCount = totalItems
   const freeShippingThreshold = 50000
-  const remainingForFreeShipping = Math.max(0, freeShippingThreshold - subtotal)
+  const remainingForFreeShipping = Math.max(0, freeShippingThreshold - subtotalDisplay)
   const freeShippingProgress = Math.min(
     100,
-    (subtotal / freeShippingThreshold) * 100,
+    (subtotalDisplay / freeShippingThreshold) * 100,
   )
 
   const formatPrice = (price: number) =>
@@ -69,7 +60,7 @@ function CartSidebar({ children }: CartSidebarProps) {
           </SheetTitle>
         </SheetHeader>
 
-        {demoCartItems.length === 0 ? (
+        {items.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center text-center p-8">
             <div className="w-24 h-24 rounded-2xl bg-slate-100 flex items-center justify-center mb-6">
               <ShoppingCart className="w-12 h-12 text-slate-400" />
@@ -94,7 +85,7 @@ function CartSidebar({ children }: CartSidebarProps) {
           <>
             {/* Cart Items */}
             <div className="flex-1 overflow-y-auto p-6 space-y-4">
-              {demoCartItems.map((item) => (
+              {items.map((item) => (
                 <div
                   key={item.product.id}
                   className="group bg-slate-50 rounded-xl p-4 transition-all duration-300 hover:bg-slate-100 border border-slate-100"
@@ -132,18 +123,27 @@ function CartSidebar({ children }: CartSidebarProps) {
 
                       <div className="flex items-center justify-between mt-3">
                         <div className="flex items-center rounded-lg border border-slate-200 bg-white overflow-hidden">
-                          <button className="px-2.5 py-1.5 text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+                          <button
+                            onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
+                            className="px-2.5 py-1.5 text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-colors"
+                          >
                             <Minus className="w-3.5 h-3.5" />
                           </button>
                           <span className="px-3 py-1.5 border-x border-slate-200 text-sm font-medium text-slate-900 min-w-[2.5rem] text-center">
                             {item.quantity}
                           </span>
-                          <button className="px-2.5 py-1.5 text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+                          <button
+                            onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
+                            className="px-2.5 py-1.5 text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-colors"
+                          >
                             <Plus className="w-3.5 h-3.5" />
                           </button>
                         </div>
 
-                        <button className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all">
+                        <button
+                          onClick={() => removeItem(item.product.id)}
+                          className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"
+                        >
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
@@ -194,7 +194,7 @@ function CartSidebar({ children }: CartSidebarProps) {
               <div className="flex justify-between items-center w-full">
                 <span className="text-slate-500">Subtotal</span>
                 <span className="text-2xl font-bold text-primary">
-                  {formatPrice(subtotal)}
+                  {formatPrice(subtotalDisplay)}
                 </span>
               </div>
               <p className="text-xs text-slate-400 text-center">
