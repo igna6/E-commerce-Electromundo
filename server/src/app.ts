@@ -19,9 +19,8 @@ app.use(express.json())
 app.get('/', async (req, res) => {
   res.json({ message: 'Hello from Electromundo API!' })
 
-  const users = await db.select().from(usersTable)
-
-  console.log(users)
+  // const users = await db.select().from(usersTable)
+  // console.log(users)
 })
 
 // Simple POST handler
@@ -44,5 +43,6 @@ app.use('/api/orders', ordersRouter)
 app.listen(config.port, () => {
   console.log(`Server is running on port ${config.port}`)
 })
+
 
 export default app

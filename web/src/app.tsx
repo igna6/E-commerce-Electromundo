@@ -6,6 +6,7 @@ function App() {
     <div className="contenedor-principal">
       <Header />
       <hr className="border-gray-200 my-4" />
+      
       <main className="p-4">
         <Outlet />
       </main>
@@ -13,4 +14,4 @@ function App() {
   )
 }
 
-export default App
+  export default App

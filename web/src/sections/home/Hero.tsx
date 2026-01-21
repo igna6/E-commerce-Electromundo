@@ -16,7 +16,7 @@ function Hero() {
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-900 leading-tight mb-6">
               Tecnología para tu hogar
             </h1>
-
+            
             <p className="text-lg text-slate-600 mb-8 max-w-lg">
               Equipa tu casa con los mejores precios en electrodomésticos y tecnología. Calidad garantizada en cada producto.
             </p>

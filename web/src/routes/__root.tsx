@@ -3,6 +3,7 @@ import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import FloatingWhatsApp from '../components/FloatingWhatsApp'
 
 import Header from '../layout/Header'
 import { CartProvider } from '../contexts/CartContext'
@@ -55,6 +56,9 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           <CartProvider>
             <Header />
             {children}
+
+            <FloatingWhatsApp />
+
           <TanStackDevtools
             config={{
               position: 'bottom-right',
