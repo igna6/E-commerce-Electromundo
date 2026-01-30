@@ -1,7 +1,34 @@
-import { Link } from '@tanstack/react-router'
+import { useState } from 'react'
 import { Button } from '@/components/ui/button'
+import { useNavigate } from '@tanstack/react-router'
 
 function LoginForm() {
+  const navigate = useNavigate()
+  const [error, setError] = useState('')
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const formData = new FormData(e.currentTarget)
+    const data = Object.fromEntries(formData)
+
+    try {
+      const response = await fetch('http://localhost:3000/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      })
+
+      if (response.ok) {
+        alert('¡Bienvenido!') 
+        // navigate({ to: '/admin/dashboard' }) // Descomenta esto cuando tengas la ruta dashboard
+      } else {
+        setError('Credenciales incorrectas')
+      }
+    } catch (err) {
+      setError('Error al conectar con el servidor')
+    }
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
     
@@ -11,16 +38,11 @@ function LoginForm() {
           <h2 className="mt-6 text-3xl font-extrabold text-brand-dark">
                 Accede a tu cuenta
           </h2>
-          <p className="mt-2 text-sm text-gray-600">
-                ¿No tienes una cuenta?{' '}
-                <Link to="/register" className="font-medium text-brand-blue hover:underline transition-all">
-                    Regístrate gratis
-                </Link>
-          </p>
         </div>
 
         {/* FORMULARIO */}
-        <form className="mt-8 space-y-6" action="#" method="POST">
+          <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+            {error && <div className="text-red-500 text-center font-bold">{error}</div>}
           <div className="space-y-4">
 
                 <div>

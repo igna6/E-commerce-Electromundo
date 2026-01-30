@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { ShoppingCart, User, Menu, X, Zap } from 'lucide-react'
+import { ShoppingCart, Menu, X, Zap } from 'lucide-react'
 import { useState } from 'react'
 import CartSidebar from '@/components/CartSidebar'
 import { useCart } from '@/contexts/CartContext'
@@ -55,31 +55,6 @@ function Header() {
               </button>
             </CartSidebar>
 
-            {/* Auth buttons - Desktop */}
-            <div className="hidden md:flex items-center gap-3">
-              <Link
-                to="/login"
-                className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-300 hover:text-white transition-colors"
-              >
-                <User className="w-4 h-4" />
-                <span>Iniciar Sesión</span>
-              </Link>
-
-              <Link
-                to="/register"
-                className="group relative px-5 py-2.5 text-sm font-semibold rounded-xl overflow-hidden transition-all duration-300"
-              >
-                {/* Button background */}
-                <span className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-cyan-400" />
-                <span className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-                {/* Glow effect */}
-                <span className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-glow" />
-
-                <span className="relative text-slate-900">Registrarse</span>
-              </Link>
-            </div>
-
             {/* Mobile menu button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -111,25 +86,6 @@ function Header() {
               label="Productos"
               onClick={() => setMobileMenuOpen(false)}
             />
-
-            <div className="pt-4 space-y-2 border-t border-white/10 mt-4">
-              <Link
-                to="/login"
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-300 hover:text-white hover:bg-white/5 transition-all"
-              >
-                <User className="w-5 h-5" />
-                <span className="font-medium">Iniciar Sesión</span>
-              </Link>
-
-              <Link
-                to="/register"
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-cyan-400 text-slate-900 font-semibold transition-all hover:shadow-glow"
-              >
-                <span>Crear Cuenta</span>
-              </Link>
-            </div>
           </div>
         </div>
       </nav>

@@ -40,6 +40,18 @@ app.use('/api/categories', categoriesRouter)
 // Orders API
 app.use('/api/orders', ordersRouter)
 
+//Login API
+app.post('/api/login', (req, res) => {
+  const { email, password } = req.body
+
+  // Aquí validas "a mano" por ahora. Luego lo conectamos a la base de datos.
+  if (email === 'admin@admin.com' && password === '1234') {
+    res.json({ success: true, message: 'Bienvenido Admin' })
+  } else {
+    res.status(401).json({ error: 'Email o contraseña incorrectos' })
+  }
+})
+
 app.listen(config.port, () => {
   console.log(`Server is running on port ${config.port}`)
 })
