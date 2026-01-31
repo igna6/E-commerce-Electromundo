@@ -3,6 +3,7 @@ import { and, asc, count, desc, eq, gte, ilike, isNull, lte, or } from 'drizzle-
 import db from '../db/db.ts'
 import { productsTable } from '../db/schema.ts'
 import { createProductSchema, updateProductSchema } from '../validators/product.ts'
+import { authenticateToken, requireAdmin } from '../middleware/auth.ts'
 
 const router = Router()
 
@@ -132,8 +133,8 @@ router.get('/', async (req, res) => {
   }
 })
 
-// POST /api/products - Create product
-router.post('/', async (req, res) => {
+// POST /api/products - Create product (admin only)
+router.post('/', authenticateToken, requireAdmin, async (req, res) => {
   try {
     const validatedData = createProductSchema.parse(req.body)
 
@@ -152,8 +153,8 @@ router.post('/', async (req, res) => {
   }
 })
 
-// PUT /api/products/:id - Update product
-router.put('/:id', async (req, res) => {
+// PUT /api/products/:id - Update product (admin only)
+router.put('/:id', authenticateToken, requireAdmin, async (req, res) => {
   try {
     const id = parseInt(req.params.id)
     const validatedData = updateProductSchema.parse(req.body)
@@ -178,8 +179,8 @@ router.put('/:id', async (req, res) => {
   }
 })
 
-// DELETE /api/products/:id - Soft delete product
-router.delete('/:id', async (req, res) => {
+// DELETE /api/products/:id - Soft delete product (admin only)
+router.delete('/:id', authenticateToken, requireAdmin, async (req, res) => {
   try {
     const id = parseInt(req.params.id)
 

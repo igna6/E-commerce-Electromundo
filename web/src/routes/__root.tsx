@@ -1,4 +1,4 @@
-import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
+import { HeadContent, Scripts, createRootRoute, useLocation } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
@@ -7,6 +7,7 @@ import FloatingWhatsApp from '../components/FloatingWhatsApp'
 
 import Header from '../layout/Header'
 import { CartProvider } from '../contexts/CartContext'
+import { AuthProvider } from '../contexts/AuthContext'
 
 import appCss from '../styles.css?url'
 
@@ -45,6 +46,19 @@ export const Route = createRootRoute({
   shellComponent: RootDocument,
 })
 
+function RootContent({ children }: { children: React.ReactNode }) {
+  const location = useLocation()
+  const isAdminRoute = location.pathname.startsWith('/admin')
+
+  return (
+    <>
+      {!isAdminRoute && <Header />}
+      {children}
+      {!isAdminRoute && <FloatingWhatsApp />}
+    </>
+  )
+}
+
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
@@ -53,11 +67,9 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         <QueryClientProvider client={queryClient}>
+          <AuthProvider>
           <CartProvider>
-            <Header />
-            {children}
-
-            <FloatingWhatsApp />
+            <RootContent>{children}</RootContent>
 
           <TanStackDevtools
             config={{
@@ -75,6 +87,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             ]}
           />
           </CartProvider>
+          </AuthProvider>
         </QueryClientProvider>
         <Scripts />
       </body>

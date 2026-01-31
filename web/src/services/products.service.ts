@@ -1,4 +1,4 @@
-import { apiRequest } from './api'
+import { apiRequest, authApiRequest } from './api'
 import type { Product } from '../types/product'
 import type { PaginatedResponse } from '../types/api'
 
@@ -52,7 +52,7 @@ export async function createProduct(data: {
   image?: string | null
   category?: number | null
 }): Promise<{ data: Product }> {
-  return apiRequest<{ data: Product }>('/api/products', {
+  return authApiRequest<{ data: Product }>('/api/products', {
     method: 'POST',
     body: JSON.stringify(data),
   })
@@ -68,14 +68,14 @@ export async function updateProduct(
     category: number | null
   }>
 ): Promise<{ data: Product }> {
-  return apiRequest<{ data: Product }>(`/api/products/${id}`, {
+  return authApiRequest<{ data: Product }>(`/api/products/${id}`, {
     method: 'PUT',
     body: JSON.stringify(data),
   })
 }
 
 export async function deleteProduct(id: number): Promise<{ message: string }> {
-  return apiRequest<{ message: string }>(`/api/products/${id}`, {
+  return authApiRequest<{ message: string }>(`/api/products/${id}`, {
     method: 'DELETE',
   })
 }

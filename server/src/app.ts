@@ -1,11 +1,12 @@
 import express from 'express'
 import cors from 'cors'
 import config from './config/config.ts'
-import db from './db/db.ts'
-import { usersTable } from './db/schema.ts'
 import productsRouter from './routes/products.ts'
 import categoriesRouter from './routes/categories.ts'
 import ordersRouter from './routes/orders.ts'
+import authRouter from './routes/auth.ts'
+import adminRouter from './routes/admin/index.ts'
+import { authenticateToken, requireAdmin } from './middleware/auth.ts'
 
 const app = express()
 
@@ -40,17 +41,11 @@ app.use('/api/categories', categoriesRouter)
 // Orders API
 app.use('/api/orders', ordersRouter)
 
-//Login API
-app.post('/api/login', (req, res) => {
-  const { email, password } = req.body
+// Auth API
+app.use('/api/auth', authRouter)
 
-  // Aquí validas "a mano" por ahora. Luego lo conectamos a la base de datos.
-  if (email === 'admin@admin.com' && password === '1234') {
-    res.json({ success: true, message: 'Bienvenido Admin' })
-  } else {
-    res.status(401).json({ error: 'Email o contraseña incorrectos' })
-  }
-})
+// Admin API (protected)
+app.use('/api/admin', authenticateToken, requireAdmin, adminRouter)
 
 app.listen(config.port, () => {
   console.log(`Server is running on port ${config.port}`)

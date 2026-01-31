@@ -1,340 +1,273 @@
 # What's Next - E-commerce Electromundo Handoff
 
-**Last Updated**: January 18, 2026
+**Last Updated**: January 31, 2026
 **Current Phase**: Phase 3 Complete, Ready for Phase 4
+**Session**: Handoff document refresh
 
 ---
 
 <original_task>
-Implement Phase 3: Guest Checkout & Order Text Generation for E-commerce Electromundo. The CheckoutPage UI already existed - the task was to wire it up with real cart data, form validation, backend order creation, and a confirmation page with copyable order text.
+No specific task was requested in this session. The `/whats-next` command was invoked to generate a comprehensive handoff document for continuing work in a fresh context.
+
+**Project Goal**: Build a full-stack e-commerce platform for Electromundo (Argentina-focused electronics retailer) with Spanish localization and ARS currency.
 </original_task>
 
 <work_completed>
-## Phase 3: Guest Checkout & Order Text Generation ✅ COMPLETE
 
-### Backend Implementation
+## Project Overview
+Full-stack e-commerce monorepo for electronics sales (Argentina-focused, ARS currency, Spanish language).
 
-**1. Database Entities Created:**
+## Completed Phases (3 of 7)
 
-- `server/src/entities/orders.ts` - Order table with fields:
-  - id (PK, auto-increment)
-  - email, phone, firstName, lastName
-  - address, apartment, city, province, zipCode
-  - shippingMethod ('pickup' | 'standard' | 'express')
-  - paymentMethod ('card' | 'mercadopago' | 'transfer')
-  - subtotal, shippingCost, tax, total (all in cents)
-  - status (default 'pending')
-  - orderText (generated Spanish formatted text)
-  - createdAt, updatedAt, deletedAt (soft delete)
+### Phase 1: Product Management & Categories ✅
+- Product CRUD API with pagination (12-50 items/page)
+- Category management endpoints
+- Product search by name/description
+- Price range filtering
+- Sorting options (newest, price asc/desc, name)
+- Soft delete support (deletedAt timestamps)
+- Frontend product browsing with responsive UI
+- Product detail pages
+- Category filtering component
 
-- `server/src/entities/orderItems.ts` - Order items with fields:
-  - id (PK, auto-increment)
-  - orderId (FK to orders)
-  - productId (FK to products)
-  - productName, productPrice, quantity, lineTotal
-  - createdAt
+### Phase 2: Session-Based Shopping Cart ✅
+- **CartContext**: React Context + localStorage persistence
+- Add products to cart (from list or detail page)
+- Quantity management (increase/decrease)
+- Remove items and clear cart
+- Cart totals calculation
+- Cart badge on header showing item count
+- localStorage key: `electromundo-cart`
 
-**2. Schema Updated:**
-- `server/src/db/schema.ts` - Added exports for ordersTable and orderItemsTable
+### Phase 3: Guest Checkout & Order Text Generation ✅
 
-**3. Database Migration:**
-- Ran `npx drizzle-kit generate && npx drizzle-kit push`
-- Migration file: `server/drizzle/0001_remarkable_human_robot.sql`
-- Tables created: orders (21 columns), order_items (8 columns)
+**Backend Implementation:**
+- Orders table (21 columns): customer info, shipping/payment methods, totals, status
+- OrderItems table (8 columns): line items with product details
+- Zod validation for order creation
+- Order text generator (Spanish formatted)
+- `POST /api/orders` - Create order with validation & price calculation
+- `GET /api/orders/:id` - Retrieve order with items
+- Backend price calculation (prevents client manipulation)
+- Shipping costs: pickup (0), standard (ARS 3,000), express (ARS 8,000)
+- Tax calculation: 21% IVA
 
-**4. Validation Schema:**
-- `server/src/validators/order.ts`
-  - createOrderSchema with Zod validation
-  - Validates email format, required fields, shipping/payment enums
-  - orderItemSchema for cart items (productId, quantity)
+**Frontend Implementation:**
+- CheckoutPage with multi-step form validation
+- Zod schema validation with Spanish error messages
+- Order confirmation page with order text display
+- Copy-to-clipboard functionality
+- Navigation to home or continue shopping
 
-**5. Order Text Generator:**
-- `server/src/utils/orderTextGenerator.ts`
-  - Generates formatted Spanish order text
-  - Includes: order number (padded 6 digits), date, customer info, address, products, totals
-  - Uses `Intl.NumberFormat('es-AR')` for ARS currency formatting
-  - Shipping labels: 'Retiro en Sucursal', 'Estándar', 'Express'
-  - Payment labels: 'Tarjeta de Crédito/Débito', 'MercadoPago', 'Transferencia Bancaria'
+### Additional Features
+- Floating WhatsApp button for customer support
+- Admin route created at `/admin` (foundation for Phase 4)
 
-**6. Order Routes:**
-- `server/src/routes/orders.ts`
-  - POST `/api/orders` - Create order
-    - Validates input with Zod
-    - Fetches current product prices from database
-    - Calculates subtotal, shipping (pickup: 0, standard: 300000, express: 800000 cents), tax (21%), total
-    - Creates order and order items
-    - Generates order text
-    - Returns complete order with items
-  - GET `/api/orders/:id` - Get order by ID
-    - Returns order with items array
-
-**7. Router Registration:**
-- `server/src/app.ts` - Added `app.use('/api/orders', ordersRouter)`
-
-### Frontend Implementation
-
-**1. Type Definitions:**
-- `web/src/types/order.ts`
-  - Order type with all fields
-  - OrderItem type
-  - CreateOrderPayload type for API requests
-
-**2. Order Service:**
-- `web/src/services/orders.service.ts`
-  - `createOrder(data: CreateOrderPayload)` - POST to /api/orders
-  - `getOrder(id: number)` - GET /api/orders/:id
-
-**3. CheckoutPage Update:**
-- `web/src/sections/checkout/CheckoutPage.tsx` - Complete rewrite
-  - Uses real CartContext: `const { items, subtotal, clearCart } = useCart()`
-  - React Hook Form + Zod validation with Spanish error messages
-  - Multi-step form with validation on step transitions
-  - Shipping methods with dynamic cost calculation
-  - Payment method selection
-  - Form submission:
-    - Builds order payload from form data + cart items
-    - Calls createOrder API
-    - Clears cart on success
-    - Navigates to `/order-confirmation?orderId=X`
-  - Empty cart redirect to /cart
-  - Loading state during submission
-  - Error handling with user-friendly message
-
-**4. Order Confirmation Route:**
-- `web/src/routes/order-confirmation.tsx`
-  - TanStack Router route with orderId search param validation
-  - Uses z.number().catch(0) for param parsing
-
-**5. Order Confirmation Page:**
-- `web/src/sections/order-confirmation/OrderConfirmationPage.tsx`
-  - Fetches order by ID on mount
-  - Displays success message with order number
-  - Shows customer info and shipping address
-  - Lists order items with prices
-  - Shows totals breakdown (subtotal, shipping, IVA, total)
-  - Displays formatted order text in preformatted block
-  - Copy to clipboard button with visual feedback
-  - Navigation buttons: "Volver al Inicio", "Seguir Comprando"
-  - Loading spinner while fetching
-  - Error state if order not found
-
-### TypeScript Fixes Applied
-
-1. Fixed Zod enum syntax for newer version (errorMap → message)
-2. Fixed potential undefined newOrder by adding null check
-3. Explicit parameter passing to generateOrderText function
-
-### Verification
-
-- Server TypeScript compiles without errors
-- Web TypeScript compiles without errors
-- All files created/modified as specified in plan
 </work_completed>
 
 <work_remaining>
-## Phase 4: Admin Panel (from ROADMAP.md)
 
-**Priority: NEXT** - This is the next phase to implement
+## Phase 4: Admin Panel (NEXT)
 
-### Backend Tasks
+### Authentication
+- [ ] JWT token-based authentication (backend)
+- [ ] Secure login endpoint (replace hardcoded `admin@admin.com/1234`)
+- [ ] Protected admin routes middleware
+- [ ] Session management / token refresh
 
-1. **Admin Authentication (Optional for MVP)**
-   - Simple auth mechanism for admin routes
-   - Could use basic auth or session-based
+### Admin Dashboard
+- [ ] Dashboard layout with sidebar navigation
+- [ ] Admin route protection (redirect if not authenticated)
+- [ ] Statistics overview (total orders, revenue, products)
 
-2. **Admin Order Routes**
-   - GET `/api/admin/orders` - List all orders with pagination
-   - PUT `/api/admin/orders/:id/status` - Update order status
+### Orders Management
+- [ ] `GET /api/admin/orders` - List all orders with pagination
+- [ ] `PUT /api/admin/orders/:id/status` - Update order status
+- [ ] Orders list page with filtering/sorting
+- [ ] Order detail view
+- [ ] Status updates (pending → confirmed → shipped → delivered)
 
-### Frontend Tasks
+### Products Management
+- [ ] Products list page with pagination
+- [ ] Create new products form
+- [ ] Edit existing products
+- [ ] Delete products (soft delete)
+- [ ] Image URL management
 
-1. **Admin Dashboard Page**
-   - Route: `/admin` or `/admin/dashboard`
-   - Overview statistics
+### Categories Management
+- [ ] Categories list page
+- [ ] CRUD interface for categories
 
-2. **Admin Orders Page**
-   - Route: `/admin/orders`
-   - List all orders with status filters
-   - Order detail view
-   - Status update functionality
+### Files to Create/Modify
 
-3. **Admin Products Page**
-   - Route: `/admin/products`
-   - Product CRUD interface
-   - Image URL management
+**Backend:**
+- `server/src/middleware/auth.ts` - JWT middleware
+- `server/src/routes/auth.ts` - Auth endpoints (login, verify, refresh)
+- `server/src/routes/admin/` - Admin-specific routes
+- Modify `server/src/routes/orders.ts` - Add admin endpoints
 
-4. **Admin Categories Page**
-   - Route: `/admin/categories`
-   - Category CRUD interface
+**Frontend:**
+- `web/src/routes/admin/` - Admin route group
+- `web/src/routes/admin/index.tsx` - Dashboard home
+- `web/src/routes/admin/orders.tsx` - Orders management
+- `web/src/routes/admin/products.tsx` - Products management
+- `web/src/sections/admin/` - Admin feature components
+- `web/src/contexts/AuthContext.tsx` - Auth state management
+- `web/src/services/auth.service.ts` - Auth API client
 
 ## Future Phases
 
 ### Phase 5: Polish & Features
-- Image gallery for products
+- Product image gallery
+- Wishlist functionality
 - Related products
-- Recently viewed
-- Wishlist
+- Recently viewed products
+- Enhanced search
 
 ### Phase 6: Payment Integration
 - MercadoPago integration
-- Payment confirmation flow
+- Payment status handling
+- Order status webhooks
 
 ### Phase 7: Production Readiness
-- Environment configuration
-- Error monitoring
+- Error handling improvements
 - Performance optimization
+- SEO enhancements
+- Analytics integration
+
 </work_remaining>
 
 <attempted_approaches>
-## What Worked Well in Phase 3
 
-1. **Backend-First Development**: Created all backend entities, validators, and routes before touching frontend
+## Patterns Established in Previous Phases
 
-2. **Price Calculation on Backend**:
-   - Fetches current product prices from database
-   - Calculates all totals server-side for security
-   - Prevents price manipulation from client
+1. **Backend-First Development**: Create entities, validators, and routes before frontend
+2. **Price Calculation on Backend**: Fetch current prices from DB, calculate server-side for security
+3. **Zod Validation**: Matching schemas on frontend and backend
+4. **Spanish Localization**: All user-facing text in Spanish
+5. **TanStack Router Search Params**: Use `z.number().catch(0)` for ID parsing
 
-3. **Order Text Generation**:
-   - Separate utility function for maintainability
-   - Uses Intl.NumberFormat for proper currency formatting
-   - Spanish labels for shipping and payment methods
+## What Worked Well
+- Separate utility function for order text generation
+- `Intl.NumberFormat('es-AR')` for currency formatting
+- React Hook Form's `trigger()` for step validation
+- Drizzle ORM for type-safe database queries
 
-4. **Form Validation Strategy**:
-   - Zod schemas on both frontend and backend
-   - React Hook Form's trigger() for step validation
-   - Spanish error messages for user experience
+## Minor Issues Resolved
+- Zod API change: Use `{ message: 'text' }` instead of `{ errorMap: () => (...) }`
+- TypeScript strictness: Add explicit null checks for database operations
 
-5. **TanStack Router Search Params**:
-   - Used z.number().catch(0) for orderId parsing
-   - Handles invalid/missing params gracefully
-
-## No Major Blockers Encountered
-
-1. **Zod API Change**: The `errorMap` syntax changed to `message` in newer versions
-   - Fixed by using `{ message: 'Error text' }` instead of `{ errorMap: () => (...) }`
-
-2. **TypeScript Strictness**: Potential undefined values from database operations
-   - Fixed with explicit null checks before using returned data
-
-## Patterns Established
-
-1. **Order Creation Flow**:
-   - Validate input → Fetch products → Calculate totals → Create order → Create items → Generate text → Update order → Return complete order
-
-2. **Confirmation Page Pattern**:
-   - Search param for ID → Fetch on mount → Loading/Error/Success states → Copy to clipboard functionality
 </attempted_approaches>
 
 <critical_context>
-## Pricing Logic (Important)
 
-- **All prices stored in cents** (integers)
-- **Display**: Divide by 100, use `Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' })`
-- **Shipping Costs (cents)**:
-  - pickup: 0 (free)
-  - standard: 300000 (ARS 3,000)
-  - express: 800000 (ARS 8,000)
-- **Tax**: 21% IVA on subtotal
+## Tech Stack
 
-## Key Files Reference
+**Backend (`/server`):**
+- Node.js + TypeScript + Express.js 5.2.1
+- PostgreSQL 17.1 + Drizzle ORM 0.45.1
+- Zod 4.3.5 for validation
 
-**Backend:**
+**Frontend (`/web`):**
+- React 19.2.0 + Vite 7.1.7
+- TanStack Router 1.132.0 (file-based routing)
+- TanStack Query 5.90.16 (server state)
+- Tailwind CSS 3.4.17 + Radix UI/shadcn (52+ components)
+- React Hook Form 7.71.0 + Zod
+
+## Price Handling Convention
+- **All prices stored as integers (cents)**
+- Example: 99999 cents = ARS $999.99
+- Display: `Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' })`
+
+## Order Calculation Logic
 ```
-server/src/
-├── entities/
-│   ├── orders.ts          # Order table schema
-│   └── orderItems.ts      # Order items table schema
-├── validators/
-│   └── order.ts           # Zod validation for orders
-├── utils/
-│   └── orderTextGenerator.ts  # Order text formatting
-├── routes/
-│   └── orders.ts          # Order API endpoints
-├── db/
-│   └── schema.ts          # Exports all tables
-└── app.ts                 # Router registration
-```
-
-**Frontend:**
-```
-web/src/
-├── types/
-│   └── order.ts           # Order TypeScript types
-├── services/
-│   └── orders.service.ts  # Order API client
-├── routes/
-│   └── order-confirmation.tsx  # Confirmation route
-└── sections/
-    ├── checkout/
-    │   └── CheckoutPage.tsx    # Updated checkout form
-    └── order-confirmation/
-        └── OrderConfirmationPage.tsx  # Confirmation page
+Subtotal = sum of (item.price * item.quantity)
+Shipping = varies by method (0 / 300000 / 800000 cents)
+Tax = Subtotal * 0.21 (21% IVA)
+Total = Subtotal + Shipping + Tax
 ```
 
-## Database Tables Added
+## API Endpoints Available
+```
+GET  /api/products          - List with pagination, search, filter, sort
+GET  /api/products/:id      - Single product
+POST /api/products          - Create product
+PUT  /api/products/:id      - Update product
+DEL  /api/products/:id      - Soft delete product
 
-**orders** (21 columns):
-- id, email, phone, firstName, lastName
-- address, apartment, city, province, zipCode
-- shippingMethod, paymentMethod
-- subtotal, shippingCost, tax, total
-- status, orderText
-- createdAt, updatedAt, deletedAt
+GET  /api/categories        - List categories
+POST /api/categories        - Create category
+PUT  /api/categories/:id    - Update category
+DEL  /api/categories/:id    - Delete category
 
-**order_items** (8 columns):
-- id, orderId, productId
-- productName, productPrice, quantity, lineTotal
-- createdAt
+POST /api/orders            - Create order from cart
+GET  /api/orders/:id        - Get order with items
 
-## API Endpoints Added
-
-- `POST /api/orders` - Create order (requires items array with productId and quantity)
-- `GET /api/orders/:id` - Get order with items
-
-## Cart Context Usage
-
-```typescript
-const { items, subtotal, clearCart } = useCart()
-
-// On successful order
-clearCart()
-navigate({ to: '/order-confirmation', search: { orderId: response.data.id } })
+POST /api/login             - Basic login (hardcoded admin@admin.com/1234)
 ```
 
-## Important: Order Text Format
+## Database Tables
+1. `products` - 11 columns (id, name, price, description, image, category, timestamps)
+2. `product_categories` - Category definitions
+3. `users` - User accounts (not yet integrated)
+4. `orders` - 21 columns with full order details
+5. `order_items` - Order line items
 
-The order text is generated in Spanish and includes:
-- Header with order number (6-digit padded)
-- Date formatted as DD/MM/YYYY
-- Customer contact info
-- Shipping address
-- Products with quantities and prices
-- Summary with subtotal, shipping, tax, total
-- Payment method
-- Thank you message
+## Key File Locations
+```
+Backend:
+server/src/entities/          # Database schemas
+server/src/validators/        # Zod validation
+server/src/routes/            # API endpoints
+server/src/utils/             # Utilities (orderTextGenerator)
+server/src/db/schema.ts       # Exports all tables
+server/src/app.ts             # Route registration
+
+Frontend:
+web/src/routes/               # TanStack file-based routes
+web/src/sections/             # Feature modules
+web/src/contexts/             # React contexts (CartContext)
+web/src/services/             # API clients
+web/src/types/                # TypeScript types
+web/src/components/ui/        # shadcn/ui components
+```
+
+## Environment Setup
+```bash
+# Backend (port 4000)
+cd server
+yarn install
+docker-compose up -d  # PostgreSQL
+yarn dev
+
+# Frontend (port 3000)
+cd web
+yarn install
+yarn dev
+```
+
+## Project Documentation
+- `BRIEF.md` - Project overview
+- `ROADMAP.md` - 7-phase development roadmap
+- `PHASE-1-SUMMARY.md` - Phase 1 completion
+- `PHASE-2-SUMMARY.md` - Phase 2 completion
+
 </critical_context>
 
 <current_state>
-## Current Position
 
-**Completed:**
-- Phase 1: Product Management & Categories ✅
-- Phase 2: Session-Based Shopping Cart ✅
-- Phase 3: Guest Checkout & Order Text Generation ✅
+## Git Status
+- **Branch**: main
+- **Status**: Clean (all changes committed)
+- **Recent commits**:
+  - c1b6596 - route admin
+  - 7e66b8c - WhatsApp button
+  - c9c0e58 - Merge branch 'main'
 
-**Current Step:**
-- Ready to begin Phase 4: Admin Panel
-
-**Git Status:**
-- Branch: `main`
-- Status: Modified files (whats-next.md, new Phase 3 files)
-- Uncommitted changes: All Phase 3 implementation
-
-## Deliverable Status
-
-| Phase | Status | Notes |
-|-------|--------|-------|
+## What's Complete
+| Phase | Status | Description |
+|-------|--------|-------------|
 | Phase 1 | ✅ Complete | Products, categories, search/filter |
 | Phase 2 | ✅ Complete | Cart with localStorage persistence |
 | Phase 3 | ✅ Complete | Guest checkout, order creation, confirmation |
@@ -343,70 +276,44 @@ The order text is generated in Spanish and includes:
 | Phase 6 | ⏳ Not Started | Payment integration |
 | Phase 7 | ⏳ Not Started | Production readiness |
 
-## What Works Now
-
-**Complete Customer Flow:**
+## Working Customer Flow
 1. ✅ Browse products with categories
 2. ✅ Search and filter products
 3. ✅ View product details
 4. ✅ Add products to cart
 5. ✅ Manage cart (quantities, remove)
 6. ✅ Fill checkout form with validation
-7. ✅ Select shipping method
-8. ✅ Select payment method
-9. ✅ Submit order
-10. ✅ View order confirmation
-11. ✅ Copy order text to clipboard
+7. ✅ Select shipping/payment methods
+8. ✅ Submit order
+9. ✅ View order confirmation with copyable text
 
-**Server Status:** Not running (needs to be started for testing)
-- To start backend: `cd server && npm run dev`
-- To start frontend: `cd web && npm run dev`
+## Admin Current State
+- Route exists at `/admin` (`web/src/routes/admin.tsx`)
+- Login form UI exists (`web/src/sections/auth/LoginForm.tsx`)
+- Basic login endpoint exists (`POST /api/login` - hardcoded credentials)
+- **No JWT implementation yet**
+- **No protected routes yet**
+- **No admin dashboard yet**
 
-## To Test Phase 3
+## Immediate Next Steps for Phase 4
+1. Implement JWT authentication on backend
+2. Create auth middleware for protected routes
+3. Build admin dashboard layout
+4. Add orders list/management for admins
+5. Add products CRUD interface for admins
 
-1. Start both servers
-2. Add products to cart
-3. Go to /checkout
-4. Fill form with test data:
-   - Email: test@example.com
-   - Phone: 1122334455
-   - Name: Test User
-   - Address: Test Street 123
-   - City: Buenos Aires
-   - Province: BA
-   - Zip: 1000
-5. Select shipping (standard) and payment (transfer)
-6. Click "Confirmar Pedido"
-7. Verify:
-   - Order in database (check orders and order_items tables)
-   - Cart cleared
-   - Redirected to confirmation page
-   - Order text displays correctly
-   - Copy button works
+## To Test Current Application
+```bash
+# Terminal 1: Backend
+cd server && yarn dev
 
-## Uncommitted Files
+# Terminal 2: Frontend
+cd web && yarn dev
 
-All Phase 3 files are created but not committed:
-- server/src/entities/orders.ts
-- server/src/entities/orderItems.ts
-- server/src/validators/order.ts
-- server/src/utils/orderTextGenerator.ts
-- server/src/routes/orders.ts
-- server/drizzle/0001_remarkable_human_robot.sql
-- web/src/types/order.ts
-- web/src/services/orders.service.ts
-- web/src/routes/order-confirmation.tsx
-- web/src/sections/order-confirmation/OrderConfirmationPage.tsx
+# Open http://localhost:3000
+```
 
-Modified files:
-- server/src/db/schema.ts
-- server/src/app.ts
-- web/src/sections/checkout/CheckoutPage.tsx
-- whats-next.md
+Test checkout flow:
+- Add products to cart → Go to /checkout → Fill form → Submit → View confirmation
 
-## Recommended Next Steps
-
-1. Test the checkout flow manually
-2. Commit Phase 3 changes
-3. Begin Phase 4: Admin Panel
 </current_state>

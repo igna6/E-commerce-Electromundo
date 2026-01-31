@@ -1,5 +1,7 @@
 import { API_URL } from '../constants/config'
 
+const ACCESS_TOKEN_KEY = 'electromundo-access-token'
+
 export class ApiError extends Error {
   constructor(
     message: string,
@@ -41,4 +43,19 @@ export async function apiRequest<T>(
       error instanceof Error ? error.message : 'Unknown error occurred',
     )
   }
+}
+
+export async function authApiRequest<T>(
+  endpoint: string,
+  options?: RequestInit,
+): Promise<T> {
+  const token = localStorage.getItem(ACCESS_TOKEN_KEY)
+
+  return apiRequest<T>(endpoint, {
+    ...options,
+    headers: {
+      ...options?.headers,
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+  })
 }

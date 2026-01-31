@@ -1,31 +1,34 @@
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { useNavigate } from '@tanstack/react-router'
+import { useAuth } from '@/contexts/AuthContext'
 
 function LoginForm() {
   const navigate = useNavigate()
+  const { login } = useAuth()
   const [error, setError] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    setError('')
+    setIsLoading(true)
+
     const formData = new FormData(e.currentTarget)
-    const data = Object.fromEntries(formData)
+    const email = formData.get('email') as string
+    const password = formData.get('password') as string
 
     try {
-      const response = await fetch('http://localhost:3000/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      })
-
-      if (response.ok) {
-        alert('¡Bienvenido!') 
-        // navigate({ to: '/admin/dashboard' }) // Descomenta esto cuando tengas la ruta dashboard
+      await login(email, password)
+      navigate({ to: '/admin/dashboard' })
+    } catch (err: any) {
+      if (err.status === 401) {
+        setError('Email o contraseña incorrectos')
       } else {
-        setError('Credenciales incorrectas')
+        setError('Error al conectar con el servidor')
       }
-    } catch (err) {
-      setError('Error al conectar con el servidor')
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -99,10 +102,11 @@ function LoginForm() {
           <div>
                 <Button
                     type="submit"
-                    className="w-full py-3 font-bold rounded-full bg-brand-orange hover:bg-orange-600 shadow-lg hover:shadow-orange-500/30 active:scale-95"
+                    disabled={isLoading}
+                    className="w-full py-3 font-bold rounded-full bg-brand-orange hover:bg-orange-600 shadow-lg hover:shadow-orange-500/30 active:scale-95 disabled:opacity-50"
                     size="lg"
                 >
-              Iniciar Sesión
+              {isLoading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
             </Button>
           </div>
         </form>
