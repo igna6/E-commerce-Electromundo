@@ -7,6 +7,7 @@ import ordersRouter from './routes/orders.ts'
 import authRouter from './routes/auth.ts'
 import adminRouter from './routes/admin/index.ts'
 import { authenticateToken, requireAdmin } from './middleware/auth.ts'
+import { errorHandler } from './middleware/errorHandler.ts'
 
 const app = express()
 
@@ -46,6 +47,9 @@ app.use('/api/auth', authRouter)
 
 // Admin API (protected)
 app.use('/api/admin', authenticateToken, requireAdmin, adminRouter)
+
+// Global error handler (must be last)
+app.use(errorHandler)
 
 app.listen(config.port, () => {
   console.log(`Server is running on port ${config.port}`)

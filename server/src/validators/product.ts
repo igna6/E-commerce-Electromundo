@@ -1,5 +1,9 @@
 import { z } from 'zod'
 
+export const idParamSchema = z.object({
+  id: z.string().regex(/^\d+$/, 'ID must be a valid number').transform(Number),
+})
+
 export const createProductSchema = z.object({
   name: z.string().min(1, 'Product name is required').max(200),
   price: z.number().int().positive('Price must be positive'),

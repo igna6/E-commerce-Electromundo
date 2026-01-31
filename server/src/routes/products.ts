@@ -2,19 +2,15 @@ import { Router } from 'express'
 import { and, asc, count, desc, eq, gte, ilike, isNull, lte, or } from 'drizzle-orm'
 import db from '../db/db.ts'
 import { productsTable } from '../db/schema.ts'
-import { createProductSchema, updateProductSchema } from '../validators/product.ts'
+import { createProductSchema, idParamSchema, updateProductSchema } from '../validators/product.ts'
 import { authenticateToken, requireAdmin } from '../middleware/auth.ts'
 
 const router = Router()
 
 // GET /api/products/:id - Get single product
-router.get('/:id', async (req, res) => {
+router.get('/:id', async (req, res, next) => {
   try {
-    const id = parseInt(req.params.id)
-
-    if (isNaN(id)) {
-      return res.status(400).json({ error: 'Invalid product ID' })
-    }
+    const { id } = idParamSchema.parse(req.params)
 
     const product = await db
       .select()
@@ -27,13 +23,12 @@ router.get('/:id', async (req, res) => {
     }
 
     res.json({ data: product[0] })
-  } catch (error: any) {
-    console.error('Error fetching product:', error)
-    res.status(500).json({ error: 'Failed to fetch product' })
+  } catch (error) {
+    next(error)
   }
 })
 
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
   try {
     // Pagination
     const page = Math.max(1, parseInt(req.query.page as string) || 1)
@@ -127,14 +122,13 @@ router.get('/', async (req, res) => {
         sortBy,
       },
     })
-  } catch (error: any) {
-    console.error('Error fetching products:', error)
-    res.status(500).json({ error: 'Failed to fetch products' })
+  } catch (error) {
+    next(error)
   }
 })
 
 // POST /api/products - Create product (admin only)
-router.post('/', authenticateToken, requireAdmin, async (req, res) => {
+router.post('/', authenticateToken, requireAdmin, async (req, res, next) => {
   try {
     const validatedData = createProductSchema.parse(req.body)
 
@@ -144,19 +138,15 @@ router.post('/', authenticateToken, requireAdmin, async (req, res) => {
       .returning()
 
     res.status(201).json({ data: newProduct[0] })
-  } catch (error: any) {
-    console.error('Error creating product:', error)
-    if (error.name === 'ZodError') {
-      return res.status(400).json({ error: 'Invalid product data', details: error.errors })
-    }
-    res.status(500).json({ error: 'Failed to create product' })
+  } catch (error) {
+    next(error)
   }
 })
 
 // PUT /api/products/:id - Update product (admin only)
-router.put('/:id', authenticateToken, requireAdmin, async (req, res) => {
+router.put('/:id', authenticateToken, requireAdmin, async (req, res, next) => {
   try {
-    const id = parseInt(req.params.id)
+    const { id } = idParamSchema.parse(req.params)
     const validatedData = updateProductSchema.parse(req.body)
 
     const updatedProduct = await db
@@ -170,19 +160,15 @@ router.put('/:id', authenticateToken, requireAdmin, async (req, res) => {
     }
 
     res.json({ data: updatedProduct[0] })
-  } catch (error: any) {
-    console.error('Error updating product:', error)
-    if (error.name === 'ZodError') {
-      return res.status(400).json({ error: 'Invalid product data', details: error.errors })
-    }
-    res.status(500).json({ error: 'Failed to update product' })
+  } catch (error) {
+    next(error)
   }
 })
 
 // DELETE /api/products/:id - Soft delete product (admin only)
-router.delete('/:id', authenticateToken, requireAdmin, async (req, res) => {
+router.delete('/:id', authenticateToken, requireAdmin, async (req, res, next) => {
   try {
-    const id = parseInt(req.params.id)
+    const { id } = idParamSchema.parse(req.params)
 
     const deletedProduct = await db
       .update(productsTable)
@@ -195,9 +181,8 @@ router.delete('/:id', authenticateToken, requireAdmin, async (req, res) => {
     }
 
     res.json({ message: 'Product deleted successfully' })
-  } catch (error: any) {
-    console.error('Error deleting product:', error)
-    res.status(500).json({ error: 'Failed to delete product' })
+  } catch (error) {
+    next(error)
   }
 })
 

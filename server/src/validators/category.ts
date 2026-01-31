@@ -1,5 +1,9 @@
 import { z } from 'zod'
 
+export const idParamSchema = z.object({
+  id: z.string().regex(/^\d+$/, 'ID must be a valid number').transform(Number),
+})
+
 export const createCategorySchema = z.object({
   name: z.string().min(1, 'Category name is required').max(100),
   description: z.string().optional().nullable(),

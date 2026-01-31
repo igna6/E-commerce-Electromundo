@@ -2,12 +2,13 @@ import { Router } from 'express'
 import { and, count, eq, isNull } from 'drizzle-orm'
 import db from '../db/db.ts'
 import { productCategoriesTable } from '../db/schema.ts'
-import { createCategorySchema, updateCategorySchema } from '../validators/category.ts'
+import { createCategorySchema, idParamSchema, updateCategorySchema } from '../validators/category.ts'
+import { authenticateToken, requireAdmin } from '../middleware/auth.ts'
 
 const router = Router()
 
 // GET /api/categories - List all categories
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
   try {
     const categories = await db
       .select()
@@ -17,15 +18,14 @@ router.get('/', async (req, res) => {
 
     res.json({ data: categories })
   } catch (error) {
-    console.error('Error fetching categories:', error)
-    res.status(500).json({ error: 'Failed to fetch categories' })
+    next(error)
   }
 })
 
 // GET /api/categories/:id - Get single category
-router.get('/:id', async (req, res) => {
+router.get('/:id', async (req, res, next) => {
   try {
-    const id = parseInt(req.params.id)
+    const { id } = idParamSchema.parse(req.params)
 
     const category = await db
       .select()
@@ -38,14 +38,13 @@ router.get('/:id', async (req, res) => {
     }
 
     res.json({ data: category[0] })
-  } catch (error: any) {
-    console.error('Error fetching category:', error)
-    res.status(500).json({ error: 'Failed to fetch category' })
+  } catch (error) {
+    next(error)
   }
 })
 
-// POST /api/categories - Create category
-router.post('/', async (req, res) => {
+// POST /api/categories - Create category (Admin only)
+router.post('/', authenticateToken, requireAdmin, async (req, res, next) => {
   try {
     const validatedData = createCategorySchema.parse(req.body)
 
@@ -55,19 +54,15 @@ router.post('/', async (req, res) => {
       .returning()
 
     res.status(201).json({ data: newCategory[0] })
-  } catch (error: any) {
-    console.error('Error creating category:', error)
-    if (error.name === 'ZodError') {
-      return res.status(400).json({ error: 'Invalid category data', details: error.errors })
-    }
-    res.status(500).json({ error: 'Failed to create category' })
+  } catch (error) {
+    next(error)
   }
 })
 
-// PUT /api/categories/:id - Update category
-router.put('/:id', async (req, res) => {
+// PUT /api/categories/:id - Update category (Admin only)
+router.put('/:id', authenticateToken, requireAdmin, async (req, res, next) => {
   try {
-    const id = parseInt(req.params.id)
+    const { id } = idParamSchema.parse(req.params)
     const validatedData = updateCategorySchema.parse(req.body)
 
     const updatedCategory = await db
@@ -81,19 +76,15 @@ router.put('/:id', async (req, res) => {
     }
 
     res.json({ data: updatedCategory[0] })
-  } catch (error: any) {
-    console.error('Error updating category:', error)
-    if (error.name === 'ZodError') {
-      return res.status(400).json({ error: 'Invalid category data', details: error.errors })
-    }
-    res.status(500).json({ error: 'Failed to update category' })
+  } catch (error) {
+    next(error)
   }
 })
 
-// DELETE /api/categories/:id - Soft delete category
-router.delete('/:id', async (req, res) => {
+// DELETE /api/categories/:id - Soft delete category (Admin only)
+router.delete('/:id', authenticateToken, requireAdmin, async (req, res, next) => {
   try {
-    const id = parseInt(req.params.id)
+    const { id } = idParamSchema.parse(req.params)
 
     const deletedCategory = await db
       .update(productCategoriesTable)
@@ -106,9 +97,8 @@ router.delete('/:id', async (req, res) => {
     }
 
     res.json({ message: 'Category deleted successfully' })
-  } catch (error: any) {
-    console.error('Error deleting category:', error)
-    res.status(500).json({ error: 'Failed to delete category' })
+  } catch (error) {
+    next(error)
   }
 })
 
