@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { and, asc, count, desc, eq, gte, ilike, isNull, lte, or } from 'drizzle-orm'
+import { and, asc, count, desc, eq, gt, gte, ilike, isNull, lte, or } from 'drizzle-orm'
 import db from '../db/db.ts'
 import { productsTable } from '../db/schema.ts'
 import { createProductSchema, idParamSchema, updateProductSchema } from '../validators/product.ts'
@@ -41,6 +41,7 @@ router.get('/', async (req, res, next) => {
     const minPrice = req.query.minPrice ? parseInt(req.query.minPrice as string) : undefined
     const maxPrice = req.query.maxPrice ? parseInt(req.query.maxPrice as string) : undefined
     const sortBy = (req.query.sortBy as string) || 'newest'
+    const inStock = req.query.inStock === 'true'
 
     // Build where conditions
     const conditions = [isNull(productsTable.deletedAt)]
@@ -66,6 +67,11 @@ router.get('/', async (req, res, next) => {
     }
     if (maxPrice !== undefined) {
       conditions.push(lte(productsTable.price, maxPrice))
+    }
+
+    // Filter by stock availability
+    if (inStock) {
+      conditions.push(gt(productsTable.stock, 0))
     }
 
     // Determine sort order

@@ -161,7 +161,11 @@ function ProductDetail() {
               <div className="mb-6">
                 <div className="flex items-center gap-2 mb-2">
                   <Badge variant="secondary">Electrónica</Badge>
-                  <Badge className="bg-green-500 hover:bg-green-600">En Stock</Badge>
+                  {product.stock > 0 ? (
+                    <Badge className="bg-green-500 hover:bg-green-600">En Stock</Badge>
+                  ) : (
+                    <Badge className="bg-red-500 hover:bg-red-600">Agotado</Badge>
+                  )}
                 </div>
                 <h1 className="text-3xl font-bold text-brand-dark mb-3">
                   {product.name}
@@ -276,28 +280,40 @@ function ProductDetail() {
                       {quantity}
                     </span>
                     <button
-                      onClick={() => setQuantity(quantity + 1)}
-                      className="px-4 py-2 text-gray-600 hover:bg-gray-100 transition-colors rounded-r-lg"
+                      onClick={() => setQuantity(Math.min(product.stock, quantity + 1))}
+                      disabled={product.stock === 0 || quantity >= product.stock}
+                      className="px-4 py-2 text-gray-600 hover:bg-gray-100 transition-colors rounded-r-lg disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                       </svg>
                     </button>
                   </div>
-                  <span className="text-sm text-gray-500">Stock disponible: 25 unidades</span>
+                  {product.stock > 5 ? (
+                    <span className="text-sm text-gray-500">Stock disponible: {product.stock} unidades</span>
+                  ) : product.stock > 0 ? (
+                    <span className="text-sm text-amber-600 font-medium">Últimas {product.stock} unidades!</span>
+                  ) : (
+                    <span className="text-sm text-red-600 font-medium">Producto agotado</span>
+                  )}
                 </div>
 
                 <div className="flex gap-3">
                   <Button
                     onClick={handleAddToCart}
+                    disabled={product.stock === 0}
                     size="lg"
                     className={`flex-1 h-14 text-lg transition-all ${
-                      isAdding
-                        ? 'bg-green-500 hover:bg-green-600'
-                        : 'bg-brand-orange hover:bg-orange-600'
+                      product.stock === 0
+                        ? 'bg-gray-400 cursor-not-allowed'
+                        : isAdding
+                          ? 'bg-green-500 hover:bg-green-600'
+                          : 'bg-brand-orange hover:bg-orange-600'
                     }`}
                   >
-                    {isAdding ? (
+                    {product.stock === 0 ? (
+                      'Producto Agotado'
+                    ) : isAdding ? (
                       <>
                         <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />

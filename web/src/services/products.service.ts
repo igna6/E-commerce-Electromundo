@@ -10,6 +10,7 @@ export type GetProductsParams = {
   minPrice?: number
   maxPrice?: number
   sortBy?: 'newest' | 'price-asc' | 'price-desc' | 'name'
+  inStock?: boolean
 }
 
 export type ProductsResponse = PaginatedResponse<Product> & {
@@ -34,6 +35,7 @@ export async function getProducts(
   if (params.minPrice !== undefined) queryParams.append('minPrice', params.minPrice.toString())
   if (params.maxPrice !== undefined) queryParams.append('maxPrice', params.maxPrice.toString())
   if (params.sortBy) queryParams.append('sortBy', params.sortBy)
+  if (params.inStock) queryParams.append('inStock', 'true')
 
   const queryString = queryParams.toString()
   const endpoint = `/api/products${queryString ? `?${queryString}` : ''}`
@@ -51,6 +53,7 @@ export async function createProduct(data: {
   description?: string | null
   image?: string | null
   category?: number | null
+  stock?: number
 }): Promise<{ data: Product }> {
   return authApiRequest<{ data: Product }>('/api/products', {
     method: 'POST',
@@ -66,6 +69,7 @@ export async function updateProduct(
     description: string | null
     image: string | null
     category: number | null
+    stock: number
   }>
 ): Promise<{ data: Product }> {
   return authApiRequest<{ data: Product }>(`/api/products/${id}`, {

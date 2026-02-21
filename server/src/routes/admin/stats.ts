@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { count, eq, isNull, sum, desc } from 'drizzle-orm'
+import { and, count, eq, gt, isNull, lte, sum, desc, asc } from 'drizzle-orm'
 import db from '../../db/db'
 import { ordersTable, productsTable, productCategoriesTable } from '../../db/schema'
 
@@ -20,6 +20,9 @@ router.get('/', async (req, res) => {
       totalCategoriesResult,
       recentOrders,
       productsByCategory,
+      outOfStockResult,
+      lowStockResult,
+      lowStockProducts,
     ] = await Promise.all([
       db.select({ count: count() }).from(ordersTable).where(isNull(ordersTable.deletedAt)),
       db.select({ count: count() }).from(ordersTable).where(eq(ordersTable.status, 'pending')),
@@ -46,6 +49,27 @@ router.get('/', async (req, res) => {
         .leftJoin(productsTable, eq(productsTable.category, productCategoriesTable.id))
         .where(isNull(productCategoriesTable.deletedAt))
         .groupBy(productCategoriesTable.id, productCategoriesTable.name),
+      // Out of stock products count
+      db.select({ count: count() }).from(productsTable).where(and(
+        isNull(productsTable.deletedAt),
+        eq(productsTable.stock, 0)
+      )),
+      // Low stock products count (stock > 0 AND stock <= 5)
+      db.select({ count: count() }).from(productsTable).where(and(
+        isNull(productsTable.deletedAt),
+        gt(productsTable.stock, 0),
+        lte(productsTable.stock, 5)
+      )),
+      // Low stock products list (stock <= 5, not deleted, limit 10)
+      db
+        .select({ id: productsTable.id, name: productsTable.name, stock: productsTable.stock })
+        .from(productsTable)
+        .where(and(
+          isNull(productsTable.deletedAt),
+          lte(productsTable.stock, 5)
+        ))
+        .orderBy(asc(productsTable.stock))
+        .limit(10),
     ])
 
     res.json({
@@ -71,6 +95,11 @@ router.get('/', async (req, res) => {
           total: totalCategoriesResult[0]?.count ?? 0,
         },
         recentOrders,
+        inventory: {
+          outOfStock: outOfStockResult[0]?.count ?? 0,
+          lowStock: lowStockResult[0]?.count ?? 0,
+          lowStockProducts,
+        },
       },
     })
   } catch (error: any) {

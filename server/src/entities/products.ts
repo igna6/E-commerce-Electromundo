@@ -8,6 +8,7 @@ export const productsTable = pgTable('products', {
   description: text(),
   image: varchar(),
   category: integer().references(() => productCategoriesTable.id),
+  stock: integer().notNull().default(0),
   createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
   deletedAt: timestamp({ withTimezone: true }),

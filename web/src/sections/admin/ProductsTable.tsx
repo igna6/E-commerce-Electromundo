@@ -35,6 +35,7 @@ export default function ProductsTable({
           <th className="px-4 py-3">Imagen</th>
           <th className="px-4 py-3">Nombre</th>
           <th className="px-4 py-3">Precio</th>
+          <th className="px-4 py-3">Stock</th>
           <th className="px-4 py-3">Categoría</th>
           <th className="px-4 py-3 text-right">Acciones</th>
         </tr>
@@ -58,6 +59,21 @@ export default function ProductsTable({
             </td>
             <td className="px-4 py-3 font-medium">{product.name}</td>
             <td className="px-4 py-3">{formatCurrency(product.price)}</td>
+            <td className="px-4 py-3">
+              {product.stock === 0 ? (
+                <span className="inline-flex items-center rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-medium text-red-700">
+                  Agotado
+                </span>
+              ) : product.stock <= 5 ? (
+                <span className="inline-flex items-center rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-medium text-amber-700">
+                  {product.stock}
+                </span>
+              ) : (
+                <span className="text-sm text-green-600 font-medium">
+                  {product.stock}
+                </span>
+              )}
+            </td>
             <td className="px-4 py-3 text-sm text-gray-500">
               {product.category || '-'}
             </td>

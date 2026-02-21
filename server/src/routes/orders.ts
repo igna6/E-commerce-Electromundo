@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { and, eq, isNull, inArray } from 'drizzle-orm'
+import { and, eq, isNull, inArray, sql } from 'drizzle-orm'
 import db from '../db/db.ts'
 import { ordersTable, orderItemsTable, productsTable } from '../db/schema.ts'
 import { createOrderSchema } from '../validators/order.ts'
@@ -22,7 +22,7 @@ router.post('/', async (req, res) => {
   try {
     const validatedData = createOrderSchema.parse(req.body)
 
-    // Fetch products to get current prices
+    // Fetch products to get current prices and stock
     const productIds = validatedData.items.map(item => item.productId)
     const products = await db
       .select()
@@ -40,6 +40,29 @@ router.post('/', async (req, res) => {
           error: `Product with ID ${item.productId} not found`
         })
       }
+    }
+
+    // Check stock availability
+    const insufficientStock = validatedData.items
+      .filter(item => {
+        const product = productMap.get(item.productId)!
+        return item.quantity > product.stock
+      })
+      .map(item => {
+        const product = productMap.get(item.productId)!
+        return {
+          productId: item.productId,
+          productName: product.name,
+          requested: item.quantity,
+          available: product.stock,
+        }
+      })
+
+    if (insufficientStock.length > 0) {
+      return res.status(409).json({
+        error: 'Stock insuficiente',
+        details: insufficientStock,
+      })
     }
 
     // Calculate totals
@@ -61,78 +84,89 @@ router.post('/', async (req, res) => {
     const tax = Math.round(subtotal * TAX_RATE)
     const total = subtotal + shippingCost + tax
 
-    // Create order
-    const insertedOrders = await db
-      .insert(ordersTable)
-      .values({
-        email: validatedData.email,
-        phone: validatedData.phone,
-        firstName: validatedData.firstName,
-        lastName: validatedData.lastName,
-        address: validatedData.address,
-        apartment: validatedData.apartment,
-        city: validatedData.city,
-        province: validatedData.province,
-        zipCode: validatedData.zipCode,
-        shippingMethod: validatedData.shippingMethod,
-        paymentMethod: validatedData.paymentMethod,
-        subtotal,
-        shippingCost,
-        tax,
-        total,
-        status: 'pending',
-        orderText: '', // Will be updated after we have the ID
+    // Use transaction to atomically create order and deduct stock
+    const result = await db.transaction(async (tx) => {
+      // Deduct stock for each item
+      for (const item of validatedData.items) {
+        await tx
+          .update(productsTable)
+          .set({ stock: sql`${productsTable.stock} - ${item.quantity}` })
+          .where(eq(productsTable.id, item.productId))
+      }
+
+      // Create order
+      const insertedOrders = await tx
+        .insert(ordersTable)
+        .values({
+          email: validatedData.email,
+          phone: validatedData.phone,
+          firstName: validatedData.firstName,
+          lastName: validatedData.lastName,
+          address: validatedData.address,
+          apartment: validatedData.apartment,
+          city: validatedData.city,
+          province: validatedData.province,
+          zipCode: validatedData.zipCode,
+          shippingMethod: validatedData.shippingMethod,
+          paymentMethod: validatedData.paymentMethod,
+          subtotal,
+          shippingCost,
+          tax,
+          total,
+          status: 'pending',
+          orderText: '',
+        })
+        .returning()
+
+      const newOrder = insertedOrders[0]
+      if (!newOrder) {
+        throw new Error('Failed to create order')
+      }
+
+      // Create order items
+      await tx.insert(orderItemsTable).values(
+        orderItems.map(item => ({
+          orderId: newOrder.id,
+          ...item,
+        }))
+      )
+
+      // Generate order text
+      const orderText = generateOrderText({
+        id: newOrder.id,
+        email: newOrder.email,
+        phone: newOrder.phone,
+        firstName: newOrder.firstName,
+        lastName: newOrder.lastName,
+        address: newOrder.address,
+        apartment: newOrder.apartment,
+        city: newOrder.city,
+        province: newOrder.province,
+        zipCode: newOrder.zipCode,
+        shippingMethod: newOrder.shippingMethod,
+        paymentMethod: newOrder.paymentMethod,
+        subtotal: newOrder.subtotal,
+        shippingCost: newOrder.shippingCost,
+        tax: newOrder.tax,
+        total: newOrder.total,
+        createdAt: newOrder.createdAt,
+        items: orderItems,
       })
-      .returning()
 
-    const newOrder = insertedOrders[0]
-    if (!newOrder) {
-      return res.status(500).json({ error: 'Failed to create order' })
-    }
+      // Update order with generated text
+      const updatedOrders = await tx
+        .update(ordersTable)
+        .set({ orderText })
+        .where(eq(ordersTable.id, newOrder.id))
+        .returning()
 
-    // Create order items
-    await db.insert(orderItemsTable).values(
-      orderItems.map(item => ({
-        orderId: newOrder.id,
-        ...item,
-      }))
-    )
-
-    // Generate order text
-    const orderText = generateOrderText({
-      id: newOrder.id,
-      email: newOrder.email,
-      phone: newOrder.phone,
-      firstName: newOrder.firstName,
-      lastName: newOrder.lastName,
-      address: newOrder.address,
-      apartment: newOrder.apartment,
-      city: newOrder.city,
-      province: newOrder.province,
-      zipCode: newOrder.zipCode,
-      shippingMethod: newOrder.shippingMethod,
-      paymentMethod: newOrder.paymentMethod,
-      subtotal: newOrder.subtotal,
-      shippingCost: newOrder.shippingCost,
-      tax: newOrder.tax,
-      total: newOrder.total,
-      createdAt: newOrder.createdAt,
-      items: orderItems,
+      return { order: updatedOrders[0], items: orderItems }
     })
-
-    // Update order with generated text
-    const updatedOrders = await db
-      .update(ordersTable)
-      .set({ orderText })
-      .where(eq(ordersTable.id, newOrder.id))
-      .returning()
-
-    const updatedOrder = updatedOrders[0]
 
     res.status(201).json({
       data: {
-        ...updatedOrder,
-        items: orderItems,
+        ...result.order,
+        items: result.items,
       },
     })
   } catch (error: any) {

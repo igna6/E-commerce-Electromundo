@@ -56,23 +56,30 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   )
 
   const addItem = useCallback((product: Product, quantity = 1) => {
+    if (product.stock <= 0) return
+
     setItems((currentItems) => {
       const existingIndex = currentItems.findIndex(
         (item) => item.product.id === product.id
       )
 
       if (existingIndex >= 0) {
-        // Update quantity if already in cart
+        // Update quantity if already in cart, cap at available stock
         const updated = [...currentItems]
+        const newQuantity = Math.min(
+          updated[existingIndex].quantity + quantity,
+          product.stock
+        )
         updated[existingIndex] = {
           ...updated[existingIndex],
-          quantity: updated[existingIndex].quantity + quantity,
+          product, // Update product data (including stock)
+          quantity: newQuantity,
         }
         return updated
       }
 
-      // Add new item
-      return [...currentItems, { product, quantity }]
+      // Add new item, cap at stock
+      return [...currentItems, { product, quantity: Math.min(quantity, product.stock) }]
     })
   }, [])
 
@@ -89,7 +96,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
     setItems((currentItems) =>
       currentItems.map((item) =>
-        item.product.id === productId ? { ...item, quantity } : item
+        item.product.id === productId
+          ? { ...item, quantity: Math.min(quantity, item.product.stock) }
+          : item
       )
     )
   }, [removeItem])

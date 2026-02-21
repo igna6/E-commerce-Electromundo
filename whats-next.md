@@ -1,13 +1,13 @@
 # What's Next - E-commerce Electromundo Handoff
 
-**Last Updated**: January 31, 2026
-**Current Phase**: Phase 4 Complete - Admin Panel Fully Functional
-**Session**: Security fix applied, status updated
+**Last Updated**: February 21, 2026
+**Current Phase**: Phase 4 Complete - Phases 5-7 Remaining
+**Session**: Fresh session - no new work performed, documenting current state with uncommitted changes
 
 ---
 
 <original_task>
-Implement remaining Phase 4 admin panel work. Upon investigation, discovered the admin panel was already fully wired to APIs. Only issue found was a security bug in category management (unauthenticated write endpoints).
+No new task was given in this session. The /whats-next skill was invoked to create a handoff document capturing the current state of the project for continuation in a fresh context.
 </original_task>
 
 <work_completed>
@@ -19,7 +19,7 @@ Full-stack e-commerce monorepo for electronics sales (Argentina-focused, ARS cur
 
 ### Phase 1: Product Management & Categories
 - Product CRUD API with pagination (12-50 items/page)
-- Category management endpoints (now secured with admin auth)
+- Category management endpoints (secured with admin auth)
 - Product search by name/description
 - Price range filtering
 - Sorting options (newest, price asc/desc, name)
@@ -65,7 +65,7 @@ Full-stack e-commerce monorepo for electronics sales (Argentina-focused, ARS cur
 - Admin order routes (`server/src/routes/admin/orders.ts`)
 - Admin stats endpoint (`server/src/routes/admin/stats.ts`)
 - Protected route middleware working
-- Category write endpoints now protected with admin auth (fixed this session)
+- Category write endpoints protected with admin auth
 
 **Frontend - Fully Wired to APIs:**
 - AuthContext for token management with auto-refresh
@@ -82,14 +82,33 @@ Full-stack e-commerce monorepo for electronics sales (Argentina-focused, ARS cur
 ### Additional Features
 - Floating WhatsApp button for customer support
 
-### This Session's Work
-- **Security Fix**: Added admin authentication to category POST/PUT/DELETE endpoints
-  - Backend: Added `authenticateToken` and `requireAdmin` middleware to `server/src/routes/categories.ts`
-  - Frontend: Updated `web/src/services/categories.service.ts` to use `authApiRequest` for write operations
-
 </work_completed>
 
 <work_remaining>
+
+## Uncommitted Changes (3 files - should be reviewed/committed first)
+
+### 1. `web/src/components/CartSidebar.tsx` - Cart sidebar close-on-navigate fix
+- Added controlled `open` state with `useState`
+- All `<Link>` elements now call `setOpen(false)` on click to close the sidebar when navigating
+- Links affected: "Explorar Productos", product image links, product name links, "Ver Carrito", "Checkout"
+- **Purpose**: Fix UX bug where the cart sidebar remained open after clicking a navigation link
+
+### 2. `web/src/sections/cart/CartPage.tsx` - Button color fix
+- Changed checkout button from `bg-brand-orange` to `bg-electric-orange text-white`
+- **Purpose**: Update to use correct design token / ensure button text is visible
+
+### 3. `web/src/sections/checkout/CheckoutPage.tsx` - Design token migration
+- Replaced ~30+ instances of old design tokens with new ones:
+  - `bg-brand-blue` -> `bg-primary`
+  - `bg-brand-light/30` -> `bg-primary/5`
+  - `text-brand-dark` -> `text-slate-900`
+  - `text-brand-orange` -> `text-primary`
+  - `bg-brand-orange` -> `bg-primary`
+  - `hover:bg-blue-700` -> `hover:bg-primary/90`
+  - `hover:bg-orange-600` -> `hover:bg-primary/90`
+  - `border-brand-blue` -> `border-primary`
+- **Purpose**: Migrate from old brand-specific color tokens to the project's unified design system (`primary`, `slate-900`)
 
 ## Phase 5: Inventory Management (Next)
 - Stock tracking with quantity field on products
@@ -129,6 +148,7 @@ Full-stack e-commerce monorepo for electronics sales (Argentina-focused, ARS cur
 4. **Spanish Localization**: All user-facing text in Spanish
 5. **TanStack Router Search Params**: Use `z.number().catch(0)` for ID parsing
 6. **Auth Pattern**: `authApiRequest` for protected endpoints, `apiRequest` for public
+7. **Design Token Migration**: Project moved from `brand-*` tokens to `primary`/`slate-*` system - the checkout page changes reflect this migration
 
 ## What Worked Well
 - Separate utility function for order text generation
@@ -136,12 +156,11 @@ Full-stack e-commerce monorepo for electronics sales (Argentina-focused, ARS cur
 - React Hook Form's `trigger()` for step validation
 - Drizzle ORM for type-safe database queries
 - JWT access tokens in memory with refresh token rotation
-
-## Issues Resolved This Session
-- Category endpoints were unprotected - now require admin authentication
+- Controlled Sheet `open` state for closing sidebar on navigation (CartSidebar fix)
 
 ## Pre-existing Technical Debt
 - TypeScript strict mode warnings in `server/src/routes/products.ts` and `server/src/routes/categories.ts` for `req.params.id` type handling (doesn't affect runtime)
+- Some pages may still use old `brand-*` color tokens (checkout page was migrated, others may need checking)
 
 </attempted_approaches>
 
@@ -225,7 +244,7 @@ server/src/middleware/auth.ts     # JWT auth middleware
 server/src/routes/auth.ts         # Auth endpoints
 server/src/routes/admin/          # Admin-specific routes
 server/src/routes/products.ts     # Products API
-server/src/routes/categories.ts   # Categories API (now protected)
+server/src/routes/categories.ts   # Categories API (protected)
 server/src/routes/orders.ts       # Orders API
 server/src/utils/                 # Utilities (orderTextGenerator)
 
@@ -237,6 +256,15 @@ web/src/contexts/CartContext.tsx  # Cart state management
 web/src/services/                 # API clients
 web/src/types/                    # TypeScript types
 web/src/components/ui/            # shadcn/ui components
+```
+
+## Project Planning Documents
+```
+BRIEF.md              # Project brief
+ROADMAP.md            # Full 7-phase development roadmap
+PHASE-1-PLAN.md       # Detailed Phase 1 implementation plan
+PHASE-1-SUMMARY.md    # Phase 1 completion summary
+PHASE-2-SUMMARY.md    # Phase 2 completion summary
 ```
 
 ## Environment Setup
@@ -261,14 +289,14 @@ cd server && yarn seed:admin
 <current_state>
 
 ## Git Status
-- **Branch**: main
-- **Status**: Modified (uncommitted changes)
-- **Modified files**:
-  - `server/src/routes/categories.ts` - Added auth middleware
-  - `web/src/services/categories.service.ts` - Use authApiRequest for writes
-  - `whats-next.md` - Updated status
+- **Branch**: main (up to date with origin/main)
+- **Uncommitted changes** (unstaged):
+  - `web/src/components/CartSidebar.tsx` - Cart sidebar close-on-navigate fix (+11/-3 lines)
+  - `web/src/sections/cart/CartPage.tsx` - Button color token fix (+1/-1 lines)
+  - `web/src/sections/checkout/CheckoutPage.tsx` - Design token migration (+34/-34 lines)
+- **No staged changes**
 
-## What's Complete
+## Phase Completion Status
 | Phase | Status | Description |
 |-------|--------|-------------|
 | Phase 1 | Complete | Products, categories, search/filter |
@@ -297,13 +325,14 @@ cd server && yarn seed:admin
 - **Products**: `/admin/products` - Full CRUD (list, create, edit, delete)
 - **Categories**: `/admin/categories` - Full CRUD with inline editing
 
-## Recommended Next Task
-Start **Phase 5: Inventory Management**:
-1. Add `stock` column to products table
-2. Add stock display in product detail page
-3. Add stock editing in admin product form
-4. Add low stock warnings in admin dashboard
-5. Prevent checkout when items out of stock
+## Recommended Next Steps
+1. **Review and commit** the 3 uncommitted files (CartSidebar fix, design token migration)
+2. Start **Phase 5: Inventory Management**:
+   - Add `stock` column to products table
+   - Add stock display in product detail page
+   - Add stock editing in admin product form
+   - Add low stock warnings in admin dashboard
+   - Prevent checkout when items out of stock
 
 ## To Test Current Application
 ```bash
@@ -316,11 +345,5 @@ cd web && yarn dev
 # Open http://localhost:3000 (store)
 # Open http://localhost:3000/admin (admin panel)
 ```
-
-Test admin flow:
-1. Go to `/admin/login`
-2. Login with admin credentials (from `yarn seed:admin`)
-3. Navigate to Dashboard, Orders, Products, Categories
-4. Test CRUD operations
 
 </current_state>

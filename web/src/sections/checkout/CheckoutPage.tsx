@@ -47,6 +47,8 @@ function CheckoutPage() {
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'mercadopago' | 'transfer'>('card')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
+  const [stockErrors, setStockErrors] = useState<Array<{ productName: string; requested: number; available: number }>>([])
+
 
   const {
     register,
@@ -95,6 +97,7 @@ function CheckoutPage() {
   const onSubmit = async (data: CheckoutFormData) => {
     setIsSubmitting(true)
     setSubmitError(null)
+    setStockErrors([])
 
     try {
       const orderPayload = {
@@ -111,9 +114,15 @@ function CheckoutPage() {
       const response = await createOrder(orderPayload)
       clearCart()
       navigate({ to: '/order-confirmation', search: { orderId: response.data.id } })
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error creating order:', error)
-      setSubmitError('Error al procesar el pedido. Por favor intenta nuevamente.')
+      // Handle 409 insufficient stock
+      if (error?.status === 409 && error?.data?.details) {
+        setStockErrors(error.data.details)
+        setSubmitError('Algunos productos no tienen suficiente stock.')
+      } else {
+        setSubmitError('Error al procesar el pedido. Por favor intenta nuevamente.')
+      }
     } finally {
       setIsSubmitting(false)
     }
@@ -552,7 +561,20 @@ function CheckoutPage() {
 
                   {submitError && (
                     <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
-                      {submitError}
+                      <p className="font-medium">{submitError}</p>
+                      {stockErrors.length > 0 && (
+                        <ul className="mt-2 space-y-1">
+                          {stockErrors.map((item, i) => (
+                            <li key={i}>
+                              <strong>{item.productName}</strong>: pediste {item.requested}, disponible{' '}
+                              {item.available === 0 ? 'agotado' : item.available}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                      <Link to="/cart" className="inline-block mt-2 text-primary hover:underline font-medium">
+                        Volver al carrito para ajustar
+                      </Link>
                     </div>
                   )}
 

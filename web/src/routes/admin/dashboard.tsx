@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import { useAuth } from '@/contexts/AuthContext'
+import { Link } from '@tanstack/react-router'
 import StatsCard from '@/sections/admin/StatsCard'
 import RecentOrdersTable from '@/sections/admin/RecentOrdersTable'
 import { apiRequest } from '@/services/api'
@@ -40,6 +41,15 @@ type StatsResponse = {
       status: string
       createdAt: string
     }>
+    inventory: {
+      outOfStock: number
+      lowStock: number
+      lowStockProducts: Array<{
+        id: number
+        name: string
+        stock: number
+      }>
+    }
   }
 }
 
@@ -107,6 +117,43 @@ function DashboardComponent() {
           icon="📁"
         />
       </div>
+
+      {/* Inventory Alerts */}
+      {((stats?.inventory.outOfStock ?? 0) > 0 || (stats?.inventory.lowStock ?? 0) > 0) && (
+        <div className="rounded-lg border border-amber-200 bg-amber-50 p-4">
+          <h2 className="mb-3 text-lg font-semibold text-amber-800">Alertas de Inventario</h2>
+          <div className="mb-3 flex gap-4">
+            {(stats?.inventory.outOfStock ?? 0) > 0 && (
+              <span className="inline-flex items-center rounded-full bg-red-100 px-3 py-1 text-sm font-medium text-red-700">
+                {stats?.inventory.outOfStock} agotado{(stats?.inventory.outOfStock ?? 0) !== 1 ? 's' : ''}
+              </span>
+            )}
+            {(stats?.inventory.lowStock ?? 0) > 0 && (
+              <span className="inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-sm font-medium text-amber-700">
+                {stats?.inventory.lowStock} con bajo stock
+              </span>
+            )}
+          </div>
+          {stats?.inventory.lowStockProducts && stats.inventory.lowStockProducts.length > 0 && (
+            <div className="space-y-1">
+              {stats.inventory.lowStockProducts.map((product) => (
+                <div key={product.id} className="flex items-center justify-between text-sm">
+                  <Link
+                    to="/admin/products/$productId/edit"
+                    params={{ productId: String(product.id) }}
+                    className="text-amber-800 hover:underline"
+                  >
+                    {product.name}
+                  </Link>
+                  <span className={product.stock === 0 ? 'font-medium text-red-600' : 'font-medium text-amber-600'}>
+                    {product.stock === 0 ? 'Agotado' : `${product.stock} unidades`}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="grid gap-4 lg:grid-cols-2">
         <div className="rounded-lg border bg-white p-4">

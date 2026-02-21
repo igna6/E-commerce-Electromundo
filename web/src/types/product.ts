@@ -5,6 +5,7 @@ export type Product = {
   description: string | null
   image: string | null
   category: number | null
+  stock: number
   createdAt: string
   updatedAt: string
 }

@@ -6,6 +6,7 @@ export class ApiError extends Error {
   constructor(
     message: string,
     public status?: number,
+    public data?: any,
   ) {
     super(message)
     this.name = 'ApiError'
@@ -28,9 +29,16 @@ export async function apiRequest<T>(
     })
 
     if (!response.ok) {
+      let errorData
+      try {
+        errorData = await response.json()
+      } catch {
+        // Response body may not be JSON
+      }
       throw new ApiError(
-        `HTTP error ${response.status}: ${response.statusText}`,
+        errorData?.error || `HTTP error ${response.status}: ${response.statusText}`,
         response.status,
+        errorData,
       )
     }
 

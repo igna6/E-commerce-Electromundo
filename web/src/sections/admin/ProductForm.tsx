@@ -9,6 +9,7 @@ type ProductFormData = {
   description?: string | null
   image?: string | null
   category?: number | null
+  stock: number
 }
 
 type ProductFormProps = {
@@ -31,6 +32,7 @@ export default function ProductForm({
   const [category, setCategory] = useState<string>(
     initialData?.category ? String(initialData.category) : ''
   )
+  const [stock, setStock] = useState(initialData ? String(initialData.stock) : '0')
 
   const { data: categoriesData } = useQuery({
     queryKey: ['categories'],
@@ -48,6 +50,7 @@ export default function ProductForm({
       description: description || null,
       image: image || null,
       category: category ? parseInt(category) : null,
+      stock: parseInt(stock) || 0,
     })
   }
 
@@ -148,6 +151,23 @@ export default function ProductForm({
             </option>
           ))}
         </select>
+      </div>
+
+      <div>
+        <label htmlFor="stock" className="block text-sm font-medium text-gray-700">
+          Stock disponible *
+        </label>
+        <input
+          type="number"
+          id="stock"
+          value={stock}
+          onChange={(e) => setStock(e.target.value)}
+          required
+          min="0"
+          step="1"
+          className="mt-1 block w-full rounded-md border px-3 py-2"
+          placeholder="0"
+        />
       </div>
 
       <div className="flex gap-4">
