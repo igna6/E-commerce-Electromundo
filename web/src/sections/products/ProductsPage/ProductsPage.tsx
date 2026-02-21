@@ -152,93 +152,35 @@ function ProductsPage() {
 
   return (
     <div className="min-h-screen bg-white pt-20">
-      {/* Hero Section - matching home page structure */}
-      <section className="bg-white">
-        <div className="container mx-auto px-6 py-16 lg:py-24">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* Left column - Text content */}
+      {/* Hero Section - compact */}
+      <section className="bg-white border-b border-slate-100">
+        <div className="container mx-auto px-6 py-8 lg:py-10">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             <div>
-              <span className="inline-block px-3 py-1 text-sm font-medium text-primary bg-primary/10 rounded-full mb-6">
-                Catálogo Completo
-              </span>
-
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-900 leading-tight mb-6">
+              <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 leading-tight mb-2">
                 Nuestros Productos
               </h1>
-
-              <p className="text-lg text-slate-600 mb-8 max-w-lg">
+              <p className="text-slate-600 max-w-lg">
                 Descubre la mejor tecnología con los mejores precios. Calidad garantizada en cada producto.
               </p>
-
-              {/* Trust badges */}
-              <div className="flex flex-wrap gap-6">
-                <div className="flex items-center gap-2 text-slate-600">
-                  <Truck className="w-5 h-5 text-primary" />
-                  <span className="text-sm">Envío gratis +$50,000</span>
-                </div>
-                <div className="flex items-center gap-2 text-slate-600">
-                  <Shield className="w-5 h-5 text-primary" />
-                  <span className="text-sm">Garantía incluida</span>
-                </div>
-                <div className="flex items-center gap-2 text-slate-600">
-                  <Tag className="w-5 h-5 text-primary" />
-                  <span className="text-sm">Mejores precios</span>
-                </div>
-              </div>
             </div>
 
-            {/* Right column - Featured visual */}
-            <div className="relative">
-              <div className="bg-gradient-to-br from-slate-100 to-slate-50 rounded-2xl p-8 lg:p-12">
-                <div className="aspect-square bg-white rounded-xl shadow-sm flex items-center justify-center">
-                  <div className="text-center p-8">
-                    <div className="w-32 h-32 mx-auto mb-6 bg-slate-100 rounded-full flex items-center justify-center">
-                      <svg className="w-16 h-16 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                      </svg>
-                    </div>
-                    <p className="text-slate-500 text-sm">Explora nuestra colección completa</p>
-                  </div>
-                </div>
+            <div className="flex flex-wrap gap-4 lg:gap-6">
+              <div className="flex items-center gap-2 text-slate-600">
+                <Truck className="w-4 h-4 text-primary" />
+                <span className="text-sm">Envío gratis +$50,000</span>
               </div>
-
-              {/* Floating badge - Product count */}
-              <div className="absolute -bottom-4 -left-4 bg-white rounded-lg shadow-lg px-4 py-3 border border-slate-100">
-                <div className="flex items-center gap-3">
-                  <div className="flex -space-x-2">
-                    {[...Array(3)].map((_, i) => (
-                      <div
-                        key={i}
-                        className="w-8 h-8 rounded-full bg-slate-200 border-2 border-white"
-                      />
-                    ))}
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold text-slate-900">+500</p>
-                    <p className="text-xs text-slate-500">productos disponibles</p>
-                  </div>
-                </div>
+              <div className="flex items-center gap-2 text-slate-600">
+                <Shield className="w-4 h-4 text-primary" />
+                <span className="text-sm">Garantía incluida</span>
               </div>
-
-              {/* Rating badge */}
-              <div className="absolute -top-4 -right-4 bg-white rounded-lg shadow-lg px-4 py-3 border border-slate-100">
-                <div className="flex items-center gap-2">
-                  <div className="flex">
-                    {[...Array(5)].map((_, i) => (
-                      <svg key={i} className="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                      </svg>
-                    ))}
-                  </div>
-                  <span className="text-sm font-medium text-slate-700">4.9</span>
-                </div>
+              <div className="flex items-center gap-2 text-slate-600">
+                <Tag className="w-4 h-4 text-primary" />
+                <span className="text-sm">Mejores precios</span>
               </div>
             </div>
           </div>
         </div>
-
-        {/* Bottom divider */}
-        <div className="border-t border-slate-100" />
       </section>
 
       <div className="max-w-7xl mx-auto px-4 md:px-6 py-8">

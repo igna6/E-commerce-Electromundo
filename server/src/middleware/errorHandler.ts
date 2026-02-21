@@ -5,7 +5,7 @@ export const errorHandler: ErrorRequestHandler = (err, req, res, _next) => {
   console.error('Error:', err)
 
   if (err instanceof ZodError) {
-    res.status(400).json({ error: 'Validation failed', details: err.errors })
+    res.status(400).json({ error: 'Validation failed', details: err.issues })
     return
   }
 
