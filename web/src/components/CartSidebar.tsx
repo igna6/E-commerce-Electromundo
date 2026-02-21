@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import {
   ShoppingCart,
@@ -26,6 +27,7 @@ type CartSidebarProps = {
 }
 
 function CartSidebar({ children }: CartSidebarProps) {
+  const [open, setOpen] = useState(false)
   const { items, subtotal, totalItems, updateQuantity, removeItem } = useCart()
 
   // Convert subtotal from cents to display value
@@ -45,7 +47,7 @@ function CartSidebar({ children }: CartSidebarProps) {
     }).format(price)
 
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>{children}</SheetTrigger>
       <SheetContent className="w-full sm:max-w-md flex flex-col bg-white border-slate-200 p-0">
         <SheetHeader className="p-6 border-b border-slate-100">
@@ -75,7 +77,7 @@ function CartSidebar({ children }: CartSidebarProps) {
               asChild
               className="bg-primary hover:bg-primary/90 text-white font-semibold rounded-xl"
             >
-              <Link to="/products" className="flex items-center gap-2">
+              <Link to="/products" onClick={() => setOpen(false)} className="flex items-center gap-2">
                 <Zap className="w-4 h-4" />
                 Explorar Productos
               </Link>
@@ -94,6 +96,7 @@ function CartSidebar({ children }: CartSidebarProps) {
                     <Link
                       to="/products/$productId"
                       params={{ productId: String(item.product.id) }}
+                      onClick={() => setOpen(false)}
                       className="w-20 h-20 bg-white rounded-xl overflow-hidden flex-shrink-0 border border-slate-200"
                     >
                       {item.product.image ? (
@@ -113,6 +116,7 @@ function CartSidebar({ children }: CartSidebarProps) {
                       <Link
                         to="/products/$productId"
                         params={{ productId: String(item.product.id) }}
+                        onClick={() => setOpen(false)}
                         className="font-medium text-slate-900 hover:text-primary transition-colors line-clamp-2 text-sm"
                       >
                         {item.product.name}
@@ -206,7 +210,7 @@ function CartSidebar({ children }: CartSidebarProps) {
                   variant="outline"
                   className="flex-1 border-slate-200 text-slate-600 hover:bg-slate-100 hover:text-slate-900 rounded-xl"
                 >
-                  <Link to="/cart">Ver Carrito</Link>
+                  <Link to="/cart" onClick={() => setOpen(false)}>Ver Carrito</Link>
                 </Button>
                 <Button
                   asChild
@@ -214,6 +218,7 @@ function CartSidebar({ children }: CartSidebarProps) {
                 >
                   <Link
                     to="/checkout"
+                    onClick={() => setOpen(false)}
                     className="flex items-center justify-center gap-2"
                   >
                     Checkout

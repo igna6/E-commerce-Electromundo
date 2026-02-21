@@ -159,7 +159,7 @@ function CheckoutPage() {
                 <div
                   className={`flex items-center justify-center w-10 h-10 rounded-full font-semibold transition-colors ${
                     step >= s.id
-                      ? 'bg-brand-blue text-white'
+                      ? 'bg-primary text-white'
                       : 'bg-gray-200 text-gray-500'
                   }`}
                 >
@@ -177,7 +177,7 @@ function CheckoutPage() {
                 </div>
                 <span
                   className={`ml-2 font-medium hidden sm:block ${
-                    step >= s.id ? 'text-brand-dark' : 'text-gray-400'
+                    step >= s.id ? 'text-slate-900' : 'text-gray-400'
                   }`}
                 >
                   {s.name}
@@ -185,7 +185,7 @@ function CheckoutPage() {
                 {index < steps.length - 1 && (
                   <div
                     className={`w-16 sm:w-24 h-1 mx-4 rounded ${
-                      step > s.id ? 'bg-brand-blue' : 'bg-gray-200'
+                      step > s.id ? 'bg-primary' : 'bg-gray-200'
                     }`}
                   />
                 )}
@@ -201,13 +201,13 @@ function CheckoutPage() {
               {/* Step 1: Contact & Shipping Information */}
               {step === 1 && (
                 <div className="bg-white rounded-xl border border-gray-200 p-6 md:p-8">
-                  <h2 className="text-2xl font-bold text-brand-dark mb-6">
+                  <h2 className="text-2xl font-bold text-slate-900 mb-6">
                     Información de Contacto y Envío
                   </h2>
 
                   {/* Contact Info */}
                   <div className="mb-8">
-                    <h3 className="font-semibold text-brand-dark mb-4">Información de Contacto</h3>
+                    <h3 className="font-semibold text-slate-900 mb-4">Información de Contacto</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <Label htmlFor="email">Email</Label>
@@ -242,7 +242,7 @@ function CheckoutPage() {
 
                   {/* Shipping Address */}
                   <div>
-                    <h3 className="font-semibold text-brand-dark mb-4">Dirección de Envío</h3>
+                    <h3 className="font-semibold text-slate-900 mb-4">Dirección de Envío</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <Label htmlFor="firstName">Nombre</Label>
@@ -333,7 +333,7 @@ function CheckoutPage() {
                       type="button"
                       onClick={handleNextStep}
                       size="lg"
-                      className="bg-brand-blue hover:bg-blue-700"
+                      className="bg-primary hover:bg-primary/90"
                     >
                       Continuar al Envío
                       <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -347,7 +347,7 @@ function CheckoutPage() {
               {/* Step 2: Shipping Method */}
               {step === 2 && (
                 <div className="bg-white rounded-xl border border-gray-200 p-6 md:p-8">
-                  <h2 className="text-2xl font-bold text-brand-dark mb-6">Método de Envío</h2>
+                  <h2 className="text-2xl font-bold text-slate-900 mb-6">Método de Envío</h2>
 
                   <RadioGroup value={shippingMethod} onValueChange={(value) => setShippingMethod(value as 'pickup' | 'standard' | 'express')}>
                     <div className="space-y-4">
@@ -355,14 +355,14 @@ function CheckoutPage() {
                       <label
                         className={`flex items-start gap-4 p-4 border-2 rounded-xl cursor-pointer transition-all ${
                           shippingMethod === 'pickup'
-                            ? 'border-brand-blue bg-brand-light/30'
+                            ? 'border-primary bg-primary/5'
                             : 'border-gray-200 hover:border-gray-300'
                         }`}
                       >
                         <RadioGroupItem value="pickup" className="mt-1" />
                         <div className="flex-1">
                           <div className="flex items-center justify-between">
-                            <span className="font-semibold text-brand-dark">Retiro en Sucursal</span>
+                            <span className="font-semibold text-slate-900">Retiro en Sucursal</span>
                             <span className="font-bold text-green-600">Gratis</span>
                           </div>
                           <p className="text-sm text-gray-600 mt-1">
@@ -375,15 +375,15 @@ function CheckoutPage() {
                       <label
                         className={`flex items-start gap-4 p-4 border-2 rounded-xl cursor-pointer transition-all ${
                           shippingMethod === 'standard'
-                            ? 'border-brand-blue bg-brand-light/30'
+                            ? 'border-primary bg-primary/5'
                             : 'border-gray-200 hover:border-gray-300'
                         }`}
                       >
                         <RadioGroupItem value="standard" className="mt-1" />
                         <div className="flex-1">
                           <div className="flex items-center justify-between">
-                            <span className="font-semibold text-brand-dark">Envío Estándar</span>
-                            <span className="font-bold text-brand-dark">{formatPrice(300000)}</span>
+                            <span className="font-semibold text-slate-900">Envío Estándar</span>
+                            <span className="font-bold text-slate-900">{formatPrice(300000)}</span>
                           </div>
                           <p className="text-sm text-gray-600 mt-1">
                             Entrega en 3-5 días hábiles a tu domicilio
@@ -395,7 +395,7 @@ function CheckoutPage() {
                       <label
                         className={`flex items-start gap-4 p-4 border-2 rounded-xl cursor-pointer transition-all ${
                           shippingMethod === 'express'
-                            ? 'border-brand-blue bg-brand-light/30'
+                            ? 'border-primary bg-primary/5'
                             : 'border-gray-200 hover:border-gray-300'
                         }`}
                       >
@@ -403,12 +403,12 @@ function CheckoutPage() {
                         <div className="flex-1">
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
-                              <span className="font-semibold text-brand-dark">Envío Express</span>
-                              <span className="px-2 py-0.5 bg-brand-orange text-white text-xs rounded-full font-medium">
+                              <span className="font-semibold text-slate-900">Envío Express</span>
+                              <span className="px-2 py-0.5 bg-primary text-white text-xs rounded-full font-medium">
                                 Rápido
                               </span>
                             </div>
-                            <span className="font-bold text-brand-dark">{formatPrice(800000)}</span>
+                            <span className="font-bold text-slate-900">{formatPrice(800000)}</span>
                           </div>
                           <p className="text-sm text-gray-600 mt-1">
                             Entrega en 24-48 horas hábiles a tu domicilio
@@ -429,7 +429,7 @@ function CheckoutPage() {
                       type="button"
                       onClick={handleNextStep}
                       size="lg"
-                      className="bg-brand-blue hover:bg-blue-700"
+                      className="bg-primary hover:bg-primary/90"
                     >
                       Continuar al Pago
                       <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -443,7 +443,7 @@ function CheckoutPage() {
               {/* Step 3: Payment */}
               {step === 3 && (
                 <div className="bg-white rounded-xl border border-gray-200 p-6 md:p-8">
-                  <h2 className="text-2xl font-bold text-brand-dark mb-6">Método de Pago</h2>
+                  <h2 className="text-2xl font-bold text-slate-900 mb-6">Método de Pago</h2>
 
                   <RadioGroup value={paymentMethod} onValueChange={(value) => setPaymentMethod(value as 'card' | 'mercadopago' | 'transfer')}>
                     <div className="space-y-4">
@@ -451,14 +451,14 @@ function CheckoutPage() {
                       <label
                         className={`flex items-start gap-4 p-4 border-2 rounded-xl cursor-pointer transition-all ${
                           paymentMethod === 'card'
-                            ? 'border-brand-blue bg-brand-light/30'
+                            ? 'border-primary bg-primary/5'
                             : 'border-gray-200 hover:border-gray-300'
                         }`}
                       >
                         <RadioGroupItem value="card" className="mt-1" />
                         <div className="flex-1">
                           <div className="flex items-center justify-between">
-                            <span className="font-semibold text-brand-dark">Tarjeta de Crédito/Débito</span>
+                            <span className="font-semibold text-slate-900">Tarjeta de Crédito/Débito</span>
                             <div className="flex gap-2">
                               <div className="w-10 h-6 bg-blue-600 rounded flex items-center justify-center text-white text-xs font-bold">
                                 VISA
@@ -481,14 +481,14 @@ function CheckoutPage() {
                       <label
                         className={`flex items-start gap-4 p-4 border-2 rounded-xl cursor-pointer transition-all ${
                           paymentMethod === 'mercadopago'
-                            ? 'border-brand-blue bg-brand-light/30'
+                            ? 'border-primary bg-primary/5'
                             : 'border-gray-200 hover:border-gray-300'
                         }`}
                       >
                         <RadioGroupItem value="mercadopago" className="mt-1" />
                         <div className="flex-1">
                           <div className="flex items-center justify-between">
-                            <span className="font-semibold text-brand-dark">MercadoPago</span>
+                            <span className="font-semibold text-slate-900">MercadoPago</span>
                             <div className="w-24 h-6 bg-[#00B1EA] rounded flex items-center justify-center text-white text-xs font-bold">
                               MercadoPago
                             </div>
@@ -503,14 +503,14 @@ function CheckoutPage() {
                       <label
                         className={`flex items-start gap-4 p-4 border-2 rounded-xl cursor-pointer transition-all ${
                           paymentMethod === 'transfer'
-                            ? 'border-brand-blue bg-brand-light/30'
+                            ? 'border-primary bg-primary/5'
                             : 'border-gray-200 hover:border-gray-300'
                         }`}
                       >
                         <RadioGroupItem value="transfer" className="mt-1" />
                         <div className="flex-1">
                           <div className="flex items-center justify-between">
-                            <span className="font-semibold text-brand-dark">Transferencia Bancaria</span>
+                            <span className="font-semibold text-slate-900">Transferencia Bancaria</span>
                             <span className="px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded-full font-medium">
                               10% OFF
                             </span>
@@ -538,7 +538,7 @@ function CheckoutPage() {
                   <Accordion type="single" collapsible>
                     <AccordionItem value="billing" className="border-none">
                       <AccordionTrigger className="hover:no-underline">
-                        <span className="font-semibold text-brand-dark">
+                        <span className="font-semibold text-slate-900">
                           Dirección de Facturación
                         </span>
                       </AccordionTrigger>
@@ -566,7 +566,7 @@ function CheckoutPage() {
                     <Button
                       type="submit"
                       size="lg"
-                      className="bg-brand-orange hover:bg-orange-600"
+                      className="bg-primary hover:bg-primary/90"
                       disabled={isSubmitting}
                     >
                       {isSubmitting ? (
@@ -599,7 +599,7 @@ function CheckoutPage() {
             {/* Order Summary */}
             <div className="lg:col-span-1">
               <div className="bg-white rounded-xl border border-gray-200 p-6 sticky top-24">
-                <h2 className="text-xl font-bold text-brand-dark mb-4">Resumen del Pedido</h2>
+                <h2 className="text-xl font-bold text-slate-900 mb-4">Resumen del Pedido</h2>
 
                 {/* Cart Items */}
                 <div className="space-y-4 max-h-64 overflow-y-auto mb-4">
@@ -624,15 +624,15 @@ function CheckoutPage() {
                             </svg>
                           </div>
                         )}
-                        <span className="absolute -top-1 -right-1 w-5 h-5 bg-brand-blue text-white text-xs rounded-full flex items-center justify-center font-medium">
+                        <span className="absolute -top-1 -right-1 w-5 h-5 bg-primary text-white text-xs rounded-full flex items-center justify-center font-medium">
                           {item.quantity}
                         </span>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="font-medium text-brand-dark text-sm truncate">
+                        <p className="font-medium text-slate-900 text-sm truncate">
                           {item.product.name}
                         </p>
-                        <p className="text-brand-orange font-semibold text-sm">
+                        <p className="text-primary font-semibold text-sm">
                           {formatPrice(item.product.price * item.quantity)}
                         </p>
                       </div>
@@ -640,7 +640,7 @@ function CheckoutPage() {
                   ))}
                 </div>
 
-                <Button asChild variant="link" className="p-0 h-auto text-brand-blue mb-4">
+                <Button asChild variant="link" className="p-0 h-auto text-primary mb-4">
                   <Link to="/cart">
                     <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path
@@ -676,8 +676,8 @@ function CheckoutPage() {
 
                 {/* Total */}
                 <div className="flex justify-between items-center mb-4">
-                  <span className="text-lg font-semibold text-brand-dark">Total</span>
-                  <span className="text-2xl font-bold text-brand-orange">{formatPrice(total)}</span>
+                  <span className="text-lg font-semibold text-slate-900">Total</span>
+                  <span className="text-2xl font-bold text-primary">{formatPrice(total)}</span>
                 </div>
 
                 {/* Trust Badges */}

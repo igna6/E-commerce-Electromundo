@@ -329,7 +329,7 @@ function CartPage() {
               <Button
                 asChild
                 size="lg"
-                className="w-full h-14 text-lg bg-brand-orange hover:bg-orange-600 mb-4"
+                className="w-full h-14 text-lg bg-electric-orange hover:bg-orange-600 text-white mb-4"
               >
                 <Link to="/checkout">
                   Continuar al Checkout
