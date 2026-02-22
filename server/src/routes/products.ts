@@ -46,12 +46,13 @@ router.get('/', async (req, res, next) => {
     // Build where conditions
     const conditions = [isNull(productsTable.deletedAt)]
 
-    // Search by name or description
+    // Search by name, description, or SKU
     if (search) {
       conditions.push(
         or(
           ilike(productsTable.name, `%${search}%`),
-          ilike(productsTable.description, `%${search}%`)
+          ilike(productsTable.description, `%${search}%`),
+          ilike(productsTable.sku, `%${search}%`)
         )!
       )
     }
