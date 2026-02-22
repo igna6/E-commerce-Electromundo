@@ -1,83 +1,100 @@
 # What's Next - E-commerce Electromundo Handoff
 
 **Last Updated**: February 21, 2026
-**Current Phase**: Phase 4 Complete - Phases 5-7 Remaining
-**Session**: Fresh session - no new work performed, documenting current state with uncommitted changes
+**Current Phase**: Phase 5 Complete - Phases 6-7 Remaining
+**Session**: Implemented Phase 5 (Inventory Management) + UX fixes
 
 ---
 
 <original_task>
-No new task was given in this session. The /whats-next skill was invoked to create a handoff document capturing the current state of the project for continuation in a fresh context.
+Execute Phase 5 of the e-commerce project roadmap: Inventory Management. This involved adding stock tracking to products, preventing overselling, showing stock data to customers, and providing admin inventory alerts. Additionally, two small UX fixes were requested during the session: fixing a Zod 4 TypeScript error in the error handler middleware, and reducing the products page hero section height to show actual content on initial load.
 </original_task>
 
 <work_completed>
 
-## Project Overview
-Full-stack e-commerce monorepo for electronics sales (Argentina-focused, ARS currency, Spanish language).
+## Session Work: Phase 5 Inventory Management (19 files, 2 commits)
 
-## Completed Phases (4 of 7)
+### Commit `31126a8` — `feat: stock handler`
+
+**Backend Changes (7 files):**
+
+1. **`server/src/entities/products.ts`** — Added `stock: integer().notNull().default(0)` to productsTable schema
+2. **`server/drizzle/0003_add-stock-column.sql`** + snapshot/journal — Drizzle migration generated and applied via `drizzle-kit push`
+3. **`server/src/validators/product.ts`** — Added `stock` field to both `createProductSchema` (`.default(0)`) and `updateProductSchema` (`.optional()`) with `min(0)` validation
+4. **`server/src/routes/products.ts`** — Added `inStock` query parameter filter (`gt(productsTable.stock, 0)`) to GET `/api/products`, imported `gt` from drizzle-orm
+5. **`server/src/routes/orders.ts`** — Major rewrite of POST `/api/orders`:
+   - Added stock availability check before order creation (returns 409 with `{ error: 'Stock insuficiente', details: [{ productId, productName, requested, available }] }`)
+   - Wrapped entire order creation + stock deduction in `db.transaction()` for atomicity
+   - Stock deducted via `sql\`${productsTable.stock} - ${item.quantity}\`` inside transaction
+   - Imported `sql` from drizzle-orm
+6. **`server/src/routes/admin/stats.ts`** — Added 3 new queries to stats endpoint:
+   - `outOfStockCount`: products where `stock = 0` and not deleted
+   - `lowStockCount`: products where `stock > 0 AND stock <= 5` and not deleted
+   - `lowStockProducts`: top 10 products with `stock <= 5`, ordered by stock ascending
+   - Added to response under `inventory: { outOfStock, lowStock, lowStockProducts }`
+   - Imported `and, gt, lte, asc` from drizzle-orm
+
+**Frontend Changes (10 files):**
+
+7. **`web/src/types/product.ts`** — Added `stock: number` to Product type
+8. **`web/src/services/products.service.ts`** — Added `inStock?: boolean` to `GetProductsParams`, added `stock?: number` to create/update function signatures, included inStock query param in URL builder
+9. **`web/src/services/api.ts`** — Enhanced `ApiError` class with `data?: any` field; updated `apiRequest` to parse error response JSON body and attach it to the thrown `ApiError` (enables 409 stock error handling at checkout)
+10. **`web/src/sections/admin/ProductForm.tsx`** — Added `stock` field to `ProductFormData` type, added `stock` state variable, added stock number input field (label: "Stock disponible *", min: 0, step: 1), included stock in form submission
+11. **`web/src/sections/admin/ProductsTable.tsx`** — Added "Stock" column header and data cell with color-coded display:
+    - stock = 0 → red badge "Agotado"
+    - stock <= 5 → amber badge with number
+    - stock > 5 → green text with number
+12. **`web/src/routes/admin/dashboard.tsx`** — Updated `StatsResponse` type with `inventory` section; added `Link` import; added conditional inventory alerts panel (amber bg) showing:
+    - Out-of-stock count (red badge)
+    - Low stock count (amber badge)
+    - List of low-stock products with links to their edit pages
+13. **`web/src/sections/products/ProductDetail/ProductDetail.tsx`** — Replaced all hardcoded stock data:
+    - "En Stock" badge → dynamic green/red based on `product.stock`
+    - Quantity + button max capped at `product.stock`, disabled when stock = 0
+    - "Stock disponible: 25 unidades" → real stock with urgency messaging ("Ultimas N unidades!" when <= 5)
+    - Add to cart button disabled + "Producto Agotado" text when stock = 0
+14. **`web/src/contexts/CartContext.tsx`** — Added stock validation:
+    - `addItem`: prevents adding when `product.stock <= 0`, caps quantity at `product.stock`, updates product data on existing cart items
+    - `updateQuantity`: caps at `item.product.stock` via `Math.min()`
+15. **`web/src/sections/checkout/CheckoutPage.tsx`** — Added `stockErrors` state; updated `onSubmit` error handler to detect `error.status === 409` and extract `error.data.details`; enhanced error display to show per-item stock details (product name, requested qty, available qty) with "Volver al carrito" link
+
+### Commit `3d9f5d8` — `improve product display`
+
+16. **`server/src/middleware/errorHandler.ts`** — Fixed Zod 4 compatibility: changed `err.errors` to `err.issues` (Zod 4 renamed the property)
+17. **`web/src/sections/products/ProductsPage/ProductsPage.tsx`** — Replaced full-viewport two-column hero section (with decorative illustration, floating badges, `py-16 lg:py-24`) with compact single-row header (`py-8 lg:py-10`) containing title, subtitle, and trust badges inline. Removed ~75 lines of decorative JSX.
+
+### Plan Document Created
+18. **`PHASE-5-PLAN.md`** — Detailed implementation plan with objective, execution context, 13 tasks across 5 groups, verification criteria, and success criteria
+
+### Existing Products Note
+All existing products in the database now have `stock = 0` (the migration default). Admin needs to set real stock values through the admin UI.
+
+## Previously Completed Phases (1-4)
 
 ### Phase 1: Product Management & Categories
 - Product CRUD API with pagination (12-50 items/page)
 - Category management endpoints (secured with admin auth)
-- Product search by name/description
-- Price range filtering
+- Product search by name/description, price range filtering
 - Sorting options (newest, price asc/desc, name)
 - Soft delete support (deletedAt timestamps)
-- Frontend product browsing with responsive UI
-- Product detail pages
-- Category filtering component
+- Frontend product browsing, detail pages, category filtering
 
 ### Phase 2: Session-Based Shopping Cart
-- **CartContext**: React Context + localStorage persistence
-- Add products to cart (from list or detail page)
-- Quantity management (increase/decrease)
-- Remove items and clear cart
-- Cart totals calculation
-- Cart badge on header showing item count
-- localStorage key: `electromundo-cart`
+- CartContext: React Context + localStorage persistence (key: `electromundo-cart`)
+- Add/remove/update quantity, cart totals, cart badge in header
 
 ### Phase 3: Guest Checkout & Order Text Generation
+- Orders table (21 columns) + OrderItems table (8 columns)
+- Backend price calculation, shipping costs, 21% IVA tax
+- Multi-step checkout form with Zod validation (Spanish)
+- Order confirmation page with copy-to-clipboard
 
-**Backend Implementation:**
-- Orders table (21 columns): customer info, shipping/payment methods, totals, status
-- OrderItems table (8 columns): line items with product details
-- Zod validation for order creation
-- Order text generator (Spanish formatted)
-- `POST /api/orders` - Create order with validation & price calculation
-- `GET /api/orders/:id` - Retrieve order with items
-- Backend price calculation (prevents client manipulation)
-- Shipping costs: pickup (0), standard (ARS 3,000), express (ARS 8,000)
-- Tax calculation: 21% IVA
-
-**Frontend Implementation:**
-- CheckoutPage with multi-step form validation
-- Zod schema validation with Spanish error messages
-- Order confirmation page with order text display
-- Copy-to-clipboard functionality
-- Navigation to home or continue shopping
-
-### Phase 4: Admin Panel - COMPLETE
-
-**Backend - Complete:**
-- JWT authentication system (`server/src/middleware/auth.ts`)
-- Auth routes: login, refresh, logout, /me endpoint (`server/src/routes/auth.ts`)
-- Admin order routes (`server/src/routes/admin/orders.ts`)
-- Admin stats endpoint (`server/src/routes/admin/stats.ts`)
-- Protected route middleware working
-- Category write endpoints protected with admin auth
-
-**Frontend - Fully Wired to APIs:**
-- AuthContext for token management with auto-refresh
-- Admin route protection
-- Admin layout with sidebar navigation
-- **Login page**: Functional JWT authentication
-- **Dashboard**: Fetches stats from `/api/admin/stats`, displays orders by status, products by category, recent orders
-- **Orders list**: Fetches from `/api/admin/orders` with pagination and status filtering
-- **Order detail**: Full order view with status update via `/api/admin/orders/:id/status`
-- **Products CRUD**: List, create, edit, delete all wired to `/api/products`
-- **Categories CRUD**: Inline create, edit, delete wired to `/api/categories` (with auth)
-- UI Components: OrderStatusBadge, OrderStatusSelect, StatsCard, ProductsTable, RecentOrdersTable, ProductForm
+### Phase 4: Admin Panel
+- JWT auth system (access + refresh tokens)
+- Admin dashboard with live stats
+- Orders management with status updates
+- Products CRUD + Categories CRUD
+- Protected routes (backend middleware + frontend route guards)
 
 ### Additional Features
 - Floating WhatsApp button for customer support
@@ -86,55 +103,44 @@ Full-stack e-commerce monorepo for electronics sales (Argentina-focused, ARS cur
 
 <work_remaining>
 
-## Uncommitted Changes (3 files - should be reviewed/committed first)
-
-### 1. `web/src/components/CartSidebar.tsx` - Cart sidebar close-on-navigate fix
-- Added controlled `open` state with `useState`
-- All `<Link>` elements now call `setOpen(false)` on click to close the sidebar when navigating
-- Links affected: "Explorar Productos", product image links, product name links, "Ver Carrito", "Checkout"
-- **Purpose**: Fix UX bug where the cart sidebar remained open after clicking a navigation link
-
-### 2. `web/src/sections/cart/CartPage.tsx` - Button color fix
-- Changed checkout button from `bg-brand-orange` to `bg-electric-orange text-white`
-- **Purpose**: Update to use correct design token / ensure button text is visible
-
-### 3. `web/src/sections/checkout/CheckoutPage.tsx` - Design token migration
-- Replaced ~30+ instances of old design tokens with new ones:
-  - `bg-brand-blue` -> `bg-primary`
-  - `bg-brand-light/30` -> `bg-primary/5`
-  - `text-brand-dark` -> `text-slate-900`
-  - `text-brand-orange` -> `text-primary`
-  - `bg-brand-orange` -> `bg-primary`
-  - `hover:bg-blue-700` -> `hover:bg-primary/90`
-  - `hover:bg-orange-600` -> `hover:bg-primary/90`
-  - `border-brand-blue` -> `border-primary`
-- **Purpose**: Migrate from old brand-specific color tokens to the project's unified design system (`primary`, `slate-900`)
-
-## Phase 5: Inventory Management (Next)
-- Stock tracking with quantity field on products
-- Low stock threshold alerts
-- Stock movement history
-- Out-of-stock handling in checkout
-
 ## Phase 6: Reports & Analytics
+Per ROADMAP.md, this phase covers:
 - Sales reports with date filtering
 - Revenue tracking over time
 - Best-selling products report
-- Charts/graphs on dashboard
+- Charts/graphs on admin dashboard (consider recharts library)
+- Export functionality (CSV)
 
 ## Phase 7: Production Deployment
+Per ROADMAP.md:
 - Environment configuration (production vs development)
-- Security hardening (CORS, rate limiting, input sanitization)
-- Performance optimization (caching, lazy loading)
-- SEO enhancements
+- Security hardening (CORS whitelist, rate limiting via express-rate-limit, Helmet.js, input sanitization)
+- Performance optimization (compression middleware, database indexes, lazy loading routes)
+- SEO enhancements (meta tags, Open Graph, sitemap)
+- Deployment setup (backend: Railway/Render/Fly.io, frontend: Netlify, database: managed PostgreSQL)
+- Monitoring and error tracking
 
-## Optional Enhancements
-- Product image file upload (currently URL-only)
-- Product search/filtering in admin list view
+## Optional Enhancements (from ROADMAP.md Phase 5: Enhanced Features & Polish)
+These were in the original ROADMAP.md Phase 5 but were deprioritized in favor of inventory management:
+- Debounced search with autocomplete/suggestions
+- Multi-select category filter with checkboxes
+- Price range slider instead of inputs
+- Mobile-friendly filter drawer
+- Product image upload (currently URL-only, consider Cloudinary/S3)
+- Image optimization (lazy loading, responsive srcset, zoom on detail)
+- Skeleton loading screens
+- Toast notifications for all actions
+- Quick view modal for products
+- Cart slide-out drawer
+- Admin dashboard charts (recharts)
 - Bulk operations (bulk delete, bulk status update)
-- Order export/printing functionality
-- Admin activity logging/audit trail
-- Email notifications for orders
+- Order export/printing
+- Admin activity logging
+
+## Known Issues / Polish Items
+- Products page filters (categories, brands, price slider) are UI-only — not wired to actual API query params. The FilterSidebar component manages state locally but doesn't pass it to `useProducts()`.
+- ProductDetail fetches all products via `useProducts({ page: 1, limit: 20 })` and finds by ID client-side — should use dedicated `getProduct(id)` endpoint instead.
+- Some pages may still use old `brand-*` color tokens (checkout was migrated to `primary`/`slate-*`, but product detail page still uses `brand-blue`, `brand-dark`, `brand-orange`, `brand-light` tokens).
 
 </work_remaining>
 
@@ -148,19 +154,27 @@ Full-stack e-commerce monorepo for electronics sales (Argentina-focused, ARS cur
 4. **Spanish Localization**: All user-facing text in Spanish
 5. **TanStack Router Search Params**: Use `z.number().catch(0)` for ID parsing
 6. **Auth Pattern**: `authApiRequest` for protected endpoints, `apiRequest` for public
-7. **Design Token Migration**: Project moved from `brand-*` tokens to `primary`/`slate-*` system - the checkout page changes reflect this migration
+7. **Design Token Migration**: Project moved from `brand-*` tokens to `primary`/`slate-*` system
+8. **Stock Validation Pattern**: Client-side optimistic check (cart caps at stock) + server-side authoritative check (409 on insufficient stock in transaction)
+9. **Drizzle Transactions**: `db.transaction(async (tx) => { ... })` for atomic multi-table operations
+10. **ApiError Enhancement**: Error responses now include parsed response body in `error.data` field for rich error handling
 
 ## What Worked Well
-- Separate utility function for order text generation
-- `Intl.NumberFormat('es-AR')` for currency formatting
-- React Hook Form's `trigger()` for step validation
-- Drizzle ORM for type-safe database queries
-- JWT access tokens in memory with refresh token rotation
-- Controlled Sheet `open` state for closing sidebar on navigation (CartSidebar fix)
+- Drizzle ORM transactions for atomic stock deduction + order creation
+- `sql` template literal for `stock = stock - quantity` atomic decrement
+- ApiError class enhancement to carry response body (enables 409 stock error display)
+- Compact hero section significantly improves above-the-fold content visibility
+- Color-coded stock badges in admin table provide instant visual inventory health
 
-## Pre-existing Technical Debt
+## Technical Decisions
+- **Stock as simple integer**: No separate inventory table, stock movement history, or reserved stock — kept simple for MVP. Stock is just a column on products.
+- **Low stock threshold = 5**: Hardcoded in admin stats query and product detail page. Consider making configurable if needed.
+- **Client-side stock validation is optimistic**: Cart context caps at `product.stock` from last fetch, but real validation happens server-side at order creation. Stale stock data in cart is possible.
+- **Zod 4 uses `.issues` not `.errors`**: The `ZodError` property was renamed in Zod 4.x.
+
+## Pre-existing Technical Debt (not introduced this session)
 - TypeScript strict mode warnings in `server/src/routes/products.ts` and `server/src/routes/categories.ts` for `req.params.id` type handling (doesn't affect runtime)
-- Some pages may still use old `brand-*` color tokens (checkout page was migrated, others may need checking)
+- Some pages still use old `brand-*` color tokens (product detail page notably)
 
 </attempted_approaches>
 
@@ -186,6 +200,12 @@ Full-stack e-commerce monorepo for electronics sales (Argentina-focused, ARS cur
 - Example: 99999 cents = ARS $999.99
 - Display: `Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' })`
 
+## Stock Handling Convention
+- **Stock stored as integer (units)** on products table
+- Default: 0 for new/existing products
+- Low stock threshold: <= 5 units
+- Out of stock: 0 units
+
 ## Order Calculation Logic
 ```
 Subtotal = sum of (item.price * item.quantity)
@@ -198,11 +218,11 @@ Total = Subtotal + Shipping + Tax
 
 **Public Endpoints:**
 ```
-GET  /api/products          - List with pagination, search, filter, sort
-GET  /api/products/:id      - Single product
+GET  /api/products          - List with pagination, search, filter, sort, inStock
+GET  /api/products/:id      - Single product (includes stock)
 GET  /api/categories        - List categories
 GET  /api/categories/:id    - Single category
-POST /api/orders            - Create order from cart
+POST /api/orders            - Create order (validates stock, deducts in transaction)
 GET  /api/orders/:id        - Get order with items
 ```
 
@@ -216,8 +236,8 @@ GET  /api/auth/me           - Get current user (protected)
 
 **Protected Admin Endpoints (JWT + Admin Required):**
 ```
-POST /api/products          - Create product
-PUT  /api/products/:id      - Update product
+POST /api/products          - Create product (with stock)
+PUT  /api/products/:id      - Update product (with stock)
 DEL  /api/products/:id      - Soft delete product
 POST /api/categories        - Create category
 PUT  /api/categories/:id    - Update category
@@ -225,11 +245,11 @@ DEL  /api/categories/:id    - Delete category
 GET  /api/admin/orders      - List all orders with pagination
 GET  /api/admin/orders/:id  - Get order details
 PUT  /api/admin/orders/:id/status - Update order status
-GET  /api/admin/stats       - Dashboard statistics
+GET  /api/admin/stats       - Dashboard statistics (includes inventory alerts)
 ```
 
 ## Database Tables
-1. `products` - Product catalog with full CRUD fields
+1. `products` - Product catalog (10 columns including `stock`)
 2. `product_categories` - Category definitions
 3. `users` - Admin users (JWT authentication)
 4. `orders` - 21 columns with full order details
@@ -240,21 +260,31 @@ GET  /api/admin/stats       - Dashboard statistics
 ```
 Backend:
 server/src/db/schema.ts           # Database schema exports
-server/src/middleware/auth.ts     # JWT auth middleware
+server/src/entities/products.ts   # Products table (has stock column)
+server/src/middleware/auth.ts      # JWT auth middleware
+server/src/middleware/errorHandler.ts # Global error handler (Zod .issues)
 server/src/routes/auth.ts         # Auth endpoints
-server/src/routes/admin/          # Admin-specific routes
-server/src/routes/products.ts     # Products API
+server/src/routes/admin/stats.ts  # Admin stats (has inventory metrics)
+server/src/routes/admin/orders.ts # Admin order management
+server/src/routes/products.ts     # Products API (has inStock filter)
 server/src/routes/categories.ts   # Categories API (protected)
-server/src/routes/orders.ts       # Orders API
+server/src/routes/orders.ts       # Orders API (has stock validation + tx)
+server/src/validators/product.ts  # Product Zod schemas (has stock)
 server/src/utils/                 # Utilities (orderTextGenerator)
 
 Frontend:
-web/src/routes/admin/             # Admin route pages
-web/src/sections/admin/           # Admin feature components
+web/src/routes/admin/dashboard.tsx     # Admin dashboard (has inventory alerts)
+web/src/routes/admin/                  # Admin route pages
+web/src/sections/admin/ProductForm.tsx # Product form (has stock input)
+web/src/sections/admin/ProductsTable.tsx # Products table (has stock column)
+web/src/sections/products/ProductDetail/ProductDetail.tsx # Product detail (dynamic stock)
+web/src/sections/products/ProductsPage/ProductsPage.tsx   # Products listing (compact hero)
+web/src/sections/checkout/CheckoutPage.tsx # Checkout (handles 409 stock errors)
 web/src/contexts/AuthContext.tsx  # Auth state management
-web/src/contexts/CartContext.tsx  # Cart state management
-web/src/services/                 # API clients
-web/src/types/                    # TypeScript types
+web/src/contexts/CartContext.tsx  # Cart state (has stock validation)
+web/src/services/api.ts          # API client (ApiError has data field)
+web/src/services/products.service.ts # Products service (has stock + inStock)
+web/src/types/product.ts         # Product type (has stock field)
 web/src/components/ui/            # shadcn/ui components
 ```
 
@@ -263,6 +293,7 @@ web/src/components/ui/            # shadcn/ui components
 BRIEF.md              # Project brief
 ROADMAP.md            # Full 7-phase development roadmap
 PHASE-1-PLAN.md       # Detailed Phase 1 implementation plan
+PHASE-5-PLAN.md       # Detailed Phase 5 implementation plan (created this session)
 PHASE-1-SUMMARY.md    # Phase 1 completion summary
 PHASE-2-SUMMARY.md    # Phase 2 completion summary
 ```
@@ -290,11 +321,10 @@ cd server && yarn seed:admin
 
 ## Git Status
 - **Branch**: main (up to date with origin/main)
-- **Uncommitted changes** (unstaged):
-  - `web/src/components/CartSidebar.tsx` - Cart sidebar close-on-navigate fix (+11/-3 lines)
-  - `web/src/sections/cart/CartPage.tsx` - Button color token fix (+1/-1 lines)
-  - `web/src/sections/checkout/CheckoutPage.tsx` - Design token migration (+34/-34 lines)
-- **No staged changes**
+- **Working tree**: clean (all changes committed)
+- **Latest commits**:
+  - `3d9f5d8` improve product display (errorHandler fix + compact hero)
+  - `31126a8` feat: stock handler (Phase 5 inventory management)
 
 ## Phase Completion Status
 | Phase | Status | Description |
@@ -303,36 +333,35 @@ cd server && yarn seed:admin
 | Phase 2 | Complete | Cart with localStorage persistence |
 | Phase 3 | Complete | Guest checkout, order creation, confirmation |
 | Phase 4 | Complete | Admin panel - fully functional |
-| Phase 5 | Not Started | Inventory management |
+| Phase 5 | Complete | Inventory management - stock tracking, validation, admin alerts |
 | Phase 6 | Not Started | Reports & analytics |
 | Phase 7 | Not Started | Production deployment |
 
 ## Working Customer Flow
-1. Browse products with categories
-2. Search and filter products
-3. View product details
-4. Add products to cart
-5. Manage cart (quantities, remove)
-6. Fill checkout form with validation
-7. Select shipping/payment methods
-8. Submit order
-9. View order confirmation with copyable text
+1. Browse products (compact hero, search/filter sidebar)
+2. View product details (real stock data, dynamic badges)
+3. Add products to cart (stock-capped quantities, blocked if out of stock)
+4. Manage cart (quantities capped at available stock)
+5. Fill checkout form with validation
+6. Submit order (server validates stock, deducts in transaction)
+7. View order confirmation with copyable text
+8. If stock insufficient at checkout, see detailed error with per-item availability
 
 ## Admin Panel - Fully Functional
-- **Login**: `/admin/login` - JWT authentication working
-- **Dashboard**: `/admin/dashboard` - Live stats, orders by status, products by category, recent orders
-- **Orders**: `/admin/orders` - List with pagination/filtering, detail view, status updates
-- **Products**: `/admin/products` - Full CRUD (list, create, edit, delete)
-- **Categories**: `/admin/categories` - Full CRUD with inline editing
+- **Dashboard**: `/admin/dashboard` — Stats + inventory alerts (out-of-stock, low-stock products)
+- **Products**: `/admin/products` — CRUD with stock input field and color-coded stock column
+- **Orders**: `/admin/orders` — List, detail, status updates
+- **Categories**: `/admin/categories` — CRUD with inline editing
+
+## Important: Existing Products Have Stock = 0
+The migration set `stock = 0` for all existing products. An admin needs to update stock values through the admin UI before the store correctly reflects availability.
 
 ## Recommended Next Steps
-1. **Review and commit** the 3 uncommitted files (CartSidebar fix, design token migration)
-2. Start **Phase 5: Inventory Management**:
-   - Add `stock` column to products table
-   - Add stock display in product detail page
-   - Add stock editing in admin product form
-   - Add low stock warnings in admin dashboard
-   - Prevent checkout when items out of stock
+1. **Set stock values** for existing products via admin UI
+2. Start **Phase 6: Reports & Analytics** — charts, sales reports, export
+3. Or start **Phase 7: Production Deployment** if the store needs to go live
+4. Consider wiring the products page FilterSidebar to actual API params (currently UI-only)
+5. Consider migrating remaining `brand-*` color tokens in ProductDetail page
 
 ## To Test Current Application
 ```bash

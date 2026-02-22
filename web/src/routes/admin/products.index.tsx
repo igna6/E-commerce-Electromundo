@@ -3,10 +3,12 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { getProducts, deleteProduct } from '@/services/products.service'
 import ProductsTable from '@/sections/admin/ProductsTable'
+import ImportProductsDialog from '@/sections/admin/ImportProductsDialog'
 
 function ProductsIndexComponent() {
   const queryClient = useQueryClient()
   const [page, setPage] = useState(1)
+  const [importOpen, setImportOpen] = useState(false)
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['products', { page, limit: 20 }],
@@ -46,13 +48,23 @@ function ProductsIndexComponent() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Productos</h1>
-        <Link
-          to="/admin/products/new"
-          className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
-        >
-          Nuevo Producto
-        </Link>
+        <div className="flex gap-2">
+          <button
+            onClick={() => setImportOpen(true)}
+            className="rounded-md border border-blue-600 px-4 py-2 text-blue-600 hover:bg-blue-50"
+          >
+            Importar CSV
+          </button>
+          <Link
+            to="/admin/products/new"
+            className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+          >
+            Nuevo Producto
+          </Link>
+        </div>
       </div>
+
+      <ImportProductsDialog open={importOpen} onOpenChange={setImportOpen} />
 
       <div className="rounded-lg border bg-white">
         <ProductsTable

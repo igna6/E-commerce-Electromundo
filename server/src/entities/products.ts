@@ -9,6 +9,7 @@ export const productsTable = pgTable('products', {
   image: varchar(),
   category: integer().references(() => productCategoriesTable.id),
   stock: integer().notNull().default(0),
+  sku: varchar().unique(),
   createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
   deletedAt: timestamp({ withTimezone: true }),

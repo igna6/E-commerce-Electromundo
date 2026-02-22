@@ -6,6 +6,7 @@ export type Product = {
   image: string | null
   category: number | null
   stock: number
+  sku: string | null
   createdAt: string
   updatedAt: string
 }

@@ -1,6 +1,7 @@
-import { apiRequest, authApiRequest } from './api'
+import { apiRequest, authApiRequest, ApiError } from './api'
 import type { Product } from '../types/product'
 import type { PaginatedResponse } from '../types/api'
+import { API_URL } from '../constants/config'
 
 export type GetProductsParams = {
   page?: number
@@ -82,4 +83,41 @@ export async function deleteProduct(id: number): Promise<{ message: string }> {
   return authApiRequest<{ message: string }>(`/api/products/${id}`, {
     method: 'DELETE',
   })
+}
+
+export type ImportResult = {
+  created: number
+  updated: number
+  errors: Array<{ row: number; error: string }>
+  total: number
+}
+
+export async function importProductsCSV(file: File): Promise<ImportResult> {
+  const formData = new FormData()
+  formData.append('file', file)
+
+  const token = localStorage.getItem('electromundo-access-token')
+  const response = await fetch(`${API_URL}/api/admin/products/import`, {
+    method: 'POST',
+    headers: {
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    body: formData,
+  })
+
+  if (!response.ok) {
+    let errorData
+    try {
+      errorData = await response.json()
+    } catch {
+      // Response body may not be JSON
+    }
+    throw new ApiError(
+      errorData?.error || `HTTP error ${response.status}: ${response.statusText}`,
+      response.status,
+      errorData,
+    )
+  }
+
+  return response.json()
 }
