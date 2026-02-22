@@ -1,36 +1,21 @@
 import express from 'express'
 import cors from 'cors'
 import config from './config/config.ts'
-import productsRouter from './routes/products.ts'
-import categoriesRouter from './routes/categories.ts'
-import ordersRouter from './routes/orders.ts'
-import authRouter from './routes/auth.ts'
+import productsRouter from './routes/products.routes.ts'
+import categoriesRouter from './routes/categories.routes.ts'
+import ordersRouter from './routes/orders.routes.ts'
+import authRouter from './routes/auth.routes.ts'
 import adminRouter from './routes/admin/index.ts'
 import { authenticateToken, requireAdmin } from './middleware/auth.ts'
 import { errorHandler } from './middleware/errorHandler.ts'
 
 const app = express()
 
-// Enable CORS for frontend requests
 app.use(cors())
-
-// Middleware to parse JSON bodies
 app.use(express.json())
 
-// Simple GET handler
 app.get('/', async (req, res) => {
   res.json({ message: 'Hello from Electromundo API!' })
-
-  // const users = await db.select().from(usersTable)
-  // console.log(users)
-})
-
-// Simple POST handler
-app.post('/api/data', (req, res) => {
-  res.json({
-    message: 'Data received',
-    data: req.body,
-  })
 })
 
 // Products API
