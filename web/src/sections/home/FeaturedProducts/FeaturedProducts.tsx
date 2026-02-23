@@ -4,11 +4,11 @@ import ProductsLoading from './components/ProductsLoading'
 import ProductsError from './components/ProductsError'
 import ProductsEmpty from './components/ProductsEmpty'
 import ProductsPagination from './components/ProductsPagination'
-import CategoryFilter from '@/components/CategoryFilter'
-import ProductControls from '@/components/ProductControls'
+import CategoryFilter from './components/CategoryFilter'
+import ProductControls from './components/ProductControls'
 import { useProducts } from '@/hooks/useProducts'
 
-function ProductsList() {
+function FeaturedProducts() {
   const [page, setPage] = useState(1)
   const [search, setSearch] = useState('')
   const [category, setCategory] = useState<number | undefined>()
@@ -32,22 +32,22 @@ function ProductsList() {
   const handlePriceChange = (min?: number, max?: number) => {
     setMinPrice(min)
     setMaxPrice(max)
-    setPage(1) // Reset to first page
+    setPage(1)
   }
 
   const handleSearchChange = (value: string) => {
     setSearch(value)
-    setPage(1) // Reset to first page
+    setPage(1)
   }
 
   const handleCategoryChange = (cat?: number) => {
     setCategory(cat)
-    setPage(1) // Reset to first page
+    setPage(1)
   }
 
   const handleSortChange = (sort: string) => {
     setSortBy(sort)
-    setPage(1) // Reset to first page
+    setPage(1)
   }
 
   if (isLoading) {
@@ -135,4 +135,4 @@ function ProductsList() {
   )
 }
 
-export default ProductsList
+export default FeaturedProducts

@@ -11,6 +11,7 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
 import { getOrder } from '@/services/orders.service'
+import { formatPrice } from '@/utils/formatPrice'
 import type { Order } from '@/types/order'
 
 function OrderConfirmationPage() {
@@ -53,12 +54,6 @@ function OrderConfirmationPage() {
       console.error('Error copying to clipboard:', err)
     }
   }
-
-  const formatPrice = (cents: number) =>
-    new Intl.NumberFormat('es-AR', {
-      style: 'currency',
-      currency: 'ARS',
-    }).format(cents / 100)
 
   const formatOrderNumber = (id: number) => String(id).padStart(6, '0')
 

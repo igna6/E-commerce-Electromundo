@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router'
 import type { Product } from '@/types/product'
+import { formatPrice } from '@/utils/formatPrice'
 
 type ProductsTableProps = {
   products: Product[]
@@ -14,13 +15,6 @@ export default function ProductsTable({
   isDeleting,
   categoryMap = {},
 }: ProductsTableProps) {
-  const formatCurrency = (cents: number) => {
-    return new Intl.NumberFormat('es-AR', {
-      style: 'currency',
-      currency: 'ARS',
-    }).format(cents / 100)
-  }
-
   if (products.length === 0) {
     return (
       <div className="px-4 py-12 text-center text-sm text-gray-500">
@@ -65,7 +59,7 @@ export default function ProductsTable({
                 {product.sku || '—'}
               </span>
             </td>
-            <td className="px-4 py-3 text-sm">{formatCurrency(product.price)}</td>
+            <td className="px-4 py-3 text-sm">{formatPrice(product.price)}</td>
             <td className="px-4 py-3">
               {product.stock === 0 ? (
                 <span className="inline-flex items-center rounded-full bg-red-100 px-2 py-0.5 text-xs font-medium text-red-700">

@@ -21,6 +21,7 @@ import {
 } from '@/components/ui/sheet'
 import { Badge } from '@/components/ui/badge'
 import { useCart } from '@/contexts/CartContext'
+import { formatPrice } from '@/utils/formatPrice'
 
 type CartSidebarProps = {
   children: React.ReactNode
@@ -30,21 +31,13 @@ function CartSidebar({ children }: CartSidebarProps) {
   const [open, setOpen] = useState(false)
   const { items, subtotal, totalItems, updateQuantity, removeItem } = useCart()
 
-  // Convert subtotal from cents to display value
-  const subtotalDisplay = subtotal / 100
   const itemCount = totalItems
-  const freeShippingThreshold = 50000
-  const remainingForFreeShipping = Math.max(0, freeShippingThreshold - subtotalDisplay)
+  const freeShippingThreshold = 5000000 // 50,000 ARS in cents
+  const remainingForFreeShipping = Math.max(0, freeShippingThreshold - subtotal)
   const freeShippingProgress = Math.min(
     100,
-    (subtotalDisplay / freeShippingThreshold) * 100,
+    (subtotal / freeShippingThreshold) * 100,
   )
-
-  const formatPrice = (price: number) =>
-    new Intl.NumberFormat('es-AR', {
-      style: 'currency',
-      currency: 'ARS',
-    }).format(price)
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -122,7 +115,7 @@ function CartSidebar({ children }: CartSidebarProps) {
                         {item.product.name}
                       </Link>
                       <p className="text-primary font-bold mt-1">
-                        {formatPrice(item.product.price / 100)}
+                        {formatPrice(item.product.price)}
                       </p>
 
                       <div className="flex items-center justify-between mt-3">
@@ -198,7 +191,7 @@ function CartSidebar({ children }: CartSidebarProps) {
               <div className="flex justify-between items-center w-full">
                 <span className="text-slate-500">Subtotal</span>
                 <span className="text-2xl font-bold text-primary">
-                  {formatPrice(subtotalDisplay)}
+                  {formatPrice(subtotal)}
                 </span>
               </div>
               <p className="text-xs text-slate-400 text-center">

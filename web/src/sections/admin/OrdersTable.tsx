@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router'
 import OrderStatusBadge from './OrderStatusBadge'
+import { formatPrice } from '@/utils/formatPrice'
 
 type Order = {
   id: number
@@ -17,13 +18,6 @@ type OrdersTableProps = {
 }
 
 export default function OrdersTable({ orders }: OrdersTableProps) {
-  const formatCurrency = (cents: number) => {
-    return new Intl.NumberFormat('es-AR', {
-      style: 'currency',
-      currency: 'ARS',
-    }).format(cents / 100)
-  }
-
   const formatDate = (date: string) => {
     return new Date(date).toLocaleDateString('es-AR', {
       year: 'numeric',
@@ -65,7 +59,7 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
               {order.firstName} {order.lastName}
             </td>
             <td className="px-4 py-3 text-sm text-gray-500">{order.email}</td>
-            <td className="px-4 py-3">{formatCurrency(order.total)}</td>
+            <td className="px-4 py-3">{formatPrice(order.total)}</td>
             <td className="px-4 py-3">
               <OrderStatusBadge status={order.status} />
             </td>

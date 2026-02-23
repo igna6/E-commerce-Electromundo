@@ -10,23 +10,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Slider } from '@/components/ui/slider'
-import { Checkbox } from '@/components/ui/checkbox'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import ProductGridCard from './components/ProductGridCard'
+import FilterSidebar, { categories } from './components/FilterSidebar'
 import { useProducts } from '@/hooks/useProducts'
-
-const categories = [
-  { id: 'all', label: 'Todos', icon: '🌟' },
-  { id: 'electronics', label: 'Electrónica', icon: '📱' },
-  { id: 'computers', label: 'Computadoras', icon: '💻' },
-  { id: 'phones', label: 'Celulares', icon: '📞' },
-  { id: 'audio', label: 'Audio', icon: '🎧' },
-  { id: 'gaming', label: 'Gaming', icon: '🎮' },
-  { id: 'accessories', label: 'Accesorios', icon: '⌨️' },
-]
-
-const brands = ['Apple', 'Samsung', 'Sony', 'LG', 'HP', 'Dell', 'Logitech', 'JBL']
 
 function ProductsPage() {
   const [searchQuery, setSearchQuery] = useState('')
@@ -54,101 +41,20 @@ function ProductsPage() {
   const hasActiveFilters =
     selectedCategory !== 'all' ||
     selectedBrands.length > 0 ||
-    priceRange[0] > 0 ||
-    priceRange[1] < 500000
+    priceRange[0]! > 0 ||
+    priceRange[1]! < 500000
 
   const activeFilterCount = selectedBrands.length + (selectedCategory !== 'all' ? 1 : 0)
 
-  const FilterSidebar = () => (
-    <div className="space-y-8">
-      {/* Categories */}
-      <div>
-        <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4">
-          Categorías
-        </h3>
-        <div className="space-y-1">
-          {categories.map((category) => (
-            <button
-              key={category.id}
-              onClick={() => setSelectedCategory(category.id)}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-all duration-200 ${
-                selectedCategory === category.id
-                  ? 'bg-primary/10 text-primary border border-primary/30'
-                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent'
-              }`}
-            >
-              <span className="text-base">{category.icon}</span>
-              <span className="font-medium">{category.label}</span>
-              {selectedCategory === category.id && (
-                <span className="ml-auto w-1.5 h-1.5 rounded-full bg-primary" />
-              )}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Price Range */}
-      <div>
-        <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4">
-          Rango de Precio
-        </h3>
-        <div className="px-1">
-          <Slider
-            value={priceRange}
-            onValueChange={setPriceRange}
-            min={0}
-            max={500000}
-            step={1000}
-            className="mb-4"
-          />
-          <div className="flex items-center justify-between text-sm">
-            <span className="px-3 py-1.5 rounded-lg bg-slate-100 text-primary font-mono">
-              ${priceRange[0].toLocaleString()}
-            </span>
-            <span className="text-slate-400">—</span>
-            <span className="px-3 py-1.5 rounded-lg bg-slate-100 text-primary font-mono">
-              ${priceRange[1].toLocaleString()}
-            </span>
-          </div>
-        </div>
-      </div>
-
-      {/* Brands */}
-      <div>
-        <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4">
-          Marcas
-        </h3>
-        <div className="space-y-1">
-          {brands.map((brand) => (
-            <label
-              key={brand}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer hover:bg-slate-100 transition-colors group"
-            >
-              <Checkbox
-                checked={selectedBrands.includes(brand)}
-                onCheckedChange={() => toggleBrand(brand)}
-                className="border-slate-300 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
-              />
-              <span className="text-slate-600 group-hover:text-slate-900 transition-colors">
-                {brand}
-              </span>
-            </label>
-          ))}
-        </div>
-      </div>
-
-      {hasActiveFilters && (
-        <Button
-          variant="outline"
-          onClick={clearFilters}
-          className="w-full border-slate-200 text-slate-600 hover:text-slate-900 hover:border-slate-300 hover:bg-slate-100"
-        >
-          <X className="w-4 h-4 mr-2" />
-          Limpiar Filtros
-        </Button>
-      )}
-    </div>
-  )
+  const filterSidebarProps = {
+    selectedCategory,
+    onSelectCategory: setSelectedCategory,
+    priceRange,
+    onPriceRangeChange: setPriceRange,
+    selectedBrands,
+    onToggleBrand: toggleBrand,
+    onClearFilters: clearFilters,
+  }
 
   return (
     <div className="min-h-screen bg-white pt-20">
@@ -260,7 +166,7 @@ function ProductsPage() {
                   <SlidersHorizontal className="w-5 h-5 text-primary" />
                   Filtros
                 </h2>
-                <FilterSidebar />
+                <FilterSidebar {...filterSidebarProps} />
               </SheetContent>
             </Sheet>
           </div>
