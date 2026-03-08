@@ -5,6 +5,7 @@ import type { Product } from '@/types/product'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { useCart } from '@/contexts/CartContext'
+import { toTitleCase } from '@/utils/toTitleCase'
 
 type ProductGridCardProps = {
   product: Product
@@ -56,7 +57,7 @@ function ProductGridCard({ product, viewMode, index = 0 }: ProductGridCardProps)
             {product.image ? (
               <img
                 src={product.image}
-                alt={product.name}
+                alt={toTitleCase(product.name)}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               />
             ) : (
@@ -78,7 +79,7 @@ function ProductGridCard({ product, viewMode, index = 0 }: ProductGridCardProps)
                   params={{ productId: String(product.id) }}
                 >
                   <h3 className="font-semibold text-slate-900 text-lg group-hover:text-primary transition-colors">
-                    {product.name}
+                    {toTitleCase(product.name)}
                   </h3>
                 </Link>
                 <Badge className="mt-2 bg-slate-100 text-slate-600 border border-slate-200 hover:bg-slate-200">
@@ -201,7 +202,7 @@ function ProductGridCard({ product, viewMode, index = 0 }: ProductGridCardProps)
             {product.image ? (
               <img
                 src={product.image}
-                alt={product.name}
+                alt={toTitleCase(product.name)}
                 className={`w-full h-full object-cover transition-transform duration-700 ease-out ${
                   isHovered ? 'scale-110' : 'scale-100'
                 }`}
@@ -220,7 +221,7 @@ function ProductGridCard({ product, viewMode, index = 0 }: ProductGridCardProps)
         <div className="p-5">
           <Link to="/products/$productId" params={{ productId: String(product.id) }}>
             <h3 className="font-semibold text-slate-900 text-lg mb-2 truncate group-hover:text-primary transition-colors">
-              {product.name}
+              {toTitleCase(product.name)}
             </h3>
           </Link>
 

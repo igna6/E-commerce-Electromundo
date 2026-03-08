@@ -88,6 +88,7 @@ export async function deleteProduct(id: number): Promise<{ message: string }> {
 export type ImportResult = {
   created: number
   updated: number
+  priceUpdated: number
   errors: Array<{ row: number; error: string }>
   total: number
 }

@@ -17,6 +17,7 @@ import ProductInfo from './components/ProductInfo'
 import AddToCartControls from './components/AddToCartControls'
 import ProductDetailTabs from './components/ProductDetailTabs'
 import RelatedProducts from './components/RelatedProducts'
+import { toTitleCase } from '@/utils/toTitleCase'
 
 function ProductDetail() {
   const { productId } = useParams({ from: '/products/$productId' })
@@ -78,7 +79,7 @@ function ProductDetail() {
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
-                <BreadcrumbPage>{product.name}</BreadcrumbPage>
+                <BreadcrumbPage>{toTitleCase(product.name)}</BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
@@ -90,7 +91,7 @@ function ProductDetail() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
             <ProductImageGallery
               images={images}
-              productName={product.name}
+              productName={toTitleCase(product.name)}
               selectedImage={selectedImage}
               onSelectImage={setSelectedImage}
             />

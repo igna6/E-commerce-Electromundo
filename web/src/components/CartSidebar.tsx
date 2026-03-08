@@ -22,6 +22,7 @@ import {
 import { Badge } from '@/components/ui/badge'
 import { useCart } from '@/contexts/CartContext'
 import { formatPrice } from '@/utils/formatPrice'
+import { toTitleCase } from '@/utils/toTitleCase'
 
 type CartSidebarProps = {
   children: React.ReactNode
@@ -95,7 +96,7 @@ function CartSidebar({ children }: CartSidebarProps) {
                       {item.product.image ? (
                         <img
                           src={item.product.image}
-                          alt={item.product.name}
+                          alt={toTitleCase(item.product.name)}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                         />
                       ) : (
@@ -112,7 +113,7 @@ function CartSidebar({ children }: CartSidebarProps) {
                         onClick={() => setOpen(false)}
                         className="font-medium text-slate-900 hover:text-primary transition-colors line-clamp-2 text-sm"
                       >
-                        {item.product.name}
+                        {toTitleCase(item.product.name)}
                       </Link>
                       <p className="text-primary font-bold mt-1">
                         {formatPrice(item.product.price)}

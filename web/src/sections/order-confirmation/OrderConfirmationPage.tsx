@@ -14,6 +14,7 @@ import { getOrder } from '@/services/orders.service'
 import { formatPrice } from '@/utils/formatPrice'
 import { STORE_WHATSAPP_NUMBER } from '@/constants/config'
 import type { Order } from '@/types/order'
+import { toTitleCase } from '@/utils/toTitleCase'
 
 function OrderConfirmationPage() {
   const navigate = useNavigate()
@@ -193,7 +194,7 @@ function OrderConfirmationPage() {
             {order.items.map((item) => (
               <div key={item.id} className="flex justify-between items-center">
                 <div>
-                  <p className="font-medium text-brand-dark">{item.productName}</p>
+                  <p className="font-medium text-brand-dark">{toTitleCase(item.productName)}</p>
                   <p className="text-sm text-gray-500">
                     {item.quantity} x {formatPrice(item.productPrice)}
                   </p>

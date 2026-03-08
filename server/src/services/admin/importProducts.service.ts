@@ -57,6 +57,7 @@ export async function importProducts(fileBuffer: Buffer) {
   const itemIdx = header.findIndex((h) => ['item', 'sku', 'codigo', 'cod', 'code', 'articulo', 'nro'].includes(h))
   const descIdx = header.findIndex((h) => ['descripcion', 'nombre', 'name', 'producto', 'detalle', 'articulo'].includes(h) || h.includes('descripcion'))
   const stockIdx = header.findIndex((h) => ['existencia', 'stock', 'cantidad', 'cant', 'qty', 'disponible'].includes(h) || h.includes('exist') || h.includes('stock'))
+  const priceIdx = header.findIndex((h) => ['precio', 'price', 'valor', 'costo', 'pvp', 'importe'].includes(h) || h.includes('precio') || h.includes('price'))
 
   if (itemIdx === -1) {
     throw new BadRequestError(`No se encontró la columna "Ítem" en el CSV. Columnas encontradas: ${rows[0]!.join(', ')}`)
@@ -70,7 +71,7 @@ export async function importProducts(fileBuffer: Buffer) {
 
   const dataRows = rows.slice(1)
   const errors: Array<{ row: number; error: string }> = []
-  const validProducts: Array<{ sku: string; name: string; stock: number }> = []
+  const validProducts: Array<{ sku: string; name: string; stock: number; price?: number | undefined }> = []
 
   for (let i = 0; i < dataRows.length; i++) {
     const row = dataRows[i]!
@@ -96,7 +97,22 @@ export async function importProducts(fileBuffer: Buffer) {
     }
 
     const stock = Math.max(0, stockNum)
-    validProducts.push({ sku, name, stock })
+
+    let price: number | undefined
+    if (priceIdx !== -1) {
+      const priceRaw = (row[priceIdx] ?? '').trim()
+      if (priceRaw !== '') {
+        const normalized = priceRaw.replace(/,/g, '.')
+        const parsed = parseFloat(normalized)
+        if (isNaN(parsed) || parsed < 0) {
+          errors.push({ row: rowNum, error: `Precio inválido "${priceRaw}" para Ítem "${sku}"` })
+        } else if (parsed > 0) {
+          price = Math.round(parsed * 100)
+        }
+      }
+    }
+
+    validProducts.push({ sku, name, stock, price })
   }
 
   const existingProducts = await db
@@ -113,28 +129,37 @@ export async function importProducts(fileBuffer: Buffer) {
 
   let created = 0
   let updated = 0
+  let priceUpdated = 0
 
   await db.transaction(async (tx) => {
     for (const product of validProducts) {
       const existingId = skuToId.get(product.sku.toLowerCase())
 
       if (existingId) {
+        const updateData: { name: string; stock: number; updatedAt: Date; price?: number | undefined } = {
+          name: product.name,
+          stock: product.stock,
+          updatedAt: new Date(),
+        }
+        if (product.price !== undefined && product.price > 0) {
+          updateData.price = product.price
+          priceUpdated++
+        }
         await tx
           .update(productsTable)
-          .set({
-            name: product.name,
-            stock: product.stock,
-            updatedAt: new Date(),
-          })
+          .set(updateData)
           .where(eq(productsTable.id, existingId))
         updated++
       } else {
         await tx.insert(productsTable).values({
           sku: product.sku,
           name: product.name,
-          price: 0,
+          price: product.price ?? 0,
           stock: product.stock,
         })
+        if (product.price !== undefined && product.price > 0) {
+          priceUpdated++
+        }
         created++
       }
     }
@@ -143,6 +168,7 @@ export async function importProducts(fileBuffer: Buffer) {
   return {
     created,
     updated,
+    priceUpdated,
     errors,
     total: validProducts.length,
   }

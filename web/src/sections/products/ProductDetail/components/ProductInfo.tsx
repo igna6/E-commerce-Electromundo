@@ -2,6 +2,7 @@ import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { formatPrice } from '@/utils/formatPrice'
 import type { Product } from '@/types/product'
+import { toTitleCase } from '@/utils/toTitleCase'
 
 type ProductInfoProps = {
   product: Product
@@ -21,7 +22,7 @@ export default function ProductInfo({ product }: ProductInfoProps) {
           )}
         </div>
         <h1 className="text-3xl font-bold text-brand-dark mb-3">
-          {product.name}
+          {toTitleCase(product.name)}
         </h1>
 
         {/* Rating */}

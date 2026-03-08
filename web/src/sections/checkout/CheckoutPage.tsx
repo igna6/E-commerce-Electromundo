@@ -28,7 +28,7 @@ type CheckoutFormData = z.infer<typeof checkoutSchema>
 
 function CheckoutPage() {
   const navigate = useNavigate()
-  const { items, subtotal, clearCart } = useCart()
+  const { items, clearCart } = useCart()
   const availableItems = items.filter((item) => item.product.stock > 0)
   const unavailableItems = items.filter((item) => item.product.stock <= 0)
   const availableSubtotal = availableItems.reduce(

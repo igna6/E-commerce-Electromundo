@@ -4,6 +4,7 @@ import { ShoppingCart, Check, Package } from 'lucide-react'
 import type { Product } from '@/types/product'
 import { useCart } from '@/contexts/CartContext'
 import { formatPrice } from '@/utils/formatPrice'
+import { toTitleCase } from '@/utils/toTitleCase'
 
 type ProductCardProps = {
   product: Product
@@ -32,7 +33,7 @@ function ProductCard({ product }: ProductCardProps) {
         {product.image ? (
           <img
             src={product.image}
-            alt={product.name}
+            alt={toTitleCase(product.name)}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
         ) : (
@@ -68,7 +69,7 @@ function ProductCard({ product }: ProductCardProps) {
       {/* Content */}
       <div className="p-4">
         <h3 className="font-medium text-slate-800 text-sm sm:text-base leading-snug mb-1 line-clamp-2 group-hover:text-primary transition-colors">
-          {product.name}
+          {toTitleCase(product.name)}
         </h3>
         {product.description && (
           <p className="text-slate-400 text-xs sm:text-sm mb-2 line-clamp-1">

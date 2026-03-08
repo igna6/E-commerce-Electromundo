@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
 import type { StockError } from '@/machines/checkoutMachine'
+import { toTitleCase } from '@/utils/toTitleCase'
 
 type ContactFormData = {
   email: string
@@ -63,7 +64,7 @@ export default function ContactShippingForm({
             <ul className="mt-2 space-y-1">
               {stockErrors.map((item, i) => (
                 <li key={i}>
-                  <strong>{item.productName}</strong>: pediste {item.requested}, disponible{' '}
+                  <strong>{toTitleCase(item.productName)}</strong>: pediste {item.requested}, disponible{' '}
                   {item.available === 0 ? 'agotado' : item.available}
                 </li>
               ))}

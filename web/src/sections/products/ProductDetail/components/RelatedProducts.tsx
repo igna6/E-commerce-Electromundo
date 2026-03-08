@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { formatPrice } from '@/utils/formatPrice'
 import type { Product } from '@/types/product'
+import { toTitleCase } from '@/utils/toTitleCase'
 
 type RelatedProductsProps = {
   products: Product[]
@@ -27,7 +28,7 @@ export default function RelatedProducts({ products, currentProductId }: RelatedP
               {relatedProduct.image ? (
                 <img
                   src={relatedProduct.image}
-                  alt={relatedProduct.name}
+                  alt={toTitleCase(relatedProduct.name)}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
               ) : (
@@ -45,7 +46,7 @@ export default function RelatedProducts({ products, currentProductId }: RelatedP
             </div>
             <div className="p-3">
               <h3 className="font-medium text-brand-dark truncate text-sm">
-                {relatedProduct.name}
+                {toTitleCase(relatedProduct.name)}
               </h3>
               <p className="text-brand-orange font-bold">
                 {formatPrice(relatedProduct.price)}

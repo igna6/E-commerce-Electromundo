@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { formatPrice } from '@/utils/formatPrice'
 import type { CartItem } from '@/types/cart'
+import { toTitleCase } from '@/utils/toTitleCase'
 
 type CheckoutOrderSummaryProps = {
   items: CartItem[]
@@ -27,7 +28,7 @@ export default function CheckoutOrderSummary({ items, subtotal, unavailableItems
                 {item.product.image ? (
                   <img
                     src={item.product.image}
-                    alt={item.product.name}
+                    alt={toTitleCase(item.product.name)}
                     className="w-full h-full object-cover"
                   />
                 ) : (
@@ -48,7 +49,7 @@ export default function CheckoutOrderSummary({ items, subtotal, unavailableItems
               </div>
               <div className="flex-1 min-w-0">
                 <p className="font-medium text-slate-900 text-sm truncate">
-                  {item.product.name}
+                  {toTitleCase(item.product.name)}
                 </p>
                 <p className="text-primary font-semibold text-sm">
                   {formatPrice(item.product.price * item.quantity)}
@@ -63,7 +64,7 @@ export default function CheckoutOrderSummary({ items, subtotal, unavailableItems
             <p className="text-sm font-medium text-red-700 mb-1">Productos sin stock (no se incluirán):</p>
             <ul className="text-sm text-red-600 space-y-1">
               {unavailableItems.map((item) => (
-                <li key={item.product.id} className="line-through">{item.product.name}</li>
+                <li key={item.product.id} className="line-through">{toTitleCase(item.product.name)}</li>
               ))}
             </ul>
           </div>

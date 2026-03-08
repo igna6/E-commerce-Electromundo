@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { formatPrice } from '@/utils/formatPrice'
 import type { CartItem } from '@/types/cart'
+import { toTitleCase } from '@/utils/toTitleCase'
 
 type CartItemRowProps = {
   item: CartItem
@@ -22,7 +23,7 @@ export default function CartItemRow({ item, onUpdateQuantity, onRemove }: CartIt
             {item.product.image ? (
               <img
                 src={item.product.image}
-                alt={item.product.name}
+                alt={toTitleCase(item.product.name)}
                 className="w-full h-full object-cover hover:scale-105 transition-transform"
               />
             ) : (
@@ -44,7 +45,7 @@ export default function CartItemRow({ item, onUpdateQuantity, onRemove }: CartIt
               params={{ productId: String(item.product.id) }}
               className="font-semibold text-brand-dark hover:text-brand-blue transition-colors"
             >
-              {item.product.name}
+              {toTitleCase(item.product.name)}
             </Link>
             <p className="text-sm text-gray-500 mt-1">SKU: EM-{item.product.id.toString().padStart(6, '0')}</p>
             <div className="flex items-center gap-2 mt-2">
