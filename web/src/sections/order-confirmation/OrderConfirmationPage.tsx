@@ -134,15 +134,21 @@ function OrderConfirmationPage() {
               <p className="text-gray-600 text-sm">{order.phone}</p>
             </div>
 
-            {/* Shipping Address */}
+            {/* Shipping / Pickup Info */}
             <div>
-              <h3 className="font-semibold text-brand-dark mb-2">Dirección de Envío</h3>
-              <p className="text-gray-600 text-sm">{order.address}</p>
-              {order.apartment && <p className="text-gray-600 text-sm">{order.apartment}</p>}
-              <p className="text-gray-600 text-sm">
-                {order.city}, {order.province}
-              </p>
-              <p className="text-gray-600 text-sm">CP: {order.zipCode}</p>
+              <h3 className="font-semibold text-brand-dark mb-2">Método de Entrega</h3>
+              {order.address ? (
+                <>
+                  <p className="text-gray-600 text-sm">{order.address}</p>
+                  {order.apartment && <p className="text-gray-600 text-sm">{order.apartment}</p>}
+                  <p className="text-gray-600 text-sm">
+                    {order.city}, {order.province}
+                  </p>
+                  <p className="text-gray-600 text-sm">CP: {order.zipCode}</p>
+                </>
+              ) : (
+                <p className="text-gray-600 text-sm">Retiro en sucursal</p>
+              )}
             </div>
           </div>
 

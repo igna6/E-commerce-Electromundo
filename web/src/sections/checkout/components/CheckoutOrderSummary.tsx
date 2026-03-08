@@ -1,24 +1,17 @@
 import { Link } from '@tanstack/react-router'
-import type { ActorRefFrom } from 'xstate'
-import { useSelector } from '@xstate/react'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { formatPrice } from '@/utils/formatPrice'
-import type { checkoutMachine } from '@/machines/checkoutMachine'
 import type { CartItem } from '@/types/cart'
 
 type CheckoutOrderSummaryProps = {
-  actorRef: ActorRefFrom<typeof checkoutMachine>
   items: CartItem[]
   subtotal: number
 }
 
-export default function CheckoutOrderSummary({ actorRef, items, subtotal }: CheckoutOrderSummaryProps) {
-  const shippingMethod = useSelector(actorRef, (state) => state.context.shippingMethod)
-
-  const shippingCost = shippingMethod === 'express' ? 800000 : shippingMethod === 'standard' ? 300000 : 0
+export default function CheckoutOrderSummary({ items, subtotal }: CheckoutOrderSummaryProps) {
   const tax = Math.round(subtotal * 0.21)
-  const total = subtotal + shippingCost + tax
+  const total = subtotal + tax
 
   return (
     <div className="lg:col-span-1">
@@ -85,10 +78,6 @@ export default function CheckoutOrderSummary({ actorRef, items, subtotal }: Chec
           <div className="flex justify-between text-gray-600">
             <span>Subtotal</span>
             <span>{formatPrice(subtotal)}</span>
-          </div>
-          <div className="flex justify-between text-gray-600">
-            <span>Envío</span>
-            <span>{shippingCost === 0 ? 'Gratis' : formatPrice(shippingCost)}</span>
           </div>
           <div className="flex justify-between text-gray-600">
             <span>IVA (21%)</span>

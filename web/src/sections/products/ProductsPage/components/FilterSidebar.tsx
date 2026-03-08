@@ -13,14 +13,23 @@ const categories = [
   { id: 'accessories', label: 'Accesorios', icon: '\u{2328}\u{FE0F}' },
 ]
 
-const brands = ['Apple', 'Samsung', 'Sony', 'LG', 'HP', 'Dell', 'Logitech', 'JBL']
+const brands = [
+  'Apple',
+  'Samsung',
+  'Sony',
+  'LG',
+  'HP',
+  'Dell',
+  'Logitech',
+  'JBL',
+]
 
 type FilterSidebarProps = {
   selectedCategory: string
   onSelectCategory: (category: string) => void
-  priceRange: number[]
-  onPriceRangeChange: (range: number[]) => void
-  selectedBrands: string[]
+  priceRange: Array<number>
+  onPriceRangeChange: (range: Array<number>) => void
+  selectedBrands: Array<string>
   onToggleBrand: (brand: string) => void
   onClearFilters: () => void
 }
@@ -37,8 +46,8 @@ export default function FilterSidebar({
   const hasActiveFilters =
     selectedCategory !== 'all' ||
     selectedBrands.length > 0 ||
-    priceRange[0]! > 0 ||
-    priceRange[1]! < 500000
+    priceRange[0] > 0 ||
+    priceRange[1] < 500000
 
   return (
     <div className="space-y-8">
@@ -84,11 +93,11 @@ export default function FilterSidebar({
           />
           <div className="flex items-center justify-between text-sm">
             <span className="px-3 py-1.5 rounded-lg bg-slate-100 text-primary font-mono">
-              ${priceRange[0]!.toLocaleString()}
+              ${priceRange[0].toLocaleString()}
             </span>
             <span className="text-slate-400">&mdash;</span>
             <span className="px-3 py-1.5 rounded-lg bg-slate-100 text-primary font-mono">
-              ${priceRange[1]!.toLocaleString()}
+              ${priceRange[1].toLocaleString()}
             </span>
           </div>
         </div>

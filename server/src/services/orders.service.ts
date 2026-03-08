@@ -4,12 +4,6 @@ import { ordersTable, orderItemsTable, productsTable } from '../db/schema.ts'
 import { generateOrderText } from '../utils/orderTextGenerator.ts'
 import { BadRequestError, ConflictError, NotFoundError } from '../utils/errors.ts'
 
-const SHIPPING_COSTS: Record<string, number> = {
-  pickup: 0,
-  standard: 300000,
-  express: 800000,
-}
-
 const TAX_RATE = 0.21
 
 type CreateOrderInput = {
@@ -17,13 +11,11 @@ type CreateOrderInput = {
   phone: string
   firstName: string
   lastName: string
-  address: string
+  address?: string | null | undefined
   apartment?: string | null | undefined
-  city: string
-  province: string
-  zipCode: string
-  shippingMethod: string
-  paymentMethod: string
+  city?: string | null | undefined
+  province?: string | null | undefined
+  zipCode?: string | null | undefined
   items: Array<{ productId: number; quantity: number }>
 }
 
@@ -77,9 +69,9 @@ export async function createOrder(data: CreateOrderInput) {
     }
   })
 
-  const shippingCost = SHIPPING_COSTS[data.shippingMethod] || 0
+  const shippingCost = 0
   const tax = Math.round(subtotal * TAX_RATE)
-  const total = subtotal + shippingCost + tax
+  const total = subtotal + tax
 
   const result = await db.transaction(async (tx) => {
     for (const item of data.items) {
@@ -96,13 +88,13 @@ export async function createOrder(data: CreateOrderInput) {
         phone: data.phone,
         firstName: data.firstName,
         lastName: data.lastName,
-        address: data.address,
-        apartment: data.apartment,
-        city: data.city,
-        province: data.province,
-        zipCode: data.zipCode,
-        shippingMethod: data.shippingMethod,
-        paymentMethod: data.paymentMethod,
+        address: data.address ?? null,
+        apartment: data.apartment ?? null,
+        city: data.city ?? null,
+        province: data.province ?? null,
+        zipCode: data.zipCode ?? null,
+        shippingMethod: 'pickup',
+        paymentMethod: null,
         subtotal,
         shippingCost,
         tax,

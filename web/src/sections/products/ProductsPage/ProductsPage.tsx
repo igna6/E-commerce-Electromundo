@@ -1,5 +1,17 @@
 import { useState } from 'react'
-import { Search, SlidersHorizontal, Grid3X3, List, X, ChevronDown, Truck, Shield, Tag } from 'lucide-react'
+import {
+  ChevronDown,
+  Grid3X3,
+  List,
+  Search,
+  Shield,
+  SlidersHorizontal,
+  Tag,
+  Truck,
+  X,
+} from 'lucide-react'
+import ProductGridCard from './components/ProductGridCard'
+import FilterSidebar, { categories } from './components/FilterSidebar'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
@@ -11,8 +23,6 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
-import ProductGridCard from './components/ProductGridCard'
-import FilterSidebar, { categories } from './components/FilterSidebar'
 import { useProducts } from '@/hooks/useProducts'
 
 function ProductsPage() {
@@ -20,14 +30,14 @@ function ProductsPage() {
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [sortBy, setSortBy] = useState('featured')
   const [priceRange, setPriceRange] = useState([0, 500000])
-  const [selectedBrands, setSelectedBrands] = useState<string[]>([])
+  const [selectedBrands, setSelectedBrands] = useState<Array<string>>([])
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
 
   const { data, isLoading } = useProducts({ page: 1, limit: 24 })
 
   const toggleBrand = (brand: string) => {
     setSelectedBrands((prev) =>
-      prev.includes(brand) ? prev.filter((b) => b !== brand) : [...prev, brand]
+      prev.includes(brand) ? prev.filter((b) => b !== brand) : [...prev, brand],
     )
   }
 
@@ -41,10 +51,11 @@ function ProductsPage() {
   const hasActiveFilters =
     selectedCategory !== 'all' ||
     selectedBrands.length > 0 ||
-    priceRange[0]! > 0 ||
-    priceRange[1]! < 500000
+    priceRange[0] > 0 ||
+    priceRange[1] < 500000
 
-  const activeFilterCount = selectedBrands.length + (selectedCategory !== 'all' ? 1 : 0)
+  const activeFilterCount =
+    selectedBrands.length + (selectedCategory !== 'all' ? 1 : 0)
 
   const filterSidebarProps = {
     selectedCategory,
@@ -67,7 +78,8 @@ function ProductsPage() {
                 Nuestros Productos
               </h1>
               <p className="text-slate-600 max-w-lg">
-                Descubre la mejor tecnología con los mejores precios. Calidad garantizada en cada producto.
+                Descubre la mejor tecnología con los mejores precios. Calidad
+                garantizada en cada producto.
               </p>
             </div>
 
@@ -112,7 +124,9 @@ function ProductsPage() {
               <SelectContent className="bg-white border-slate-200">
                 <SelectItem value="featured">Destacados</SelectItem>
                 <SelectItem value="price-low">Precio: Menor a Mayor</SelectItem>
-                <SelectItem value="price-high">Precio: Mayor a Menor</SelectItem>
+                <SelectItem value="price-high">
+                  Precio: Mayor a Menor
+                </SelectItem>
                 <SelectItem value="newest">Más Recientes</SelectItem>
                 <SelectItem value="rating">Mejor Valorados</SelectItem>
               </SelectContent>
@@ -208,7 +222,7 @@ function ProductsPage() {
                 <SlidersHorizontal className="w-5 h-5 text-primary" />
                 Filtros
               </h2>
-              <FilterSidebar />
+              <FilterSidebar {...filterSidebarProps} />
             </div>
           </aside>
 
@@ -271,19 +285,21 @@ function ProductsPage() {
                   >
                     <ChevronDown className="w-4 h-4 rotate-90" />
                   </Button>
-                  {[...Array(Math.min(5, data.pagination.totalPages))].map((_, i) => (
-                    <Button
-                      key={i}
-                      variant={i === 0 ? 'default' : 'outline'}
-                      className={
-                        i === 0
-                          ? 'bg-primary text-white hover:bg-primary/90'
-                          : 'border-slate-200 text-slate-500 hover:bg-slate-100 hover:text-slate-900'
-                      }
-                    >
-                      {i + 1}
-                    </Button>
-                  ))}
+                  {[...Array(Math.min(5, data.pagination.totalPages))].map(
+                    (_, i) => (
+                      <Button
+                        key={i}
+                        variant={i === 0 ? 'default' : 'outline'}
+                        className={
+                          i === 0
+                            ? 'bg-primary text-white hover:bg-primary/90'
+                            : 'border-slate-200 text-slate-500 hover:bg-slate-100 hover:text-slate-900'
+                        }
+                      >
+                        {i + 1}
+                      </Button>
+                    ),
+                  )}
                   <Button
                     variant="outline"
                     disabled={!data.pagination.hasNext}

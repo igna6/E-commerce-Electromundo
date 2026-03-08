@@ -15,13 +15,13 @@ export type Order = {
   phone: string
   firstName: string
   lastName: string
-  address: string
+  address: string | null
   apartment: string | null
-  city: string
-  province: string
-  zipCode: string
-  shippingMethod: string
-  paymentMethod: string
+  city: string | null
+  province: string | null
+  zipCode: string | null
+  shippingMethod: string | null
+  paymentMethod: string | null
   subtotal: number
   shippingCost: number
   tax: number
@@ -38,13 +38,6 @@ export type CreateOrderPayload = {
   phone: string
   firstName: string
   lastName: string
-  address: string
-  apartment?: string | null
-  city: string
-  province: string
-  zipCode: string
-  shippingMethod: 'pickup' | 'standard' | 'express'
-  paymentMethod: 'card' | 'mercadopago' | 'transfer'
   items: {
     productId: number
     quantity: number

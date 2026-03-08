@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link, useParams } from '@tanstack/react-router'
+import { useQuery } from '@tanstack/react-query'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -8,6 +9,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
+import { getProduct } from '@/services/products.service'
 import { useProducts } from '@/hooks/useProducts'
 import { useCart } from '@/contexts/CartContext'
 import ProductImageGallery from './components/ProductImageGallery'
@@ -23,8 +25,12 @@ function ProductDetail() {
   const [isAdding, setIsAdding] = useState(false)
   const { addItem } = useCart()
 
-  const { data } = useProducts({ page: 1, limit: 20 })
-  const product = data?.data.find((p) => p.id === Number(productId))
+  const { data: productData } = useQuery({
+    queryKey: ['product', productId],
+    queryFn: () => getProduct(Number(productId)),
+  })
+  const product = productData?.data
+  const { data: productsData } = useProducts({ page: 1, limit: 20 })
 
   const images = product?.image
     ? [product.image, product.image, product.image, product.image]
@@ -103,7 +109,7 @@ function ProductDetail() {
         </div>
 
         <ProductDetailTabs product={product} />
-        <RelatedProducts products={data?.data ?? []} currentProductId={product.id} />
+        <RelatedProducts products={productsData?.data ?? []} currentProductId={product.id} />
       </div>
     </div>
   )
