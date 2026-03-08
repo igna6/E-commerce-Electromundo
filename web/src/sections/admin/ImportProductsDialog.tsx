@@ -236,7 +236,7 @@ export default function ImportProductsDialog({ open, onOpenChange }: ImportProdu
               Importación completada
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
               <div className="rounded-md bg-green-50 p-3 text-center">
                 <div className="text-2xl font-bold text-green-700">{result.created}</div>
                 <div className="text-xs text-green-600">Creados</div>
@@ -248,6 +248,10 @@ export default function ImportProductsDialog({ open, onOpenChange }: ImportProdu
               <div className="rounded-md bg-purple-50 p-3 text-center">
                 <div className="text-2xl font-bold text-purple-700">{result.priceUpdated}</div>
                 <div className="text-xs text-purple-600">Precios</div>
+              </div>
+              <div className="rounded-md bg-indigo-50 p-3 text-center">
+                <div className="text-2xl font-bold text-indigo-700">{result.imageUpdated}</div>
+                <div className="text-xs text-indigo-600">Imágenes</div>
               </div>
               <div className="rounded-md bg-red-50 p-3 text-center">
                 <div className="text-2xl font-bold text-red-700">{result.errors.length}</div>

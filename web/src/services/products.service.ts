@@ -89,6 +89,7 @@ export type ImportResult = {
   created: number
   updated: number
   priceUpdated: number
+  imageUpdated: number
   errors: Array<{ row: number; error: string }>
   total: number
 }

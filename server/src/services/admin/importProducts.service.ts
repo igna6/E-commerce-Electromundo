@@ -58,6 +58,7 @@ export async function importProducts(fileBuffer: Buffer) {
   const descIdx = header.findIndex((h) => ['descripcion', 'nombre', 'name', 'producto', 'detalle', 'articulo'].includes(h) || h.includes('descripcion'))
   const stockIdx = header.findIndex((h) => ['existencia', 'stock', 'cantidad', 'cant', 'qty', 'disponible'].includes(h) || h.includes('exist') || h.includes('stock'))
   const priceIdx = header.findIndex((h) => ['precio', 'price', 'valor', 'costo', 'pvp', 'importe'].includes(h) || h.includes('precio') || h.includes('price'))
+  const imageIdx = header.findIndex((h) => ['imagen', 'image', 'foto', 'urlimagen', 'urlimage', 'img', 'picture', 'photo'].includes(h) || h.includes('imagen') || h.includes('image') || h.includes('foto'))
 
   if (itemIdx === -1) {
     throw new BadRequestError(`No se encontró la columna "Ítem" en el CSV. Columnas encontradas: ${rows[0]!.join(', ')}`)
@@ -71,7 +72,7 @@ export async function importProducts(fileBuffer: Buffer) {
 
   const dataRows = rows.slice(1)
   const errors: Array<{ row: number; error: string }> = []
-  const validProducts: Array<{ sku: string; name: string; stock: number; price?: number | undefined }> = []
+  const validProducts: Array<{ sku: string; name: string; stock: number; price?: number | undefined; image?: string | undefined }> = []
 
   for (let i = 0; i < dataRows.length; i++) {
     const row = dataRows[i]!
@@ -112,7 +113,19 @@ export async function importProducts(fileBuffer: Buffer) {
       }
     }
 
-    validProducts.push({ sku, name, stock, price })
+    let image: string | undefined
+    if (imageIdx !== -1) {
+      const imageRaw = (row[imageIdx] ?? '').trim()
+      if (imageRaw !== '') {
+        if (imageRaw.startsWith('http://') || imageRaw.startsWith('https://')) {
+          image = imageRaw
+        } else {
+          errors.push({ row: rowNum, error: `URL de imagen inválida "${imageRaw}" para Ítem "${sku}" (debe comenzar con http:// o https://)` })
+        }
+      }
+    }
+
+    validProducts.push({ sku, name, stock, price, image })
   }
 
   const existingProducts = await db
@@ -130,13 +143,14 @@ export async function importProducts(fileBuffer: Buffer) {
   let created = 0
   let updated = 0
   let priceUpdated = 0
+  let imageUpdated = 0
 
   await db.transaction(async (tx) => {
     for (const product of validProducts) {
       const existingId = skuToId.get(product.sku.toLowerCase())
 
       if (existingId) {
-        const updateData: { name: string; stock: number; updatedAt: Date; price?: number | undefined } = {
+        const updateData: { name: string; stock: number; updatedAt: Date; price?: number | undefined; image?: string | undefined } = {
           name: product.name,
           stock: product.stock,
           updatedAt: new Date(),
@@ -144,6 +158,10 @@ export async function importProducts(fileBuffer: Buffer) {
         if (product.price !== undefined && product.price > 0) {
           updateData.price = product.price
           priceUpdated++
+        }
+        if (product.image !== undefined) {
+          updateData.image = product.image
+          imageUpdated++
         }
         await tx
           .update(productsTable)
@@ -156,9 +174,13 @@ export async function importProducts(fileBuffer: Buffer) {
           name: product.name,
           price: product.price ?? 0,
           stock: product.stock,
+          ...(product.image !== undefined ? { image: product.image } : {}),
         })
         if (product.price !== undefined && product.price > 0) {
           priceUpdated++
+        }
+        if (product.image !== undefined) {
+          imageUpdated++
         }
         created++
       }
@@ -169,6 +191,7 @@ export async function importProducts(fileBuffer: Buffer) {
     created,
     updated,
     priceUpdated,
+    imageUpdated,
     errors,
     total: validProducts.length,
   }

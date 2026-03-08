@@ -33,9 +33,7 @@ function ProductDetail() {
   const product = productData?.data
   const { data: productsData } = useProducts({ page: 1, limit: 20 })
 
-  const images = product?.image
-    ? [product.image, product.image, product.image, product.image]
-    : []
+  const images = product?.image ? [product.image] : []
 
   const handleAddToCart = () => {
     if (product) {
