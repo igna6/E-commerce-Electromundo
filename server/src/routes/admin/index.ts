@@ -3,6 +3,7 @@ import multer from 'multer'
 import * as adminOrdersController from '../../controllers/admin/orders.controller.ts'
 import * as statsController from '../../controllers/admin/stats.controller.ts'
 import * as importProductsController from '../../controllers/admin/importProducts.controller.ts'
+import * as bannersController from '../../controllers/banners.controller.ts'
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -28,5 +29,12 @@ router.get('/stats', statsController.getStats)
 
 // Import products
 router.post('/products/import', upload.single('file'), importProductsController.importCSV)
+
+// Banners
+router.get('/banners', bannersController.listAll)
+router.get('/banners/:id', bannersController.getById)
+router.post('/banners', bannersController.create)
+router.put('/banners/:id', bannersController.update)
+router.delete('/banners/:id', bannersController.remove)
 
 export default router

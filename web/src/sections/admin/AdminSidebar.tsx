@@ -5,6 +5,7 @@ const navItems = [
   { to: '/admin/orders', label: 'Pedidos', icon: '📦' },
   { to: '/admin/products', label: 'Productos', icon: '🏷️' },
   { to: '/admin/categories', label: 'Categorías', icon: '📁' },
+  { to: '/admin/banners', label: 'Banners', icon: '🖼️' },
 ]
 
 export default function AdminSidebar() {

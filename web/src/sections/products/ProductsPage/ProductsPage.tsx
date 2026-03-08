@@ -73,7 +73,7 @@ function ProductsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white pt-20">
+    <div className="min-h-screen bg-white">
       {/* Hero Section - compact */}
       <section className="bg-white border-b border-slate-100">
         <div className="container mx-auto px-6 py-8 lg:py-10">

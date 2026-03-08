@@ -1,135 +1,58 @@
-import { useState } from 'react'
+import { Link } from '@tanstack/react-router'
+import { ArrowRight } from 'lucide-react'
 import ProductCard from './components/ProductCard'
 import ProductsLoading from './components/ProductsLoading'
-import ProductsError from './components/ProductsError'
-import ProductsEmpty from './components/ProductsEmpty'
-import ProductsPagination from './components/ProductsPagination'
-import CategoryFilter from './components/CategoryFilter'
-import ProductControls from './components/ProductControls'
 import { useProducts } from '@/hooks/useProducts'
 
 function FeaturedProducts() {
-  const [page, setPage] = useState(1)
-  const [search, setSearch] = useState('')
-  const [category, setCategory] = useState<number | undefined>()
-  const [minPrice, setMinPrice] = useState<number | undefined>()
-  const [maxPrice, setMaxPrice] = useState<number | undefined>()
-  const [sortBy, setSortBy] = useState('newest')
-
-  const { data, isLoading, error, refetch } = useProducts({
-    page,
-    limit: 12,
-    search: search || undefined,
-    category,
-    minPrice,
-    maxPrice,
-    sortBy: sortBy as any,
+  const { data, isLoading } = useProducts({
+    page: 1,
+    limit: 8,
+    sortBy: 'newest',
   })
 
   const products = data?.data ?? []
-  const pagination = data?.pagination ?? null
-
-  const handlePriceChange = (min?: number, max?: number) => {
-    setMinPrice(min)
-    setMaxPrice(max)
-    setPage(1)
-  }
-
-  const handleSearchChange = (value: string) => {
-    setSearch(value)
-    setPage(1)
-  }
-
-  const handleCategoryChange = (cat?: number) => {
-    setCategory(cat)
-    setPage(1)
-  }
-
-  const handleSortChange = (sort: string) => {
-    setSortBy(sort)
-    setPage(1)
-  }
 
   if (isLoading) {
     return <ProductsLoading />
   }
 
-  if (error) {
-    return (
-      <ProductsError
-        error={error instanceof Error ? error.message : 'Error desconocido'}
-        onRetry={() => {
-          setPage(1)
-          refetch()
-        }}
-      />
-    )
-  }
-
-  if (products.length === 0 && !search && !category && !minPrice && !maxPrice) {
-    return <ProductsEmpty />
-  }
+  if (products.length === 0) return null
 
   return (
-    <section className="py-16 bg-gray-50">
-      <div className="container mx-auto px-6">
-        <h2 className="text-3xl font-bold text-brand-dark mb-8 text-center">
-          Nuestros Productos
-        </h2>
-
-        {/* Filters */}
-        <div className="mb-8 space-y-6">
-          <CategoryFilter
-            selectedCategory={category}
-            onCategoryChange={handleCategoryChange}
-          />
-          <ProductControls
-            search={search}
-            onSearchChange={handleSearchChange}
-            minPrice={minPrice}
-            maxPrice={maxPrice}
-            onPriceChange={handlePriceChange}
-            sortBy={sortBy}
-            onSortChange={handleSortChange}
-          />
+    <section className="bg-white py-10 lg:py-14">
+      <div className="container mx-auto px-4 sm:px-6">
+        {/* Section header */}
+        <div className="flex items-center justify-between mb-8">
+          <h2 className="text-2xl sm:text-3xl font-bold text-slate-900">
+            Productos Destacados
+          </h2>
+          <Link
+            to="/products"
+            className="hidden sm:inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary/80 transition-colors"
+          >
+            Ver todos
+            <ArrowRight className="w-4 h-4" />
+          </Link>
         </div>
 
-        {/* Results */}
-        {products.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-gray-500 mb-4">
-              No se encontraron productos que coincidan con los filtros seleccionados.
-            </p>
-            <button
-              onClick={() => {
-                setSearch('')
-                setCategory(undefined)
-                setMinPrice(undefined)
-                setMaxPrice(undefined)
-                setSortBy('newest')
-                setPage(1)
-              }}
-              className="text-brand-primary hover:underline"
-            >
-              Limpiar filtros
-            </button>
-          </div>
-        ) : (
-          <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {products.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
+        {/* Product grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+          {products.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
 
-            {pagination && (
-              <ProductsPagination
-                pagination={pagination}
-                onPageChange={setPage}
-              />
-            )}
-          </>
-        )}
+        {/* Mobile "ver todos" */}
+        <div className="mt-8 text-center sm:hidden">
+          <Link
+            to="/products"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-primary hover:bg-primary/90 text-white font-semibold rounded-lg transition-colors"
+          >
+            Ver todos los productos
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
       </div>
     </section>
   )

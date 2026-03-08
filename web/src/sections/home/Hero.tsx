@@ -1,111 +1,194 @@
+import { useState, useEffect, useCallback } from 'react'
 import { Link } from '@tanstack/react-router'
-import { Truck, Shield, Tag } from 'lucide-react'
+import { useQuery } from '@tanstack/react-query'
+import { ArrowRight, Zap, ChevronLeft, ChevronRight } from 'lucide-react'
+import { getActiveBanners } from '@/services/banners.service'
+import type { Banner } from '@/types/banner'
 
-function Hero() {
+function HeroSlide({ banner }: { banner: Banner }) {
   return (
-    <section className="bg-white">
-      {/* Main hero content */}
-      <div className="container mx-auto px-6 py-16 lg:py-24">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Left column - Text content */}
-          <div>
-            <span className="inline-block px-3 py-1 text-sm font-medium text-primary bg-primary/10 rounded-full mb-6">
-              Nuevos productos disponibles
-            </span>
-
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-900 leading-tight mb-6">
-              Tecnología para tu hogar
-            </h1>
-            
-            <p className="text-lg text-slate-600 mb-8 max-w-lg">
-              Equipa tu casa con los mejores precios en electrodomésticos y tecnología. Calidad garantizada en cada producto.
-            </p>
-
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 mb-12">
-              <Link
-                to="/products"
-                className="inline-flex items-center justify-center px-6 py-3 font-semibold text-white bg-primary rounded-lg hover:bg-primary/90 transition-colors"
-              >
-                Ver productos
-              </Link>
-              <Link
-                to="/products"
-                className="inline-flex items-center justify-center px-6 py-3 font-semibold text-slate-700 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors"
-              >
-                Ofertas del día
-              </Link>
-            </div>
-
-            {/* Trust badges */}
-            <div className="flex flex-wrap gap-6">
-              <div className="flex items-center gap-2 text-slate-600">
-                <Truck className="w-5 h-5 text-primary" />
-                <span className="text-sm">Envío gratis +$50,000</span>
-              </div>
-              <div className="flex items-center gap-2 text-slate-600">
-                <Shield className="w-5 h-5 text-primary" />
-                <span className="text-sm">Garantía incluida</span>
-              </div>
-              <div className="flex items-center gap-2 text-slate-600">
-                <Tag className="w-5 h-5 text-primary" />
-                <span className="text-sm">Mejores precios</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Right column - Featured product visual */}
-          <div className="relative">
-            <div className="bg-gradient-to-br from-slate-100 to-slate-50 rounded-2xl p-8 lg:p-12">
-              <div className="aspect-square bg-white rounded-xl shadow-sm flex items-center justify-center">
-                <div className="text-center p-8">
-                  <div className="w-32 h-32 mx-auto mb-6 bg-slate-100 rounded-full flex items-center justify-center">
-                    <svg className="w-16 h-16 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                    </svg>
-                  </div>
-                  <p className="text-slate-500 text-sm">Descubre nuestros productos destacados</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Floating badge */}
-            <div className="absolute -bottom-4 -left-4 bg-white rounded-lg shadow-lg px-4 py-3 border border-slate-100">
-              <div className="flex items-center gap-3">
-                <div className="flex -space-x-2">
-                  {[...Array(3)].map((_, i) => (
-                    <div
-                      key={i}
-                      className="w-8 h-8 rounded-full bg-slate-200 border-2 border-white"
-                    />
-                  ))}
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-slate-900">+2,500</p>
-                  <p className="text-xs text-slate-500">clientes satisfechos</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Rating badge */}
-            <div className="absolute -top-4 -right-4 bg-white rounded-lg shadow-lg px-4 py-3 border border-slate-100">
-              <div className="flex items-center gap-2">
-                <div className="flex">
-                  {[...Array(5)].map((_, i) => (
-                    <svg key={i} className="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                  ))}
-                </div>
-                <span className="text-sm font-medium text-slate-700">4.9</span>
+    <div className="relative w-full flex-shrink-0">
+      {banner.image ? (
+        <div className="relative">
+          <img
+            src={banner.image}
+            alt={banner.title}
+            className="w-full h-[320px] sm:h-[400px] lg:h-[480px] object-cover"
+          />
+          {/* Overlay for text readability */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-transparent" />
+          <div className="absolute inset-0 flex items-center">
+            <div className="container mx-auto px-4 sm:px-6">
+              <div className="max-w-xl">
+                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight mb-3">
+                  {banner.title}
+                </h2>
+                {banner.subtitle && (
+                  <p className="text-base sm:text-lg text-white/85 mb-6 max-w-md leading-relaxed">
+                    {banner.subtitle}
+                  </p>
+                )}
+                {banner.buttonText && banner.buttonLink && (
+                  <Link
+                    to={banner.buttonLink}
+                    className="inline-flex items-center gap-2 px-6 py-3 font-semibold text-primary bg-white rounded-lg hover:bg-slate-50 transition-colors shadow-lg"
+                  >
+                    {banner.buttonText}
+                    <ArrowRight className="w-4 h-4" />
+                  </Link>
+                )}
               </div>
             </div>
           </div>
         </div>
+      ) : (
+        <div className="relative bg-gradient-to-br from-primary via-primary to-teal-700 overflow-hidden">
+          {/* Decorative circles */}
+          <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/3" />
+          <div className="absolute bottom-0 left-0 w-72 h-72 bg-white/5 rounded-full translate-y-1/3 -translate-x-1/4" />
+          <div className="absolute top-1/2 left-1/2 w-[600px] h-[600px] bg-amber-400/10 rounded-full -translate-x-1/2 -translate-y-1/2" />
+
+          <div className="relative container mx-auto px-4 sm:px-6 py-16 sm:py-20 lg:py-24">
+            <div className="max-w-xl">
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight mb-3">
+                {banner.title}
+              </h2>
+              {banner.subtitle && (
+                <p className="text-base sm:text-lg text-white/80 mb-6 max-w-md leading-relaxed">
+                  {banner.subtitle}
+                </p>
+              )}
+              {banner.buttonText && banner.buttonLink && (
+                <Link
+                  to={banner.buttonLink}
+                  className="inline-flex items-center gap-2 px-6 py-3 font-semibold text-primary bg-white rounded-lg hover:bg-slate-50 transition-colors shadow-lg"
+                >
+                  {banner.buttonText}
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+function DefaultHero() {
+  return (
+    <section className="relative bg-gradient-to-br from-primary via-primary to-teal-700 overflow-hidden">
+      <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/3" />
+      <div className="absolute bottom-0 left-0 w-72 h-72 bg-white/5 rounded-full translate-y-1/3 -translate-x-1/4" />
+      <div className="absolute top-1/2 left-1/2 w-[600px] h-[600px] bg-amber-400/10 rounded-full -translate-x-1/2 -translate-y-1/2" />
+
+      <div className="relative container mx-auto px-4 sm:px-6 py-16 sm:py-20 lg:py-28">
+        <div className="max-w-3xl">
+          <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm rounded-full px-4 py-1.5 mb-6">
+            <Zap className="w-4 h-4 text-amber-300" />
+            <span className="text-sm font-medium text-white/90">
+              Nuevos productos disponibles
+            </span>
+          </div>
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-[1.1] mb-5">
+            Tecnología y electrodomésticos al mejor precio
+          </h1>
+          <p className="text-lg sm:text-xl text-white/80 mb-8 max-w-xl leading-relaxed">
+            Equipá tu hogar con calidad garantizada. Envío gratis, las mejores marcas y atención personalizada.
+          </p>
+          <Link
+            to="/products"
+            className="inline-flex items-center gap-2 px-7 py-3.5 font-semibold text-primary bg-white rounded-lg hover:bg-slate-50 transition-colors shadow-lg shadow-black/10"
+          >
+            Ver productos
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function Hero() {
+  const { data } = useQuery({
+    queryKey: ['banners', 'active'],
+    queryFn: getActiveBanners,
+  })
+
+  const banners = data?.data ?? []
+  const [current, setCurrent] = useState(0)
+
+  const goTo = useCallback(
+    (index: number) => {
+      setCurrent(((index % banners.length) + banners.length) % banners.length)
+    },
+    [banners.length],
+  )
+
+  // Auto-advance every 5 seconds
+  useEffect(() => {
+    if (banners.length <= 1) return
+    const timer = setInterval(() => goTo(current + 1), 5000)
+    return () => clearInterval(timer)
+  }, [current, banners.length, goTo])
+
+  // No banners from API → show default static hero
+  if (banners.length === 0) {
+    return <DefaultHero />
+  }
+
+  // Single banner → no carousel controls
+  if (banners.length === 1) {
+    return (
+      <section className="relative overflow-hidden">
+        <HeroSlide banner={banners[0]!} />
+      </section>
+    )
+  }
+
+  return (
+    <section className="relative overflow-hidden group">
+      {/* Slides */}
+      <div
+        className="flex transition-transform duration-500 ease-out"
+        style={{ transform: `translateX(-${current * 100}%)` }}
+      >
+        {banners.map((banner) => (
+          <HeroSlide key={banner.id} banner={banner} />
+        ))}
       </div>
 
-      {/* Bottom divider */}
-      <div className="border-t border-slate-100" />
+      {/* Navigation arrows */}
+      <button
+        onClick={() => goTo(current - 1)}
+        className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 hover:bg-white text-slate-700 flex items-center justify-center shadow-md opacity-0 group-hover:opacity-100 transition-opacity"
+        aria-label="Banner anterior"
+      >
+        <ChevronLeft className="w-5 h-5" />
+      </button>
+      <button
+        onClick={() => goTo(current + 1)}
+        className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 hover:bg-white text-slate-700 flex items-center justify-center shadow-md opacity-0 group-hover:opacity-100 transition-opacity"
+        aria-label="Siguiente banner"
+      >
+        <ChevronRight className="w-5 h-5" />
+      </button>
+
+      {/* Dots */}
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+        {banners.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => goTo(i)}
+            className={`w-2.5 h-2.5 rounded-full transition-all ${
+              i === current
+                ? 'bg-white w-7'
+                : 'bg-white/50 hover:bg-white/70'
+            }`}
+            aria-label={`Ir al banner ${i + 1}`}
+          />
+        ))}
+      </div>
     </section>
   )
 }

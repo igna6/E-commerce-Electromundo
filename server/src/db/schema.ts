@@ -4,5 +4,6 @@ import { usersTable } from '../entities/users'
 import { ordersTable } from '../entities/orders'
 import { orderItemsTable } from '../entities/orderItems'
 import { refreshTokensTable } from '../entities/refreshTokens'
+import { bannersTable } from '../entities/banners'
 
-export { productsTable, productCategoriesTable, usersTable, ordersTable, orderItemsTable, refreshTokensTable }
+export { productsTable, productCategoriesTable, usersTable, ordersTable, orderItemsTable, refreshTokensTable, bannersTable }

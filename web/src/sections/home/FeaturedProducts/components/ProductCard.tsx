@@ -1,10 +1,9 @@
 import { useState } from 'react'
 import { Link } from '@tanstack/react-router'
-import { ShoppingCart, Check } from 'lucide-react'
+import { ShoppingCart, Check, Package } from 'lucide-react'
 import type { Product } from '@/types/product'
-import { Card, CardContent } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
 import { useCart } from '@/contexts/CartContext'
+import { formatPrice } from '@/utils/formatPrice'
 
 type ProductCardProps = {
   product: Product
@@ -13,11 +12,6 @@ type ProductCardProps = {
 function ProductCard({ product }: ProductCardProps) {
   const [isAdding, setIsAdding] = useState(false)
   const { addItem } = useCart()
-
-  const formattedPrice = new Intl.NumberFormat('es-AR', {
-    style: 'currency',
-    currency: 'ARS',
-  }).format(product.price / 100)
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault()
@@ -31,60 +25,65 @@ function ProductCard({ product }: ProductCardProps) {
     <Link
       to="/products/$productId"
       params={{ productId: String(product.id) }}
-      className="block"
+      className="group block bg-white rounded-2xl border border-slate-100 hover:border-slate-200 hover:shadow-lg transition-all duration-300 overflow-hidden"
     >
-      <Card className="hover:shadow-xl transition-shadow duration-300 overflow-hidden group">
-        <div className="aspect-square bg-gray-100 relative overflow-hidden">
-          {product.image ? (
-            <img
-              src={product.image}
-              alt={product.name}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-            />
+      {/* Image */}
+      <div className="aspect-square bg-slate-50 relative overflow-hidden">
+        {product.image ? (
+          <img
+            src={product.image}
+            alt={product.name}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center">
+            <Package className="w-12 h-12 text-slate-300" />
+          </div>
+        )}
+
+        {/* Quick add button */}
+        <button
+          onClick={handleAddToCart}
+          className={`absolute bottom-3 right-3 p-2.5 rounded-xl shadow-md opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0 transition-all duration-200 ${
+            isAdding
+              ? 'bg-emerald-500 text-white'
+              : 'bg-white text-slate-700 hover:bg-primary hover:text-white'
+          }`}
+        >
+          {isAdding ? (
+            <Check className="w-4 h-4" />
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-gray-400">
-              <svg
-                className="w-16 h-16"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1.5}
-                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                />
-              </svg>
-            </div>
+            <ShoppingCart className="w-4 h-4" />
           )}
-          {/* Quick Add Button */}
-          <Button
-            onClick={handleAddToCart}
-            size="sm"
-            className={`absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-all ${
-              isAdding ? 'bg-green-500 hover:bg-green-600' : 'bg-brand-orange hover:bg-orange-600'
-            }`}
-          >
-            {isAdding ? (
-              <Check className="w-4 h-4" />
-            ) : (
-              <ShoppingCart className="w-4 h-4" />
-            )}
-          </Button>
-        </div>
-        <CardContent className="p-4">
-          <h3 className="font-semibold text-brand-dark text-lg mb-1 truncate">
-            {product.name}
-          </h3>
-          {product.description && (
-            <p className="text-gray-500 text-sm mb-3 line-clamp-2">
-              {product.description}
-            </p>
-          )}
-          <p className="text-brand-orange font-bold text-xl">{formattedPrice}</p>
-        </CardContent>
-      </Card>
+        </button>
+
+        {/* Stock badge */}
+        {product.stock <= 3 && product.stock > 0 && (
+          <span className="absolute top-3 left-3 bg-amber-500 text-white text-[11px] font-semibold px-2.5 py-1 rounded-lg">
+            Últimas unidades
+          </span>
+        )}
+      </div>
+
+      {/* Content */}
+      <div className="p-4">
+        <h3 className="font-medium text-slate-800 text-sm sm:text-base leading-snug mb-1 line-clamp-2 group-hover:text-primary transition-colors">
+          {product.name}
+        </h3>
+        {product.description && (
+          <p className="text-slate-400 text-xs sm:text-sm mb-2 line-clamp-1">
+            {product.description}
+          </p>
+        )}
+        <p className="text-primary font-bold text-lg sm:text-xl">
+          {formatPrice(product.price)}
+        </p>
+        {product.stock > 0 && (
+          <p className="text-xs text-emerald-600 mt-1 font-medium">
+            En stock
+          </p>
+        )}
+      </div>
     </Link>
   )
 }

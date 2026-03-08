@@ -5,6 +5,7 @@ import productsRouter from './routes/products.routes.ts'
 import categoriesRouter from './routes/categories.routes.ts'
 import ordersRouter from './routes/orders.routes.ts'
 import authRouter from './routes/auth.routes.ts'
+import bannersRouter from './routes/banners.routes.ts'
 import adminRouter from './routes/admin/index.ts'
 import { authenticateToken, requireAdmin } from './middleware/auth.ts'
 import { errorHandler } from './middleware/errorHandler.ts'
@@ -29,6 +30,9 @@ app.use('/api/orders', ordersRouter)
 
 // Auth API
 app.use('/api/auth', authRouter)
+
+// Banners API
+app.use('/api/banners', bannersRouter)
 
 // Admin API (protected)
 app.use('/api/admin', authenticateToken, requireAdmin, adminRouter)

@@ -346,20 +346,20 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: theme('colors.slate.900');
+  background: theme('colors.slate.100');
 }
 
 ::-webkit-scrollbar-thumb {
-  background: theme('colors.slate.700');
+  background: theme('colors.slate.300');
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: theme('colors.cyan.600');
+  background: theme('colors.slate.400');
 }
 
 /* Selection styling */
 ::selection {
-  background: theme('colors.cyan.500/30');
-  color: theme('colors.cyan.100');
+  background: theme('colors.cyan.500/20');
+  color: theme('colors.cyan.900');
 }

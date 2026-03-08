@@ -6,6 +6,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import FloatingWhatsApp from '../components/FloatingWhatsApp'
 
 import Header from '../layout/Header'
+import Footer from '../layout/Footer'
 import { CartProvider } from '../contexts/CartContext'
 import { AuthProvider } from '../contexts/AuthContext'
 
@@ -53,7 +54,10 @@ function RootContent({ children }: { children: React.ReactNode }) {
   return (
     <>
       {!isAdminRoute && <Header />}
+      {/* Spacer for fixed header: top bar (36px) + main bar (64px) + mobile search (52px on <md) */}
+      {!isAdminRoute && <div className="h-[152px] md:h-[100px]" />}
       {children}
+      {!isAdminRoute && <Footer />}
       {!isAdminRoute && <FloatingWhatsApp />}
     </>
   )
