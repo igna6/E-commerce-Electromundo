@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useDeferredValue } from 'react'
 import {
   ChevronDown,
   Grid3X3,
@@ -27,13 +27,18 @@ import { useProducts } from '@/hooks/useProducts'
 
 function ProductsPage() {
   const [searchQuery, setSearchQuery] = useState('')
+  const deferredSearch = useDeferredValue(searchQuery)
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [sortBy, setSortBy] = useState('featured')
   const [priceRange, setPriceRange] = useState([0, 500000])
   const [selectedBrands, setSelectedBrands] = useState<Array<string>>([])
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
 
-  const { data, isLoading } = useProducts({ page: 1, limit: 24 })
+  const { data, isLoading } = useProducts({
+    page: 1,
+    limit: 24,
+    search: deferredSearch || undefined,
+  })
 
   const toggleBrand = (brand: string) => {
     setSelectedBrands((prev) =>

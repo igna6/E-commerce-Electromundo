@@ -29,8 +29,14 @@ type CheckoutFormData = z.infer<typeof checkoutSchema>
 function CheckoutPage() {
   const navigate = useNavigate()
   const { items, subtotal, clearCart } = useCart()
+  const availableItems = items.filter((item) => item.product.stock > 0)
+  const unavailableItems = items.filter((item) => item.product.stock <= 0)
+  const availableSubtotal = availableItems.reduce(
+    (sum, item) => sum + item.product.price * item.quantity,
+    0
+  )
   const [state, , actorRef] = useMachine(checkoutMachine, {
-    input: { items },
+    input: { items: availableItems },
   })
 
   const {
@@ -42,12 +48,12 @@ function CheckoutPage() {
     resolver: zodResolver(checkoutSchema),
   })
 
-  // Redirect if cart is empty
+  // Redirect if no available items
   useEffect(() => {
-    if (items.length === 0) {
+    if (availableItems.length === 0) {
       navigate({ to: '/cart' })
     }
-  }, [items.length, navigate])
+  }, [availableItems.length, navigate])
 
   // Navigate on successful order
   useEffect(() => {
@@ -67,7 +73,7 @@ function CheckoutPage() {
       type: 'SUBMIT',
       formData: {
         ...data,
-        items: items.map((item) => ({
+        items: availableItems.map((item) => ({
           productId: item.product.id,
           quantity: item.quantity,
         })),
@@ -75,7 +81,7 @@ function CheckoutPage() {
     })
   }
 
-  if (items.length === 0) {
+  if (availableItems.length === 0) {
     return null
   }
 
@@ -122,8 +128,9 @@ function CheckoutPage() {
 
           {/* Order Summary */}
           <CheckoutOrderSummary
-            items={items}
-            subtotal={subtotal}
+            items={availableItems}
+            subtotal={availableSubtotal}
+            unavailableItems={unavailableItems}
           />
         </div>
       </div>

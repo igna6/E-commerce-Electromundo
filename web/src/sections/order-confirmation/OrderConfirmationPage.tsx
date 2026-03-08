@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/breadcrumb'
 import { getOrder } from '@/services/orders.service'
 import { formatPrice } from '@/utils/formatPrice'
+import { STORE_WHATSAPP_NUMBER } from '@/constants/config'
 import type { Order } from '@/types/order'
 
 function OrderConfirmationPage() {
@@ -56,6 +57,9 @@ function OrderConfirmationPage() {
   }
 
   const formatOrderNumber = (id: number) => String(id).padStart(6, '0')
+
+  const getWhatsAppUrl = (orderText: string) =>
+    `https://wa.me/${STORE_WHATSAPP_NUMBER}?text=${encodeURIComponent(orderText)}`
 
   if (isLoading) {
     return (
@@ -109,47 +113,77 @@ function OrderConfirmationPage() {
             </svg>
           </div>
           <h1 className="text-3xl font-bold text-brand-dark mb-2">
-            ¡Gracias por tu compra!
+            ¡Gracias por tu pedido!
           </h1>
-          <p className="text-gray-600 mb-4">
-            Tu pedido #{formatOrderNumber(order.id)} ha sido recibido correctamente.
+          <p className="text-gray-600 mb-6">
+            Tu pedido #{formatOrderNumber(order.id)} ha sido registrado correctamente.
           </p>
-          <p className="text-sm text-gray-500">
-            Te enviamos un correo a <strong>{order.email}</strong> con los detalles de tu pedido.
-          </p>
+
+          {/* WhatsApp Button — Primary CTA */}
+          <a
+            href={getWhatsAppUrl(order.orderText)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center gap-3 w-full sm:w-auto px-8 py-4 rounded-lg text-white text-lg font-semibold shadow-lg hover:shadow-xl transition-all"
+            style={{ backgroundColor: '#25D366' }}
+          >
+            <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
+              <path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.832-1.438A9.955 9.955 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18a7.96 7.96 0 01-4.11-1.14l-.29-.174-3.01.79.8-2.93-.19-.3A7.96 7.96 0 014 12c0-4.41 3.59-8 8-8s8 3.59 8 8-3.59 8-8 8z" />
+            </svg>
+            Enviar Pedido por WhatsApp
+          </a>
+
+          {/* Copy Button — Secondary */}
+          <div className="mt-4">
+            <Button
+              variant="outline"
+              size="lg"
+              onClick={copyToClipboard}
+              className="w-full sm:w-auto"
+            >
+              {copied ? (
+                <>
+                  <svg className="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  Copiado
+                </>
+              ) : (
+                <>
+                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                    />
+                  </svg>
+                  Copiar Pedido
+                </>
+              )}
+            </Button>
+          </div>
         </div>
 
         {/* Order Summary */}
         <div className="bg-white rounded-xl border border-gray-200 p-6 md:p-8 mb-6">
           <h2 className="text-xl font-bold text-brand-dark mb-6">Resumen del Pedido</h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            {/* Customer Info */}
-            <div>
-              <h3 className="font-semibold text-brand-dark mb-2">Datos de Contacto</h3>
-              <p className="text-gray-600 text-sm">
-                {order.firstName} {order.lastName}
-              </p>
-              <p className="text-gray-600 text-sm">{order.email}</p>
-              <p className="text-gray-600 text-sm">{order.phone}</p>
-            </div>
+          {/* Contact Info */}
+          <div className="mb-6">
+            <h3 className="font-semibold text-brand-dark mb-2">Datos de Contacto</h3>
+            <p className="text-gray-600 text-sm">
+              {order.firstName} {order.lastName}
+            </p>
+            <p className="text-gray-600 text-sm">{order.email}</p>
+            <p className="text-gray-600 text-sm">{order.phone}</p>
+          </div>
 
-            {/* Shipping / Pickup Info */}
-            <div>
-              <h3 className="font-semibold text-brand-dark mb-2">Método de Entrega</h3>
-              {order.address ? (
-                <>
-                  <p className="text-gray-600 text-sm">{order.address}</p>
-                  {order.apartment && <p className="text-gray-600 text-sm">{order.apartment}</p>}
-                  <p className="text-gray-600 text-sm">
-                    {order.city}, {order.province}
-                  </p>
-                  <p className="text-gray-600 text-sm">CP: {order.zipCode}</p>
-                </>
-              ) : (
-                <p className="text-gray-600 text-sm">Retiro en sucursal</p>
-              )}
-            </div>
+          {/* Delivery Method */}
+          <div className="mb-6">
+            <h3 className="font-semibold text-brand-dark mb-2">Método de Entrega</h3>
+            <p className="text-gray-600 text-sm">Retiro en sucursal</p>
           </div>
 
           <Separator className="my-6" />
@@ -176,10 +210,6 @@ function OrderConfirmationPage() {
             <div className="flex justify-between text-gray-600">
               <span>Subtotal</span>
               <span>{formatPrice(order.subtotal)}</span>
-            </div>
-            <div className="flex justify-between text-gray-600">
-              <span>Envío</span>
-              <span>{order.shippingCost === 0 ? 'Gratis' : formatPrice(order.shippingCost)}</span>
             </div>
             <div className="flex justify-between text-gray-600">
               <span>IVA (21%)</span>
@@ -230,7 +260,7 @@ function OrderConfirmationPage() {
           </pre>
         </div>
 
-        {/* Actions */}
+        {/* Navigation Actions */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button asChild className="bg-brand-blue hover:bg-blue-700">
             <Link to="/">

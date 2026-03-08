@@ -1,4 +1,4 @@
-import { setup, assign } from 'xstate'
+import { setup, assign, fromPromise } from 'xstate'
 import { createOrder } from '@/services/orders.service'
 import type { CreateOrderPayload } from '@/types/order'
 
@@ -22,12 +22,10 @@ export const checkoutMachine = setup({
     input: {} as { items: { product: { id: number }; quantity: number }[] },
   },
   actors: {
-    submitOrder: {
-      src: async (_: unknown, { formData }: { formData: CreateOrderPayload }) => {
-        const response = await createOrder(formData)
-        return response.data
-      },
-    },
+    submitOrder: fromPromise(async ({ input }: { input: { formData: CreateOrderPayload } }) => {
+      const response = await createOrder(input.formData)
+      return response.data
+    }),
   },
 }).createMachine({
   id: 'checkout',

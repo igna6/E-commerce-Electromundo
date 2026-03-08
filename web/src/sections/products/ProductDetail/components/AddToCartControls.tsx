@@ -105,12 +105,21 @@ export default function AddToCartControls({
       </div>
 
       <Button
-        asChild
+        asChild={product.stock > 0}
         variant="outline"
         size="lg"
-        className="w-full h-14 text-lg border-brand-dark text-brand-dark hover:bg-brand-dark hover:text-white"
+        disabled={product.stock === 0}
+        className={`w-full h-14 text-lg ${
+          product.stock === 0
+            ? 'border-gray-300 text-gray-400 cursor-not-allowed'
+            : 'border-brand-dark text-brand-dark hover:bg-brand-dark hover:text-white'
+        }`}
       >
-        <Link to="/checkout">Comprar Ahora</Link>
+        {product.stock > 0 ? (
+          <Link to="/checkout">Comprar Ahora</Link>
+        ) : (
+          'Producto Agotado'
+        )}
       </Button>
     </div>
   )

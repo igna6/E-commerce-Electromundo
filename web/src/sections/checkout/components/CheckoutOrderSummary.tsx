@@ -7,9 +7,10 @@ import type { CartItem } from '@/types/cart'
 type CheckoutOrderSummaryProps = {
   items: CartItem[]
   subtotal: number
+  unavailableItems?: CartItem[]
 }
 
-export default function CheckoutOrderSummary({ items, subtotal }: CheckoutOrderSummaryProps) {
+export default function CheckoutOrderSummary({ items, subtotal, unavailableItems = [] }: CheckoutOrderSummaryProps) {
   const tax = Math.round(subtotal * 0.21)
   const total = subtotal + tax
 
@@ -56,6 +57,17 @@ export default function CheckoutOrderSummary({ items, subtotal }: CheckoutOrderS
             </div>
           ))}
         </div>
+
+        {unavailableItems.length > 0 && (
+          <div className="p-3 bg-red-50 border border-red-200 rounded-lg mb-4">
+            <p className="text-sm font-medium text-red-700 mb-1">Productos sin stock (no se incluirán):</p>
+            <ul className="text-sm text-red-600 space-y-1">
+              {unavailableItems.map((item) => (
+                <li key={item.product.id} className="line-through">{item.product.name}</li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         <Button asChild variant="link" className="p-0 h-auto text-primary mb-4">
           <Link to="/cart">
