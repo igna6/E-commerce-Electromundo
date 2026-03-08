@@ -1,9 +1,8 @@
 import { useState } from 'react'
 import { Link } from '@tanstack/react-router'
-import { Heart, Eye, ShoppingCart, Check, Star, Minus, Plus, Zap } from 'lucide-react'
+import { Heart, Eye, ShoppingCart, Check, Minus, Plus, Zap } from 'lucide-react'
 import type { Product } from '@/types/product'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 import { useCart } from '@/contexts/CartContext'
 import { toTitleCase } from '@/utils/toTitleCase'
 
@@ -24,11 +23,6 @@ function ProductGridCard({ product, viewMode, index = 0 }: ProductGridCardProps)
     style: 'currency',
     currency: 'ARS',
   }).format(product.price / 100)
-
-  const originalPrice = new Intl.NumberFormat('es-AR', {
-    style: 'currency',
-    currency: 'ARS',
-  }).format((product.price * 1.15) / 100)
 
   const handleAddToCart = () => {
     addItem(product, quantity)
@@ -82,13 +76,9 @@ function ProductGridCard({ product, viewMode, index = 0 }: ProductGridCardProps)
                     {toTitleCase(product.name)}
                   </h3>
                 </Link>
-                <Badge className="mt-2 bg-slate-100 text-slate-600 border border-slate-200 hover:bg-slate-200">
-                  Electrónica
-                </Badge>
               </div>
               <div className="text-right flex-shrink-0">
                 <p className="text-primary font-bold text-xl">{formattedPrice}</p>
-                <p className="text-slate-400 text-sm line-through">{originalPrice}</p>
               </div>
             </div>
             {product.description && (
@@ -191,11 +181,6 @@ function ProductGridCard({ product, viewMode, index = 0 }: ProductGridCardProps)
           </Link>
         </div>
 
-        {/* Sale badge */}
-        <Badge className="absolute top-4 left-4 z-20 bg-gradient-to-r from-orange-500 to-amber-500 text-white border-0">
-          -15%
-        </Badge>
-
         {/* Product image */}
         <Link to="/products/$productId" params={{ productId: String(product.id) }}>
           <div className="aspect-square bg-gradient-to-br from-slate-100 to-slate-50 relative overflow-hidden">
@@ -225,23 +210,9 @@ function ProductGridCard({ product, viewMode, index = 0 }: ProductGridCardProps)
             </h3>
           </Link>
 
-          {/* Star rating */}
-          <div className="flex items-center gap-1.5 mb-3">
-            {[...Array(5)].map((_, i) => (
-              <Star
-                key={i}
-                className={`w-4 h-4 ${
-                  i < 4 ? 'text-amber-400 fill-amber-400' : 'text-slate-300'
-                }`}
-              />
-            ))}
-            <span className="text-xs text-slate-500 ml-1">(128)</span>
-          </div>
-
           {/* Price */}
-          <div className="flex items-baseline gap-2 mb-4">
+          <div className="mb-4">
             <p className="text-primary font-bold text-xl">{formattedPrice}</p>
-            <p className="text-slate-400 text-sm line-through">{originalPrice}</p>
           </div>
 
           {/* Quantity and Add to Cart */}

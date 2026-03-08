@@ -36,7 +36,7 @@ Plans:
 
 Plans:
 - [x] 09-01: Frontend toTitleCase utility for product names + extend CSV import to handle price column
-- [ ] 09-02: Remove fake reviews, fake discounts, fake installments, hardcoded brands from all UI components
+- [x] 09-02: Remove fake reviews, fake discounts, fake installments, hardcoded brands from all UI components
 
 #### Phase 10: Images & Categories
 **Goal**: Add product image support and build proper category structure with assignments
@@ -90,7 +90,7 @@ Plans:
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
 | 8. Checkout Simplification | v0.8 | 2/3 | In progress | - |
-| 9. Data Cleanup | v1.0 | 1/2 | In progress | - |
+| 9. Data Cleanup | v1.0 | 2/2 | Complete | - |
 | 10. Images & Categories | v1.0 | 0/3 | Not started | - |
 | 11. Navigation & Filtering | v1.0 | 0/3 | Not started | - |
 | 12. Product Pages | v1.0 | 0/2 | Not started | - |

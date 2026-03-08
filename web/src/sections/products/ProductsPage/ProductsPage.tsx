@@ -8,13 +8,11 @@ import {
   SlidersHorizontal,
   Tag,
   Truck,
-  X,
 } from 'lucide-react'
 import ProductGridCard from './components/ProductGridCard'
-import FilterSidebar, { categories } from './components/FilterSidebar'
+import FilterSidebar from './components/FilterSidebar'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Badge } from '@/components/ui/badge'
 import {
   Select,
   SelectContent,
@@ -28,10 +26,8 @@ import { useProducts } from '@/hooks/useProducts'
 function ProductsPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const deferredSearch = useDeferredValue(searchQuery)
-  const [selectedCategory, setSelectedCategory] = useState('all')
   const [sortBy, setSortBy] = useState('featured')
   const [priceRange, setPriceRange] = useState([0, 500000])
-  const [selectedBrands, setSelectedBrands] = useState<Array<string>>([])
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
 
   const { data, isLoading } = useProducts({
@@ -40,35 +36,14 @@ function ProductsPage() {
     search: deferredSearch || undefined,
   })
 
-  const toggleBrand = (brand: string) => {
-    setSelectedBrands((prev) =>
-      prev.includes(brand) ? prev.filter((b) => b !== brand) : [...prev, brand],
-    )
-  }
-
   const clearFilters = () => {
     setSearchQuery('')
-    setSelectedCategory('all')
     setPriceRange([0, 500000])
-    setSelectedBrands([])
   }
 
-  const hasActiveFilters =
-    selectedCategory !== 'all' ||
-    selectedBrands.length > 0 ||
-    priceRange[0] > 0 ||
-    priceRange[1] < 500000
-
-  const activeFilterCount =
-    selectedBrands.length + (selectedCategory !== 'all' ? 1 : 0)
-
   const filterSidebarProps = {
-    selectedCategory,
-    onSelectCategory: setSelectedCategory,
     priceRange,
     onPriceRangeChange: setPriceRange,
-    selectedBrands,
-    onToggleBrand: toggleBrand,
     onClearFilters: clearFilters,
   }
 
@@ -170,11 +145,6 @@ function ProductsPage() {
                 >
                   <SlidersHorizontal className="w-5 h-5 mr-2" />
                   Filtros
-                  {activeFilterCount > 0 && (
-                    <Badge className="ml-2 bg-primary text-white hover:bg-primary/90">
-                      {activeFilterCount}
-                    </Badge>
-                  )}
                 </Button>
               </SheetTrigger>
               <SheetContent
@@ -190,32 +160,6 @@ function ProductsPage() {
             </Sheet>
           </div>
 
-          {/* Active Filters Tags */}
-          {hasActiveFilters && (
-            <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t border-slate-100">
-              {selectedCategory !== 'all' && (
-                <Badge
-                  variant="secondary"
-                  className="flex items-center gap-2 px-3 py-1.5 bg-slate-100 text-slate-700 border border-slate-200 hover:bg-slate-200 cursor-pointer"
-                  onClick={() => setSelectedCategory('all')}
-                >
-                  {categories.find((c) => c.id === selectedCategory)?.label}
-                  <X className="w-3 h-3" />
-                </Badge>
-              )}
-              {selectedBrands.map((brand) => (
-                <Badge
-                  key={brand}
-                  variant="secondary"
-                  className="flex items-center gap-2 px-3 py-1.5 bg-slate-100 text-slate-700 border border-slate-200 hover:bg-slate-200 cursor-pointer"
-                  onClick={() => toggleBrand(brand)}
-                >
-                  {brand}
-                  <X className="w-3 h-3" />
-                </Badge>
-              ))}
-            </div>
-          )}
         </div>
 
         {/* Main Content */}
