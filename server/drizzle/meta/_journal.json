@@ -36,6 +36,13 @@
       "when": 1772992675935,
       "tag": "0004_sparkling_risque",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1773014604559,
+      "tag": "0005_regular_ares",
+      "breakpoints": true
     }
   ]
 }

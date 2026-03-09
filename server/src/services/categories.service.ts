@@ -1,7 +1,7 @@
 import { and, eq, isNull } from 'drizzle-orm'
 import db from '../db/db.ts'
 import { productCategoriesTable } from '../db/schema.ts'
-import { NotFoundError } from '../utils/errors.ts'
+import { BadRequestError, NotFoundError } from '../utils/errors.ts'
 import type { CreateCategoryInput, UpdateCategoryInput } from '../validators/category.ts'
 
 export async function listCategories() {
@@ -26,7 +26,25 @@ export async function getCategoryById(id: number) {
   return category[0]
 }
 
+async function validateParentCategory(parentCategoryId: number | null | undefined) {
+  if (parentCategoryId != null) {
+    const parent = await db
+      .select({ id: productCategoriesTable.id })
+      .from(productCategoriesTable)
+      .where(
+        and(eq(productCategoriesTable.id, parentCategoryId), isNull(productCategoriesTable.deletedAt))
+      )
+      .limit(1)
+
+    if (!parent[0]) {
+      throw new NotFoundError('Parent category not found')
+    }
+  }
+}
+
 export async function createCategory(data: CreateCategoryInput) {
+  await validateParentCategory(data.parentCategoryId)
+
   const newCategory = await db
     .insert(productCategoriesTable)
     .values(data)
@@ -36,6 +54,12 @@ export async function createCategory(data: CreateCategoryInput) {
 }
 
 export async function updateCategory(id: number, data: UpdateCategoryInput) {
+  if (data.parentCategoryId != null && data.parentCategoryId === id) {
+    throw new BadRequestError('A category cannot be its own parent')
+  }
+
+  await validateParentCategory(data.parentCategoryId)
+
   const updatedCategory = await db
     .update(productCategoriesTable)
     .set({ ...data, updatedAt: new Date() })

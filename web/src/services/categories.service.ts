@@ -12,6 +12,7 @@ export async function getCategory(id: number): Promise<{ data: Category }> {
 export async function createCategory(data: {
   name: string
   description?: string | null
+  parentCategoryId?: number | null
 }): Promise<{ data: Category }> {
   return authApiRequest<{ data: Category }>('/api/categories', {
     method: 'POST',
@@ -21,7 +22,7 @@ export async function createCategory(data: {
 
 export async function updateCategory(
   id: number,
-  data: Partial<{ name: string; description: string | null }>
+  data: Partial<{ name: string; description: string | null; parentCategoryId: number | null }>
 ): Promise<{ data: Category }> {
   return authApiRequest<{ data: Category }>(`/api/categories/${id}`, {
     method: 'PUT',
