@@ -46,7 +46,7 @@ Plans:
 Plans:
 - [x] 10-01: Extend CSV import for image URLs + fix product detail gallery hack
 - [x] 10-02: Add parentCategoryId for category hierarchy + update API and admin UI
-- [ ] 10-03: Seed real category tree + assign products to categories by keyword matching
+- [x] 10-03: Seed real category tree + assign products to categories by keyword matching
 
 #### Phase 11: Navigation & Filtering
 **Goal**: Category navigation bar, dynamic filters from real data, search improvements
@@ -91,7 +91,7 @@ Plans:
 |-------|-----------|----------------|--------|-----------|
 | 8. Checkout Simplification | v0.8 | 2/3 | In progress | - |
 | 9. Data Cleanup | v1.0 | 2/2 | Complete | - |
-| 10. Images & Categories | v1.0 | 2/3 | In progress | - |
+| 10. Images & Categories | v1.0 | 3/3 | Complete | - |
 | 11. Navigation & Filtering | v1.0 | 0/3 | Not started | - |
 | 12. Product Pages | v1.0 | 0/2 | Not started | - |
 | 13. Homepage Sections | v1.0 | 0/2 | Not started | - |

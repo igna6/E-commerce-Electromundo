@@ -4,7 +4,9 @@
   "scripts": {
     "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node src/app.ts'",
     "build": "tsc",
-    "seed:admin": "ts-node src/scripts/seedAdmin.ts"
+    "seed:admin": "ts-node src/scripts/seedAdmin.ts",
+    "seed:categories": "tsx src/scripts/seedCategories.ts",
+    "seed:assign-categories": "tsx src/scripts/assignProductCategories.ts"
   },
   "main": "app.ts",
   "dependencies": {
