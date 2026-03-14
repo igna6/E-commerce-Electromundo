@@ -1,16 +1,7 @@
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { useEffect } from 'react'
-
-function AdminIndexComponent() {
-  const navigate = useNavigate()
-
-  useEffect(() => {
-    navigate({ to: '/admin/dashboard', replace: true })
-  }, [navigate])
-
-  return null
-}
+import { createFileRoute, redirect } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/admin/')({
-  component: AdminIndexComponent,
+  beforeLoad: () => {
+    throw redirect({ to: '/admin/dashboard' })
+  },
 })
