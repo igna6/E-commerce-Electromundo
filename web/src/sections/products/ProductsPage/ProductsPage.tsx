@@ -8,6 +8,7 @@ import {
   SlidersHorizontal,
   Tag,
   Truck,
+  X,
 } from 'lucide-react'
 import ProductGridCard from './components/ProductGridCard'
 import FilterSidebar from './components/FilterSidebar'
@@ -22,6 +23,7 @@ import {
 } from '@/components/ui/select'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { useProducts } from '@/hooks/useProducts'
+import { useCategories } from '@/hooks/useCategories'
 import { Route } from '@/routes/products.index'
 import { useNavigate } from '@tanstack/react-router'
 import type { GetProductsParams } from '@/services/products.service'
@@ -32,6 +34,14 @@ const SORT_MAP: Record<string, GetProductsParams['sortBy'] | undefined> = {
   'price-high': 'price-desc',
   newest: 'newest',
   rating: undefined,
+}
+
+const SORT_LABELS: Record<string, string> = {
+  featured: 'Destacados',
+  'price-low': 'Precio: Menor a Mayor',
+  'price-high': 'Precio: Mayor a Menor',
+  newest: 'Mas Recientes',
+  rating: 'Mejor Valorados',
 }
 
 const DEFAULT_PRICE_MIN = 0
@@ -104,6 +114,13 @@ function ProductsPage() {
   const apiMaxPrice =
     priceRange[1] !== DEFAULT_PRICE_MAX ? priceRange[1] * 100 : undefined
 
+  const { data: categoriesData } = useCategories()
+
+  const categoryName =
+    categoryFromRoute && categoriesData
+      ? categoriesData.find((c) => c.id === categoryFromRoute)?.name
+      : undefined
+
   const { data, isLoading } = useProducts({
     page,
     limit: 24,
@@ -140,6 +157,46 @@ function ProductsPage() {
     })
     setPage(1)
   }
+
+  const clearSearch = () => {
+    setSearchQuery('')
+    setPage(1)
+    void navigate({
+      to: '/products',
+      search: (prev) => ({
+        ...prev,
+        search: undefined,
+      }),
+    })
+  }
+
+  const clearCategory = () => {
+    handleCategoryChange(undefined)
+  }
+
+  const clearPriceRange = () => {
+    setPriceRange([DEFAULT_PRICE_MIN, DEFAULT_PRICE_MAX])
+    setPage(1)
+  }
+
+  const clearInStock = () => {
+    setInStock(false)
+    setPage(1)
+  }
+
+  const clearSort = () => {
+    setSortBy('featured')
+    setPage(1)
+  }
+
+  const hasPriceFilter =
+    priceRange[0] !== DEFAULT_PRICE_MIN || priceRange[1] !== DEFAULT_PRICE_MAX
+  const hasAnyFilter =
+    !!deferredSearch ||
+    categoryFromRoute !== undefined ||
+    hasPriceFilter ||
+    inStock ||
+    sortBy !== 'featured'
 
   const clearFilters = () => {
     setSearchQuery('')
@@ -293,15 +350,102 @@ function ProductsPage() {
 
           {/* Products Grid */}
           <main className="flex-1 min-w-0">
-            {/* Results Count */}
-            <div className="flex items-center justify-between mb-6">
-              <p className="text-slate-500">
-                Mostrando{' '}
-                <span className="font-semibold text-slate-900">
-                  {data?.data.length || 0}
-                </span>{' '}
-                productos
-              </p>
+            {/* Results Summary */}
+            <div className="mb-6 space-y-3">
+              <div className="flex items-center justify-between">
+                <p className="text-slate-500">
+                  {data ? (
+                    data.pagination.total === 0 ? (
+                      'No se encontraron productos'
+                    ) : (
+                      <>
+                        <span className="font-semibold text-slate-900">
+                          {data.pagination.total}
+                        </span>{' '}
+                        {data.pagination.total === 1
+                          ? 'producto encontrado'
+                          : 'productos encontrados'}
+                      </>
+                    )
+                  ) : null}
+                </p>
+                {data?.pagination.total === 0 && hasAnyFilter && (
+                  <button
+                    onClick={clearFilters}
+                    className="text-sm text-primary hover:text-primary/80 font-medium transition-colors"
+                  >
+                    Limpiar filtros
+                  </button>
+                )}
+              </div>
+
+              {/* Active Filter Tags */}
+              {hasAnyFilter && (
+                <div className="flex flex-wrap items-center gap-2">
+                  {deferredSearch && (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-sm border border-slate-200">
+                      <Search className="w-3 h-3 text-slate-400" />
+                      &ldquo;{deferredSearch}&rdquo;
+                      <button
+                        onClick={clearSearch}
+                        className="ml-0.5 p-0.5 rounded-full hover:bg-slate-200 transition-colors"
+                        aria-label="Quitar busqueda"
+                      >
+                        <X className="w-3 h-3 text-slate-500" />
+                      </button>
+                    </span>
+                  )}
+                  {categoryFromRoute !== undefined && (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm border border-primary/20">
+                      {categoryName ?? `Categoria #${categoryFromRoute}`}
+                      <button
+                        onClick={clearCategory}
+                        className="ml-0.5 p-0.5 rounded-full hover:bg-primary/20 transition-colors"
+                        aria-label="Quitar categoria"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </span>
+                  )}
+                  {hasPriceFilter && (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-sm border border-slate-200">
+                      ${priceRange[0].toLocaleString()} &mdash; $
+                      {priceRange[1].toLocaleString()}
+                      <button
+                        onClick={clearPriceRange}
+                        className="ml-0.5 p-0.5 rounded-full hover:bg-slate-200 transition-colors"
+                        aria-label="Quitar filtro de precio"
+                      >
+                        <X className="w-3 h-3 text-slate-500" />
+                      </button>
+                    </span>
+                  )}
+                  {inStock && (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-sm border border-emerald-200">
+                      En stock
+                      <button
+                        onClick={clearInStock}
+                        className="ml-0.5 p-0.5 rounded-full hover:bg-emerald-100 transition-colors"
+                        aria-label="Quitar filtro de stock"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </span>
+                  )}
+                  {sortBy !== 'featured' && (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-sm border border-slate-200">
+                      {SORT_LABELS[sortBy] ?? sortBy}
+                      <button
+                        onClick={clearSort}
+                        className="ml-0.5 p-0.5 rounded-full hover:bg-slate-200 transition-colors"
+                        aria-label="Quitar orden"
+                      >
+                        <X className="w-3 h-3 text-slate-500" />
+                      </button>
+                    </span>
+                  )}
+                </div>
+              )}
             </div>
 
             {isLoading ? (
