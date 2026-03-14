@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 import { createProductSchema, idParamSchema, updateProductSchema } from '../validators/product.ts'
+import { productListQuerySchema } from '../validators/common.ts'
 import * as productsService from '../services/products.service.ts'
 
 export async function getById(req: Request, res: Response, next: NextFunction) {
@@ -14,19 +15,8 @@ export async function getById(req: Request, res: Response, next: NextFunction) {
 
 export async function list(req: Request, res: Response, next: NextFunction) {
   try {
-    const page = Math.max(1, parseInt(req.query.page as string) || 1)
-    const limit = Math.min(50, Math.max(1, parseInt(req.query.limit as string) || 12))
-    const search = req.query.search as string
-    const category = req.query.category ? parseInt(req.query.category as string) : undefined
-    const minPrice = req.query.minPrice ? parseInt(req.query.minPrice as string) : undefined
-    const maxPrice = req.query.maxPrice ? parseInt(req.query.maxPrice as string) : undefined
-    const sortBy = (req.query.sortBy as string) || 'newest'
-    const inStock = req.query.inStock === 'true'
-
-    const result = await productsService.listProducts({
-      page, limit, search, category, minPrice, maxPrice, sortBy, inStock,
-    })
-
+    const query = productListQuerySchema.parse(req.query)
+    const result = await productsService.listProducts(query)
     res.json(result)
   } catch (error) {
     next(error)

@@ -1,14 +1,11 @@
 import { Request, Response, NextFunction } from 'express'
 import * as adminOrdersService from '../../services/admin/orders.service.ts'
-import { idParamSchema } from '../../validators/common.ts'
+import { idParamSchema, orderListQuerySchema } from '../../validators/common.ts'
 
 export async function list(req: Request, res: Response, next: NextFunction) {
   try {
-    const page = Math.max(1, parseInt(req.query.page as string) || 1)
-    const limit = Math.min(50, Math.max(1, parseInt(req.query.limit as string) || 20))
-    const status = req.query.status as string | undefined
-
-    const result = await adminOrdersService.listOrders({ page, limit, status })
+    const query = orderListQuerySchema.parse(req.query)
+    const result = await adminOrdersService.listOrders(query)
     res.json(result)
   } catch (error) {
     next(error)
