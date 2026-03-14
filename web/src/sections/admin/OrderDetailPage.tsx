@@ -7,6 +7,17 @@ import AdminLoadingState from '@/components/admin/AdminLoadingState'
 import AdminErrorState from '@/components/admin/AdminErrorState'
 import { authApiRequest } from '@/services/api'
 import { formatPrice } from '@/utils/formatPrice'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 
 type OrderResponse = {
   data: Order
@@ -67,9 +78,11 @@ export default function OrderDetailPage() {
 
   if (!order) {
     return (
-      <div className="rounded-lg bg-yellow-50 p-4 text-yellow-700">
-        Pedido no encontrado
-      </div>
+      <Alert className="border-yellow-200 bg-yellow-50">
+        <AlertDescription className="text-yellow-700">
+          Pedido no encontrado
+        </AlertDescription>
+      </Alert>
     )
   }
 
@@ -91,141 +104,161 @@ export default function OrderDetailPage() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <div className="rounded-lg border bg-white p-4">
-          <h2 className="mb-4 text-lg font-semibold">Información del Cliente</h2>
-          <dl className="space-y-2">
-            <div>
-              <dt className="text-sm text-gray-500">Nombre</dt>
-              <dd className="font-medium">
-                {order.firstName} {order.lastName}
-              </dd>
-            </div>
-            <div>
-              <dt className="text-sm text-gray-500">Email</dt>
-              <dd className="font-medium">{order.email}</dd>
-            </div>
-            <div>
-              <dt className="text-sm text-gray-500">Teléfono</dt>
-              <dd className="font-medium">{order.phone}</dd>
-            </div>
-          </dl>
-        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>Información del Cliente</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <dl className="space-y-2">
+              <div>
+                <dt className="text-sm text-muted-foreground">Nombre</dt>
+                <dd className="font-medium">
+                  {order.firstName} {order.lastName}
+                </dd>
+              </div>
+              <div>
+                <dt className="text-sm text-muted-foreground">Email</dt>
+                <dd className="font-medium">{order.email}</dd>
+              </div>
+              <div>
+                <dt className="text-sm text-muted-foreground">Teléfono</dt>
+                <dd className="font-medium">{order.phone}</dd>
+              </div>
+            </dl>
+          </CardContent>
+        </Card>
 
-        <div className="rounded-lg border bg-white p-4">
-          <h2 className="mb-4 text-lg font-semibold">Dirección de Envío</h2>
-          <dl className="space-y-2">
-            <div>
-              <dt className="text-sm text-gray-500">Dirección</dt>
-              <dd className="font-medium">
-                {order.address}
-                {order.apartment && `, ${order.apartment}`}
-              </dd>
-            </div>
-            <div>
-              <dt className="text-sm text-gray-500">Ciudad</dt>
-              <dd className="font-medium">
-                {order.city}, {order.province} {order.zipCode}
-              </dd>
-            </div>
-            <div>
-              <dt className="text-sm text-gray-500">Método de Envío</dt>
-              <dd className="font-medium">
-                {shippingMethodLabels[order.shippingMethod] || order.shippingMethod}
-              </dd>
-            </div>
-          </dl>
-        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>Dirección de Envío</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <dl className="space-y-2">
+              <div>
+                <dt className="text-sm text-muted-foreground">Dirección</dt>
+                <dd className="font-medium">
+                  {order.address}
+                  {order.apartment && `, ${order.apartment}`}
+                </dd>
+              </div>
+              <div>
+                <dt className="text-sm text-muted-foreground">Ciudad</dt>
+                <dd className="font-medium">
+                  {order.city}, {order.province} {order.zipCode}
+                </dd>
+              </div>
+              <div>
+                <dt className="text-sm text-muted-foreground">Método de Envío</dt>
+                <dd className="font-medium">
+                  {shippingMethodLabels[order.shippingMethod] || order.shippingMethod}
+                </dd>
+              </div>
+            </dl>
+          </CardContent>
+        </Card>
       </div>
 
-      <div className="rounded-lg border bg-white p-4">
-        <h2 className="mb-4 text-lg font-semibold">Productos</h2>
-        <table className="w-full">
-          <thead>
-            <tr className="border-b text-left text-sm text-gray-500">
-              <th className="pb-2">Producto</th>
-              <th className="pb-2 text-right">Precio</th>
-              <th className="pb-2 text-right">Cantidad</th>
-              <th className="pb-2 text-right">Total</th>
-            </tr>
-          </thead>
-          <tbody>
-            {order.items.map((item) => (
-              <tr key={item.id} className="border-b">
-                <td className="py-3">{item.productName}</td>
-                <td className="py-3 text-right">{formatPrice(item.productPrice)}</td>
-                <td className="py-3 text-right">{item.quantity}</td>
-                <td className="py-3 text-right">{formatPrice(item.lineTotal)}</td>
-              </tr>
-            ))}
-          </tbody>
-          <tfoot>
-            <tr>
-              <td colSpan={3} className="pt-4 text-right text-gray-500">
-                Subtotal
-              </td>
-              <td className="pt-4 text-right">{formatPrice(order.subtotal)}</td>
-            </tr>
-            <tr>
-              <td colSpan={3} className="text-right text-gray-500">
-                Envío
-              </td>
-              <td className="text-right">{formatPrice(order.shippingCost)}</td>
-            </tr>
-            <tr>
-              <td colSpan={3} className="text-right text-gray-500">
-                IVA (21%)
-              </td>
-              <td className="text-right">{formatPrice(order.tax)}</td>
-            </tr>
-            <tr className="font-bold">
-              <td colSpan={3} className="pt-2 text-right">
-                Total
-              </td>
-              <td className="pt-2 text-right">{formatPrice(order.total)}</td>
-            </tr>
-          </tfoot>
-        </table>
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Productos</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Producto</TableHead>
+                <TableHead className="text-right">Precio</TableHead>
+                <TableHead className="text-right">Cantidad</TableHead>
+                <TableHead className="text-right">Total</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {order.items.map((item) => (
+                <TableRow key={item.id}>
+                  <TableCell>{item.productName}</TableCell>
+                  <TableCell className="text-right">{formatPrice(item.productPrice)}</TableCell>
+                  <TableCell className="text-right">{item.quantity}</TableCell>
+                  <TableCell className="text-right">{formatPrice(item.lineTotal)}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+            <TableFooter className="bg-transparent">
+              <TableRow className="border-0">
+                <TableCell colSpan={3} className="text-right text-muted-foreground">
+                  Subtotal
+                </TableCell>
+                <TableCell className="text-right">{formatPrice(order.subtotal)}</TableCell>
+              </TableRow>
+              <TableRow className="border-0">
+                <TableCell colSpan={3} className="text-right text-muted-foreground">
+                  Envío
+                </TableCell>
+                <TableCell className="text-right">{formatPrice(order.shippingCost)}</TableCell>
+              </TableRow>
+              <TableRow className="border-0">
+                <TableCell colSpan={3} className="text-right text-muted-foreground">
+                  IVA (21%)
+                </TableCell>
+                <TableCell className="text-right">{formatPrice(order.tax)}</TableCell>
+              </TableRow>
+              <TableRow className="border-0 font-bold">
+                <TableCell colSpan={3} className="text-right">
+                  Total
+                </TableCell>
+                <TableCell className="text-right">{formatPrice(order.total)}</TableCell>
+              </TableRow>
+            </TableFooter>
+          </Table>
+        </CardContent>
+      </Card>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <div className="rounded-lg border bg-white p-4">
-          <h2 className="mb-4 text-lg font-semibold">Información del Pedido</h2>
-          <dl className="space-y-2">
-            <div>
-              <dt className="text-sm text-gray-500">Fecha</dt>
-              <dd className="font-medium">{formatDate(order.createdAt)}</dd>
-            </div>
-            <div>
-              <dt className="text-sm text-gray-500">Método de Pago</dt>
-              <dd className="font-medium">
-                {paymentMethodLabels[order.paymentMethod] || order.paymentMethod}
-              </dd>
-            </div>
-            <div>
-              <dt className="text-sm text-gray-500">Última Actualización</dt>
-              <dd className="font-medium">{formatDate(order.updatedAt)}</dd>
-            </div>
-          </dl>
-        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>Información del Pedido</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <dl className="space-y-2">
+              <div>
+                <dt className="text-sm text-muted-foreground">Fecha</dt>
+                <dd className="font-medium">{formatDate(order.createdAt)}</dd>
+              </div>
+              <div>
+                <dt className="text-sm text-muted-foreground">Método de Pago</dt>
+                <dd className="font-medium">
+                  {paymentMethodLabels[order.paymentMethod] || order.paymentMethod}
+                </dd>
+              </div>
+              <div>
+                <dt className="text-sm text-muted-foreground">Última Actualización</dt>
+                <dd className="font-medium">{formatDate(order.updatedAt)}</dd>
+              </div>
+            </dl>
+          </CardContent>
+        </Card>
 
-        <div className="rounded-lg border bg-white p-4">
-          <h2 className="mb-4 text-lg font-semibold">Actualizar Estado</h2>
-          <OrderStatusSelect
-            currentStatus={order.status}
-            onStatusChange={(status) => updateStatusMutation.mutate(status)}
-            isLoading={updateStatusMutation.isPending}
-          />
-          {updateStatusMutation.isError && (
-            <p className="mt-2 text-sm text-red-600">
-              Error al actualizar estado
-            </p>
-          )}
-          {updateStatusMutation.isSuccess && (
-            <p className="mt-2 text-sm text-green-600">
-              Estado actualizado correctamente
-            </p>
-          )}
-        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>Actualizar Estado</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <OrderStatusSelect
+              currentStatus={order.status}
+              onStatusChange={(status) => updateStatusMutation.mutate(status)}
+              isLoading={updateStatusMutation.isPending}
+            />
+            {updateStatusMutation.isError && (
+              <p className="mt-2 text-sm text-red-600">
+                Error al actualizar estado
+              </p>
+            )}
+            {updateStatusMutation.isSuccess && (
+              <p className="mt-2 text-sm text-green-600">
+                Estado actualizado correctamente
+              </p>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </div>
   )

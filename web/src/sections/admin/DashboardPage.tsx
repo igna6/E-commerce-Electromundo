@@ -5,6 +5,9 @@ import AdminLoadingState from '@/components/admin/AdminLoadingState'
 import AdminErrorState from '@/components/admin/AdminErrorState'
 import { authApiRequest } from '@/services/api'
 import { formatPrice } from '@/utils/formatPrice'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
+import { Badge } from '@/components/ui/badge'
 
 type StatsResponse = {
   data: {
@@ -99,112 +102,124 @@ export default function DashboardPage() {
       {/* Inventory Alerts */}
       {((stats?.inventory.outOfStock ?? 0) > 0 ||
         (stats?.inventory.lowStock ?? 0) > 0) && (
-        <div className="rounded-lg border border-amber-200 bg-amber-50 p-4">
-          <h2 className="mb-3 text-lg font-semibold text-amber-800">
+        <Alert className="border-amber-200 bg-amber-50">
+          <AlertTitle className="text-lg font-semibold text-amber-800">
             Alertas de Inventario
-          </h2>
-          <div className="mb-3 flex gap-4">
-            {(stats?.inventory.outOfStock ?? 0) > 0 && (
-              <span className="inline-flex items-center rounded-full bg-red-100 px-3 py-1 text-sm font-medium text-red-700">
-                {stats?.inventory.outOfStock} agotado
-                {(stats?.inventory.outOfStock ?? 0) !== 1 ? 's' : ''}
-              </span>
-            )}
-            {(stats?.inventory.lowStock ?? 0) > 0 && (
-              <span className="inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-sm font-medium text-amber-700">
-                {stats?.inventory.lowStock} con bajo stock
-              </span>
-            )}
-          </div>
-          {stats?.inventory.lowStockProducts &&
-            stats.inventory.lowStockProducts.length > 0 && (
-              <div className="space-y-1">
-                {stats.inventory.lowStockProducts.map((product) => (
-                  <div
-                    key={product.id}
-                    className="flex items-center justify-between text-sm"
-                  >
-                    <span className="text-amber-800">
-                      {product.name}
-                    </span>
-                    <span
-                      className={
-                        product.stock === 0
-                          ? 'font-medium text-red-600'
-                          : 'font-medium text-amber-600'
-                      }
+          </AlertTitle>
+          <AlertDescription>
+            <div className="mt-2 flex gap-4">
+              {(stats?.inventory.outOfStock ?? 0) > 0 && (
+                <Badge variant="destructive" className="bg-red-100 text-red-700 hover:bg-red-100 border-transparent">
+                  {stats?.inventory.outOfStock} agotado
+                  {(stats?.inventory.outOfStock ?? 0) !== 1 ? 's' : ''}
+                </Badge>
+              )}
+              {(stats?.inventory.lowStock ?? 0) > 0 && (
+                <Badge variant="outline" className="bg-amber-100 text-amber-700 hover:bg-amber-100 border-transparent">
+                  {stats?.inventory.lowStock} con bajo stock
+                </Badge>
+              )}
+            </div>
+            {stats?.inventory.lowStockProducts &&
+              stats.inventory.lowStockProducts.length > 0 && (
+                <div className="mt-3 space-y-1">
+                  {stats.inventory.lowStockProducts.map((product) => (
+                    <div
+                      key={product.id}
+                      className="flex items-center justify-between text-sm"
                     >
-                      {product.stock === 0
-                        ? 'Agotado'
-                        : `${product.stock} unidades`}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            )}
-        </div>
+                      <span className="text-amber-800">
+                        {product.name}
+                      </span>
+                      <span
+                        className={
+                          product.stock === 0
+                            ? 'font-medium text-red-600'
+                            : 'font-medium text-amber-600'
+                        }
+                      >
+                        {product.stock === 0
+                          ? 'Agotado'
+                          : `${product.stock} unidades`}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+          </AlertDescription>
+        </Alert>
       )}
 
       <div className="grid gap-4 lg:grid-cols-2">
-        <div className="rounded-lg border bg-white p-4">
-          <h2 className="mb-4 text-lg font-semibold">Pedidos por Estado</h2>
-          <div className="space-y-2">
-            <div className="flex justify-between">
-              <span className="text-yellow-600">Pendientes</span>
-              <span className="font-medium">
-                {stats?.orders.byStatus.pending ?? 0}
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-blue-600">Confirmados</span>
-              <span className="font-medium">
-                {stats?.orders.byStatus.confirmed ?? 0}
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-purple-600">Enviados</span>
-              <span className="font-medium">
-                {stats?.orders.byStatus.shipped ?? 0}
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-green-600">Entregados</span>
-              <span className="font-medium">
-                {stats?.orders.byStatus.delivered ?? 0}
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-red-600">Cancelados</span>
-              <span className="font-medium">
-                {stats?.orders.byStatus.cancelled ?? 0}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <div className="rounded-lg border bg-white p-4">
-          <h2 className="mb-4 text-lg font-semibold">
-            Productos por Categoría
-          </h2>
-          <div className="space-y-2">
-            {stats?.products.byCategory.map((cat) => (
-              <div key={cat.categoryId} className="flex justify-between">
-                <span>{cat.categoryName}</span>
-                <span className="font-medium">{cat.productCount}</span>
+        <Card>
+          <CardHeader>
+            <CardTitle>Pedidos por Estado</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              <div className="flex justify-between">
+                <span className="text-yellow-600">Pendientes</span>
+                <span className="font-medium">
+                  {stats?.orders.byStatus.pending ?? 0}
+                </span>
               </div>
-            ))}
-            {(!stats?.products.byCategory ||
-              stats.products.byCategory.length === 0) && (
-              <p className="text-gray-500">No hay categorías</p>
-            )}
-          </div>
-        </div>
+              <div className="flex justify-between">
+                <span className="text-blue-600">Confirmados</span>
+                <span className="font-medium">
+                  {stats?.orders.byStatus.confirmed ?? 0}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-purple-600">Enviados</span>
+                <span className="font-medium">
+                  {stats?.orders.byStatus.shipped ?? 0}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-green-600">Entregados</span>
+                <span className="font-medium">
+                  {stats?.orders.byStatus.delivered ?? 0}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-red-600">Cancelados</span>
+                <span className="font-medium">
+                  {stats?.orders.byStatus.cancelled ?? 0}
+                </span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Productos por Categoría</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              {stats?.products.byCategory.map((cat) => (
+                <div key={cat.categoryId} className="flex justify-between">
+                  <span>{cat.categoryName}</span>
+                  <span className="font-medium">{cat.productCount}</span>
+                </div>
+              ))}
+              {(!stats?.products.byCategory ||
+                stats.products.byCategory.length === 0) && (
+                <p className="text-muted-foreground">No hay categorías</p>
+              )}
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
-      <div className="rounded-lg border bg-white p-4">
-        <h2 className="mb-4 text-lg font-semibold">Pedidos Recientes</h2>
-        <RecentOrdersTable orders={stats?.recentOrders ?? []} />
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Pedidos Recientes</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <RecentOrdersTable orders={stats?.recentOrders ?? []} />
+        </CardContent>
+      </Card>
     </div>
   )
 }

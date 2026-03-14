@@ -1,41 +1,83 @@
 import { Link, useNavigate } from '@tanstack/react-router'
 import { ChevronDown, ChevronRight, Menu, Search, ShoppingCart, X, Zap } from 'lucide-react'
-import { useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import type {CategoryWithChildren} from '@/hooks/useCategories';
 import CartSidebar from '@/components/CartSidebar'
 import { useCart } from '@/contexts/CartContext'
 import {  useCategoryTree } from '@/hooks/useCategories'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+
+
+function useHoverPopover(closeDelay = 150) {
+  const [open, setOpen] = useState(false)
+  const timeoutRef = useRef<ReturnType<typeof setTimeout>>(null)
+
+  const handleMouseEnter = useCallback(() => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    setOpen(true)
+  }, [])
+
+  const handleMouseLeave = useCallback(() => {
+    timeoutRef.current = setTimeout(() => setOpen(false), closeDelay)
+  }, [closeDelay])
+
+  const close = useCallback(() => setOpen(false), [])
+
+  return { open, setOpen, handleMouseEnter, handleMouseLeave, close }
+}
 
 function CategoryDropdown({ category }: { category: CategoryWithChildren }) {
-  return (
-    <div className="relative group/cat">
+  const { open, setOpen, handleMouseEnter, handleMouseLeave, close } = useHoverPopover()
+
+  if (category.children.length === 0) {
+    return (
       <Link
         to="/products"
         search={{ category: category.id }}
         className="flex items-center gap-1 px-3 py-2 text-sm text-slate-700 hover:text-primary font-medium transition-colors whitespace-nowrap"
       >
         {category.name}
-        {category.children.length > 0 && (
-          <ChevronDown className="w-3.5 h-3.5 text-slate-400 group-hover/cat:text-primary transition-colors" />
-        )}
       </Link>
-      {category.children.length > 0 && (
-        <div className="absolute top-full left-0 pt-1 invisible group-hover/cat:visible opacity-0 group-hover/cat:opacity-100 transition-all duration-150 z-50">
-          <div className="bg-white rounded-lg shadow-lg border border-slate-100 py-1 min-w-[200px]">
-            {category.children.map((child) => (
-              <Link
-                key={child.id}
-                to="/products"
-                search={{ category: child.id }}
-                className="block px-4 py-2.5 text-sm text-slate-600 hover:text-primary hover:bg-primary/5 transition-colors"
-              >
-                {child.name}
-              </Link>
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
+    )
+  }
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+        <PopoverTrigger asChild>
+          <button className="flex items-center gap-1 px-3 py-2 text-sm text-slate-700 hover:text-primary font-medium transition-colors whitespace-nowrap">
+            {category.name}
+            <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
+          </button>
+        </PopoverTrigger>
+      </div>
+      <PopoverContent
+        align="start"
+        className="w-auto min-w-[200px] p-1"
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        <Link
+          to="/products"
+          search={{ category: category.id }}
+          onClick={close}
+          className="block px-3 py-2 text-sm text-slate-600 hover:text-primary hover:bg-primary/5 rounded-sm transition-colors font-medium"
+        >
+          Todo en {category.name}
+        </Link>
+        {category.children.map((child) => (
+          <Link
+            key={child.id}
+            to="/products"
+            search={{ category: child.id }}
+            onClick={close}
+            className="block px-3 py-2 text-sm text-slate-600 hover:text-primary hover:bg-primary/5 rounded-sm transition-colors"
+          >
+            {child.name}
+          </Link>
+        ))}
+      </PopoverContent>
+    </Popover>
   )
 }
 
@@ -96,6 +138,41 @@ function MobileCategorySection({
         </div>
       )}
     </div>
+  )
+}
+
+function VerTodasDropdown({ categories }: { categories: CategoryWithChildren[] }) {
+  const { open, setOpen, handleMouseEnter, handleMouseLeave, close } = useHoverPopover()
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+        <PopoverTrigger asChild>
+          <button className="flex items-center gap-1 px-3 py-2 text-sm text-slate-700 hover:text-primary font-medium transition-colors whitespace-nowrap">
+            Ver todas
+            <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
+          </button>
+        </PopoverTrigger>
+      </div>
+      <PopoverContent
+        align="end"
+        className="w-auto min-w-[220px] max-h-[var(--radix-popover-content-available-height,400px)] overflow-y-auto p-1"
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        {categories.map((cat) => (
+          <Link
+            key={cat.id}
+            to="/products"
+            search={{ category: cat.id }}
+            onClick={close}
+            className="block px-3 py-2 text-sm text-slate-600 hover:text-primary hover:bg-primary/5 rounded-sm transition-colors"
+          >
+            {cat.name}
+          </Link>
+        ))}
+      </PopoverContent>
+    </Popover>
   )
 }
 
@@ -242,26 +319,7 @@ function Header() {
                 <CategoryDropdown key={category.id} category={category} />
               ))}
               {categoryTree.length > 8 && (
-                <div className="relative group/more">
-                  <button className="flex items-center gap-1 px-3 py-2 text-sm text-slate-700 hover:text-primary font-medium transition-colors whitespace-nowrap">
-                    Ver todas
-                    <ChevronDown className="w-3.5 h-3.5 text-slate-400 group-hover/more:text-primary transition-colors" />
-                  </button>
-                  <div className="absolute top-full right-0 pt-1 invisible group-hover/more:visible opacity-0 group-hover/more:opacity-100 transition-all duration-150 z-50">
-                    <div className="bg-white rounded-lg shadow-lg border border-slate-100 py-1 min-w-[220px] max-h-[400px] overflow-y-auto">
-                      {categoryTree.slice(8).map((cat) => (
-                        <Link
-                          key={cat.id}
-                          to="/products"
-                          search={{ category: cat.id }}
-                          className="block px-4 py-2.5 text-sm text-slate-600 hover:text-primary hover:bg-primary/5 transition-colors"
-                        >
-                          {cat.name}
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                </div>
+                <VerTodasDropdown categories={categoryTree.slice(8)} />
               )}
             </nav>
           </div>

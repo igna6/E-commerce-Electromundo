@@ -1,6 +1,15 @@
 import { Link } from '@tanstack/react-router'
 import type { Product } from '@/types/product'
 import { formatPrice } from '@/utils/formatPrice'
+import { Badge } from '@/components/ui/badge'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 
 type ProductsTableProps = {
   products: Array<Product>
@@ -17,28 +26,28 @@ export default function ProductsTable({
 }: ProductsTableProps) {
   if (products.length === 0) {
     return (
-      <div className="px-4 py-12 text-center text-sm text-gray-500">
+      <div className="px-4 py-12 text-center text-sm text-muted-foreground">
         No se encontraron productos
       </div>
     )
   }
 
   return (
-    <table className="w-full">
-      <thead>
-        <tr className="border-b bg-gray-50 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-          <th className="px-4 py-3">Producto</th>
-          <th className="px-4 py-3">SKU</th>
-          <th className="px-4 py-3">Precio</th>
-          <th className="px-4 py-3">Stock</th>
-          <th className="px-4 py-3">Categoría</th>
-          <th className="px-4 py-3 text-right">Acciones</th>
-        </tr>
-      </thead>
-      <tbody className="divide-y">
+    <Table>
+      <TableHeader>
+        <TableRow className="bg-muted/50">
+          <TableHead className="px-4">Producto</TableHead>
+          <TableHead className="px-4">SKU</TableHead>
+          <TableHead className="px-4">Precio</TableHead>
+          <TableHead className="px-4">Stock</TableHead>
+          <TableHead className="px-4">Categoría</TableHead>
+          <TableHead className="px-4 text-right">Acciones</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
         {products.map((product) => (
-          <tr key={product.id} className="hover:bg-gray-50">
-            <td className="px-4 py-3">
+          <TableRow key={product.id}>
+            <TableCell className="px-4">
               <div className="flex items-center gap-3">
                 {product.image ? (
                   <img
@@ -47,38 +56,38 @@ export default function ProductsTable({
                     className="h-10 w-10 rounded object-cover"
                   />
                 ) : (
-                  <div className="flex h-10 w-10 items-center justify-center rounded bg-gray-100 text-xs text-gray-400">
+                  <div className="flex h-10 w-10 items-center justify-center rounded bg-muted text-xs text-muted-foreground">
                     —
                   </div>
                 )}
                 <span className="text-sm font-medium">{product.name}</span>
               </div>
-            </td>
-            <td className="px-4 py-3">
-              <span className="text-xs text-gray-500 font-mono">
+            </TableCell>
+            <TableCell className="px-4">
+              <span className="text-xs text-muted-foreground font-mono">
                 {product.sku || '—'}
               </span>
-            </td>
-            <td className="px-4 py-3 text-sm">{formatPrice(product.price)}</td>
-            <td className="px-4 py-3">
+            </TableCell>
+            <TableCell className="px-4 text-sm">{formatPrice(product.price)}</TableCell>
+            <TableCell className="px-4">
               {product.stock === 0 ? (
-                <span className="inline-flex items-center rounded-full bg-red-100 px-2 py-0.5 text-xs font-medium text-red-700">
+                <Badge variant="destructive" className="bg-red-100 text-red-700 hover:bg-red-100 border-transparent">
                   Agotado
-                </span>
+                </Badge>
               ) : product.stock <= 5 ? (
-                <span className="inline-flex items-center rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700">
+                <Badge variant="outline" className="bg-amber-100 text-amber-700 hover:bg-amber-100 border-transparent">
                   {product.stock}
-                </span>
+                </Badge>
               ) : (
                 <span className="text-sm text-green-600 font-medium">
                   {product.stock}
                 </span>
               )}
-            </td>
-            <td className="px-4 py-3 text-sm text-gray-500">
+            </TableCell>
+            <TableCell className="px-4 text-sm text-muted-foreground">
               {product.category ? (categoryMap[product.category] || `#${product.category}`) : '—'}
-            </td>
-            <td className="px-4 py-3 text-right">
+            </TableCell>
+            <TableCell className="px-4 text-right">
               <div className="flex items-center justify-end gap-2">
                 <Link
                   to="/admin/products/$productId/edit"
@@ -95,10 +104,10 @@ export default function ProductsTable({
                   Eliminar
                 </button>
               </div>
-            </td>
-          </tr>
+            </TableCell>
+          </TableRow>
         ))}
-      </tbody>
-    </table>
+      </TableBody>
+    </Table>
   )
 }

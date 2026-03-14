@@ -1,6 +1,14 @@
 import { Link } from '@tanstack/react-router'
 import OrderStatusBadge from './OrderStatusBadge'
 import { formatPrice } from '@/utils/formatPrice'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 
 type Order = {
   id: number
@@ -27,24 +35,24 @@ export default function RecentOrdersTable({ orders }: RecentOrdersTableProps) {
   }
 
   if (orders.length === 0) {
-    return <p className="text-gray-500">No hay pedidos recientes</p>
+    return <p className="text-muted-foreground">No hay pedidos recientes</p>
   }
 
   return (
-    <table className="w-full">
-      <thead>
-        <tr className="border-b text-left text-sm text-gray-500">
-          <th className="pb-2">Pedido</th>
-          <th className="pb-2">Cliente</th>
-          <th className="pb-2">Total</th>
-          <th className="pb-2">Estado</th>
-          <th className="pb-2">Fecha</th>
-        </tr>
-      </thead>
-      <tbody>
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead>Pedido</TableHead>
+          <TableHead>Cliente</TableHead>
+          <TableHead>Total</TableHead>
+          <TableHead>Estado</TableHead>
+          <TableHead>Fecha</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
         {orders.map((order) => (
-          <tr key={order.id} className="border-b">
-            <td className="py-3">
+          <TableRow key={order.id}>
+            <TableCell>
               <Link
                 to="/admin/orders/$orderId"
                 params={{ orderId: String(order.id) }}
@@ -52,20 +60,20 @@ export default function RecentOrdersTable({ orders }: RecentOrdersTableProps) {
               >
                 #{order.id.toString().padStart(6, '0')}
               </Link>
-            </td>
-            <td className="py-3">
+            </TableCell>
+            <TableCell>
               {order.firstName} {order.lastName}
-            </td>
-            <td className="py-3">{formatPrice(order.total)}</td>
-            <td className="py-3">
+            </TableCell>
+            <TableCell>{formatPrice(order.total)}</TableCell>
+            <TableCell>
               <OrderStatusBadge status={order.status} />
-            </td>
-            <td className="py-3 text-sm text-gray-500">
+            </TableCell>
+            <TableCell className="text-sm text-muted-foreground">
               {formatDate(order.createdAt)}
-            </td>
-          </tr>
+            </TableCell>
+          </TableRow>
         ))}
-      </tbody>
-    </table>
+      </TableBody>
+    </Table>
   )
 }

@@ -7,7 +7,7 @@ Transform ElectroMundo from a broken prototype (v0.8) into a credible, professio
 ## Milestones
 
 - ✅ **v0.8 Prototype** - Phases 1-8 (shipped)
-- 🚧 **v1.0 Production Storefront** - Phases 9-14 (in progress)
+- ✅ **v1.0 Production Storefront** - Phases 9-15 (complete)
 
 ## Phases
 
@@ -25,7 +25,7 @@ Plans:
 
 </details>
 
-### 🚧 v1.0 Production Storefront
+### ✅ v1.0 Production Storefront
 
 **Milestone Goal:** A credible, professional Argentine e-commerce storefront with real data, working navigation, and polished UI.
 
@@ -48,42 +48,52 @@ Plans:
 - [x] 10-02: Add parentCategoryId for category hierarchy + update API and admin UI
 - [x] 10-03: Seed real category tree + assign products to categories by keyword matching
 
-#### Phase 11: Navigation & Filtering
-**Goal**: Category navigation bar, dynamic filters from real data, search improvements
+#### Phase 11: Codebase Refactor
+**Goal**: Fix bugs, clean up structural issues, and reduce duplication before building new features
 **Depends on**: Phase 10
+**Issues**: [11a-bug-fixes](.planning/issues/11a-bug-fixes.md), [11b-server-cleanup](.planning/issues/11b-server-cleanup.md), [11c-web-cleanup](.planning/issues/11c-web-cleanup.md)
+
+Plans:
+- [x] 11a: Bug fixes (7 commits) — broken pagination, search, auth gaps, Tailwind classes, soft-delete gaps
+- [x] 11b: Server structural cleanup (13 commits) — shared validators, response envelope, pagination helper, transactions, dead code
+- [x] 11c: Web structural cleanup (13 commits) — shared components, API client, types, memoization, dead code
+
+#### Phase 12: Navigation & Filtering
+**Goal**: Category navigation bar, dynamic filters from real data, search improvements
+**Depends on**: Phase 11
 **Plans**: 3 plans
 
 Plans:
-- [ ] 11-01: Category navigation bar with dropdowns
-- [ ] 11-02: Dynamic product filters (brands from DB, working category/price/stock filters)
-- [ ] 11-03: Search improvements (better results, category-scoped search)
+- [x] 12-01: Category navigation bar with dropdowns
+- [x] 12-02: Dynamic product filters (working category/price/stock filters, sort wired to API)
+- [x] 12-03: Search improvements (result count, active filter tags, category-scoped search)
 
-#### Phase 12: Product Pages
+#### Phase 13: Product Pages
 **Goal**: Professional product cards and detail pages with real data
-**Depends on**: Phase 10 (needs images), Phase 9 (needs clean data)
+**Depends on**: Phase 11 (needs shared ProductCard), Phase 10 (needs images), Phase 9 (needs clean data)
 **Plans**: 2 plans
 
 Plans:
-- [ ] 12-01: Product card redesign (image, price formatting, name truncation, real badges)
-- [ ] 12-02: Product detail page overhaul (real specs, image display, remove fake tabs)
+- [x] 13-01: Product card polish (category name display, cleanup non-functional UI)
+- [x] 13-02: Product detail page overhaul (category breadcrumb, smart related products, remove duplication and dead UI)
 
-#### Phase 13: Homepage Sections
+#### Phase 14: Homepage Sections
 **Goal**: Rich homepage with category tiles, product carousels, and promotional sections
-**Depends on**: Phase 12 (needs good product cards), Phase 10 (needs categories)
+**Depends on**: Phase 13 (needs good product cards), Phase 10 (needs categories)
 **Plans**: 2 plans
 
 Plans:
-- [ ] 13-01: Category tiles section and featured products carousel
-- [ ] 13-02: Offers section, best sellers, brand showcase
+- [x] 14-01: Best prices section, improved promo section, trust bar
+- [x] 14-02: Category names on featured products cards
 
-#### Phase 14: Footer & Polish
+#### Phase 15: Footer & Polish
 **Goal**: Working footer with real legal pages, localization consistency, final UI polish
-**Depends on**: Phase 13
+**Depends on**: Phase 14
 **Plans**: 2 plans
 
 Plans:
-- [ ] 14-01: Legal/info pages (terms, privacy, FAQ, shipping policy, returns)
-- [ ] 14-02: Footer links, newsletter placeholder, localization fixes, final polish pass
+- [x] 15-01: Legal/info pages (terms, privacy, FAQ, shipping, returns)
+- [x] 15-02: Footer links wired to actual pages, WhatsApp number fixed
 
 ## Progress
 
@@ -92,7 +102,8 @@ Plans:
 | 8. Checkout Simplification | v0.8 | 2/3 | In progress | - |
 | 9. Data Cleanup | v1.0 | 2/2 | Complete | - |
 | 10. Images & Categories | v1.0 | 3/3 | Complete | - |
-| 11. Navigation & Filtering | v1.0 | 0/3 | Not started | - |
-| 12. Product Pages | v1.0 | 0/2 | Not started | - |
-| 13. Homepage Sections | v1.0 | 0/2 | Not started | - |
-| 14. Footer & Polish | v1.0 | 0/2 | Not started | - |
+| 11. Codebase Refactor | v1.0 | 3/3 | Complete | - |
+| 12. Navigation & Filtering | v1.0 | 3/3 | Complete | - |
+| 13. Product Pages | v1.0 | 2/2 | Complete | - |
+| 14. Homepage Sections | v1.0 | 2/2 | Complete | - |
+| 15. Footer & Polish | v1.0 | 2/2 | Complete | - |
