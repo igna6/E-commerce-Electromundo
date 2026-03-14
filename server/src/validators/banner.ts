@@ -1,8 +1,6 @@
 import { z } from 'zod'
 
-export const idParamSchema = z.object({
-  id: z.string().regex(/^\d+$/, 'ID must be a valid number').transform(Number),
-})
+export { idParamSchema } from './common.ts'
 
 export const createBannerSchema = z.object({
   title: z.string().min(1, 'Title is required').max(200),
