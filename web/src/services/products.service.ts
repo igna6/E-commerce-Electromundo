@@ -1,6 +1,4 @@
-import { API_URL } from '../constants/config'
-import { ACCESS_TOKEN_KEY } from '../constants/auth'
-import { ApiError, apiRequest, authApiRequest } from './api'
+import { apiRequest, authApiRequest } from './api'
 import type { Product } from '../types/product'
 import type { PaginatedResponse } from '../types/api'
 
@@ -99,28 +97,8 @@ export async function importProductsCSV(file: File): Promise<ImportResult> {
   const formData = new FormData()
   formData.append('file', file)
 
-  const token = localStorage.getItem(ACCESS_TOKEN_KEY)
-  const response = await fetch(`${API_URL}/api/admin/products/import`, {
+  return authApiRequest<ImportResult>('/api/admin/products/import', {
     method: 'POST',
-    headers: {
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    },
     body: formData,
   })
-
-  if (!response.ok) {
-    let errorData
-    try {
-      errorData = await response.json()
-    } catch {
-      // Response body may not be JSON
-    }
-    throw new ApiError(
-      errorData?.error || `HTTP error ${response.status}: ${response.statusText}`,
-      response.status,
-      errorData,
-    )
-  }
-
-  return response.json()
 }
