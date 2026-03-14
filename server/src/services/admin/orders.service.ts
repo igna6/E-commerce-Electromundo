@@ -1,8 +1,9 @@
 import { and, count, desc, eq, isNull } from 'drizzle-orm'
 import db from '../../db/db.ts'
-import { ordersTable, orderItemsTable } from '../../db/schema.ts'
+import { ordersTable } from '../../db/schema.ts'
 import { BadRequestError, NotFoundError } from '../../utils/errors.ts'
 import { paginate } from '../../utils/pagination.ts'
+import { fetchOrderWithItems } from '../orders.service.ts'
 
 const VALID_STATUSES = ['pending', 'confirmed', 'shipped', 'delivered', 'cancelled']
 
@@ -55,25 +56,8 @@ export async function listOrders(filters: AdminOrderFilters) {
 }
 
 export async function getOrderById(id: number) {
-  const order = await db
-    .select()
-    .from(ordersTable)
-    .where(and(eq(ordersTable.id, id), isNull(ordersTable.deletedAt)))
-    .limit(1)
-
-  if (!order[0]) {
-    throw new NotFoundError('Order not found')
-  }
-
-  const items = await db
-    .select()
-    .from(orderItemsTable)
-    .where(eq(orderItemsTable.orderId, id))
-
-  return {
-    ...order[0],
-    items,
-  }
+  const { order, items } = await fetchOrderWithItems(id)
+  return { ...order, items }
 }
 
 export async function updateOrderStatus(id: number, status: string) {

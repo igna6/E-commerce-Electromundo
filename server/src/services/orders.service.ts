@@ -155,7 +155,7 @@ export async function createOrder(data: CreateOrderInput) {
   }
 }
 
-export async function getOrderById(id: number, token: string) {
+export async function fetchOrderWithItems(id: number) {
   const order = await db
     .select()
     .from(ordersTable)
@@ -166,16 +166,22 @@ export async function getOrderById(id: number, token: string) {
     throw new NotFoundError('Order not found')
   }
 
-  if (order[0].accessToken !== token) {
-    throw new UnauthorizedError('Invalid order access token')
-  }
-
   const items = await db
     .select()
     .from(orderItemsTable)
     .where(eq(orderItemsTable.orderId, id))
 
-  const { accessToken: _token, ...orderWithoutToken } = order[0]
+  return { order: order[0], items }
+}
+
+export async function getOrderById(id: number, token: string) {
+  const { order, items } = await fetchOrderWithItems(id)
+
+  if (order.accessToken !== token) {
+    throw new UnauthorizedError('Invalid order access token')
+  }
+
+  const { accessToken: _token, ...orderWithoutToken } = order
   return {
     ...orderWithoutToken,
     items,
