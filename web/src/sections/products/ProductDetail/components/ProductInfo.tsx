@@ -1,7 +1,7 @@
+import type { Product } from '@/types/product'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { formatPrice } from '@/utils/formatPrice'
-import type { Product } from '@/types/product'
 import { toTitleCase } from '@/utils/toTitleCase'
 
 type ProductInfoProps = {

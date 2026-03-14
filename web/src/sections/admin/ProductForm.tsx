@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { getCategories } from '@/services/categories.service'
 import type { Product } from '@/types/product'
+import { getCategories } from '@/services/categories.service'
 
 type ProductFormData = {
   name: string

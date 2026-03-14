@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react'
-import { Link, useSearch, useNavigate } from '@tanstack/react-router'
+import { useEffect, useState } from 'react'
+import { Link, useNavigate, useSearch } from '@tanstack/react-router'
+import type { Order } from '@/types/order'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import {
@@ -13,7 +14,6 @@ import {
 import { getOrder } from '@/services/orders.service'
 import { formatPrice } from '@/utils/formatPrice'
 import { STORE_WHATSAPP_NUMBER } from '@/constants/config'
-import type { Order } from '@/types/order'
 import { toTitleCase } from '@/utils/toTitleCase'
 
 function OrderConfirmationPage() {

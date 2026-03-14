@@ -1,4 +1,7 @@
 import { Link } from '@tanstack/react-router'
+import EmptyCart from './components/EmptyCart'
+import CartItemRow from './components/CartItemRow'
+import CartSummary from './components/CartSummary'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import {
@@ -10,9 +13,6 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
 import { useCart } from '@/contexts/CartContext'
-import EmptyCart from './components/EmptyCart'
-import CartItemRow from './components/CartItemRow'
-import CartSummary from './components/CartSummary'
 
 function CartPage() {
   const { items, subtotal, totalItems, updateQuantity, removeItem, clearCart } = useCart()

@@ -6,7 +6,7 @@ export type CartItem = {
 }
 
 export type Cart = {
-  items: CartItem[]
+  items: Array<CartItem>
   totalItems: number
   subtotal: number
 }

@@ -1,6 +1,6 @@
-import { useAuth } from '@/contexts/AuthContext'
 import { useNavigate } from '@tanstack/react-router'
 import AdminSidebar from './AdminSidebar'
+import { useAuth } from '@/contexts/AuthContext'
 
 type AdminLayoutProps = {
   children: React.ReactNode

@@ -1,5 +1,5 @@
 import { apiRequest } from './api'
-import type { Order, CreateOrderPayload } from '../types/order'
+import type { CreateOrderPayload, Order } from '../types/order'
 
 export async function createOrder(data: CreateOrderPayload): Promise<{ data: Order }> {
   return apiRequest<{ data: Order }>('/api/orders', {

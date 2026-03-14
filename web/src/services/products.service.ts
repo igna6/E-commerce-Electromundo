@@ -1,7 +1,7 @@
-import { apiRequest, authApiRequest, ApiError } from './api'
+import { API_URL } from '../constants/config'
+import { ApiError, apiRequest, authApiRequest } from './api'
 import type { Product } from '../types/product'
 import type { PaginatedResponse } from '../types/api'
-import { API_URL } from '../constants/config'
 
 export type GetProductsParams = {
   page?: number

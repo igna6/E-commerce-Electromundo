@@ -1,8 +1,8 @@
 import { apiRequest, authApiRequest } from './api'
 import type { Category } from '../types/category'
 
-export async function getCategories(): Promise<{ data: Category[] }> {
-  return apiRequest<{ data: Category[] }>('/api/categories')
+export async function getCategories(): Promise<{ data: Array<Category> }> {
+  return apiRequest<{ data: Array<Category> }>('/api/categories')
 }
 
 export async function getCategory(id: number): Promise<{ data: Category }> {

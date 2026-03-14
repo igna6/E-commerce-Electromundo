@@ -1,10 +1,10 @@
 import { Link } from '@tanstack/react-router'
-import type { UseFormRegister, FieldErrors } from 'react-hook-form'
+import type { FieldErrors, UseFormRegister } from 'react-hook-form'
+import type { StockError } from '@/machines/checkoutMachine'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
-import type { StockError } from '@/machines/checkoutMachine'
 import { toTitleCase } from '@/utils/toTitleCase'
 
 type ContactFormData = {
@@ -20,7 +20,7 @@ type ContactShippingFormProps = {
   onSubmit: () => void
   isSubmitting: boolean
   submitError: string | null
-  stockErrors: StockError[]
+  stockErrors: Array<StockError>
 }
 
 export default function ContactShippingForm({

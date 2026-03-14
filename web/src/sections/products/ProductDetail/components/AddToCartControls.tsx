@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router'
-import { Button } from '@/components/ui/button'
 import type { Product } from '@/types/product'
+import { Button } from '@/components/ui/button'
 
 type AddToCartControlsProps = {
   product: Product

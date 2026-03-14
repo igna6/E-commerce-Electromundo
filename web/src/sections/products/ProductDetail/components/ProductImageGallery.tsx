@@ -1,7 +1,7 @@
 import { ImageOff } from 'lucide-react'
 
 type ProductImageGalleryProps = {
-  images: string[]
+  images: Array<string>
   productName: string
   selectedImage: number
   onSelectImage: (index: number) => void

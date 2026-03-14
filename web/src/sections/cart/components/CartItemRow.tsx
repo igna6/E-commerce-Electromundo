@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router'
-import { formatPrice } from '@/utils/formatPrice'
 import type { CartItem } from '@/types/cart'
+import { formatPrice } from '@/utils/formatPrice'
 import { toTitleCase } from '@/utils/toTitleCase'
 
 type CartItemRowProps = {

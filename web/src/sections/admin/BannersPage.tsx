@@ -1,12 +1,12 @@
 import { useState } from 'react'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import {
-  getAllBanners,
-  createBanner,
-  updateBanner,
-  deleteBanner,
-} from '@/services/banners.service'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import type { Banner } from '@/types/banner'
+import {
+  createBanner,
+  deleteBanner,
+  getAllBanners,
+  updateBanner,
+} from '@/services/banners.service'
 
 type BannerFormData = {
   title: string
@@ -50,8 +50,8 @@ export default function BannersPage() {
   })
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, data }: { id: number; data: Partial<Banner> }) =>
-      updateBanner(id, data),
+    mutationFn: ({ id, data: payload }: { id: number; data: Partial<Banner> }) =>
+      updateBanner(id, payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-banners'] })
       queryClient.invalidateQueries({ queryKey: ['banners'] })

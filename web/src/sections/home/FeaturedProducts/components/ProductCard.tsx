@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from '@tanstack/react-router'
-import { ShoppingCart, Check, Package } from 'lucide-react'
+import { Check, Package, ShoppingCart } from 'lucide-react'
 import type { Product } from '@/types/product'
 import { useCart } from '@/contexts/CartContext'
 import { formatPrice } from '@/utils/formatPrice'

@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { Zap, Mail, Phone, MapPin } from 'lucide-react'
+import { Mail, MapPin, Phone, Zap } from 'lucide-react'
 
 function Footer() {
   return (

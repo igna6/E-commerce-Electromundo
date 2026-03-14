@@ -13,7 +13,7 @@ type Order = {
 }
 
 type RecentOrdersTableProps = {
-  orders: Order[]
+  orders: Array<Order>
 }
 
 export default function RecentOrdersTable({ orders }: RecentOrdersTableProps) {

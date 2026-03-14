@@ -1,11 +1,11 @@
-import { createContext, useContext, useEffect, useState, useCallback } from 'react'
+import { createContext, useCallback, useContext, useEffect, useState } from 'react'
 import type { Product } from '@/types/product'
 import type { CartItem } from '@/types/cart'
 
 const CART_STORAGE_KEY = 'electromundo-cart'
 
 type CartContextType = {
-  items: CartItem[]
+  items: Array<CartItem>
   totalItems: number
   subtotal: number
   addItem: (product: Product, quantity?: number) => void
@@ -19,7 +19,7 @@ type CartContextType = {
 const CartContext = createContext<CartContextType | null>(null)
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
-  const [items, setItems] = useState<CartItem[]>([])
+  const [items, setItems] = useState<Array<CartItem>>([])
   const [isInitialized, setIsInitialized] = useState(false)
 
   // Load cart from localStorage on mount
@@ -114,7 +114,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const getItemQuantity = useCallback(
     (productId: number) => {
-      const item = items.find((item) => item.product.id === productId)
+      const item = items.find((entry) => entry.product.id === productId)
       return item?.quantity ?? 0
     },
     [items]

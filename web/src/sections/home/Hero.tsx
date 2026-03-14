@@ -1,9 +1,9 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
-import { ArrowRight, Zap, ChevronLeft, ChevronRight } from 'lucide-react'
-import { getActiveBanners } from '@/services/banners.service'
+import { ArrowRight, ChevronLeft, ChevronRight, Zap } from 'lucide-react'
 import type { Banner } from '@/types/banner'
+import { getActiveBanners } from '@/services/banners.service'
 
 function HeroSlide({ banner }: { banner: Banner }) {
   return (
@@ -141,7 +141,7 @@ function Hero() {
   if (banners.length === 1) {
     return (
       <section className="relative overflow-hidden">
-        <HeroSlide banner={banners[0]!} />
+        <HeroSlide banner={banners[0]} />
       </section>
     )
   }

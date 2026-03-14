@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from '@tanstack/react-router'
-import { Heart, Eye, ShoppingCart, Check, Minus, Plus, Zap } from 'lucide-react'
+import { Check, Eye, Heart, Minus, Plus, ShoppingCart, Zap } from 'lucide-react'
 import type { Product } from '@/types/product'
 import { Button } from '@/components/ui/button'
 import { useCart } from '@/contexts/CartContext'

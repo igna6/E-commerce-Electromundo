@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
-import { useAuth } from '@/contexts/AuthContext'
 import { Link } from '@tanstack/react-router'
 import StatsCard from './StatsCard'
 import RecentOrdersTable from './RecentOrdersTable'
+import { useAuth } from '@/contexts/AuthContext'
 import { apiRequest } from '@/services/api'
 import { formatPrice } from '@/utils/formatPrice'
 
@@ -112,8 +112,8 @@ export default function DashboardPage() {
       </div>
 
       {/* Inventory Alerts */}
-      {((stats?.inventory?.outOfStock ?? 0) > 0 ||
-        (stats?.inventory?.lowStock ?? 0) > 0) && (
+      {((stats?.inventory.outOfStock ?? 0) > 0 ||
+        (stats?.inventory.lowStock ?? 0) > 0) && (
         <div className="rounded-lg border border-amber-200 bg-amber-50 p-4">
           <h2 className="mb-3 text-lg font-semibold text-amber-800">
             Alertas de Inventario

@@ -14,7 +14,7 @@ type Order = {
 }
 
 type OrdersTableProps = {
-  orders: Order[]
+  orders: Array<Order>
 }
 
 export default function OrdersTable({ orders }: OrdersTableProps) {

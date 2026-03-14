@@ -1,10 +1,10 @@
 import { Link } from '@tanstack/react-router'
-import { formatPrice } from '@/utils/formatPrice'
 import type { Product } from '@/types/product'
+import { formatPrice } from '@/utils/formatPrice'
 import { toTitleCase } from '@/utils/toTitleCase'
 
 type RelatedProductsProps = {
-  products: Product[]
+  products: Array<Product>
   currentProductId: number
 }
 

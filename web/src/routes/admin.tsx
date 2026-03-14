@@ -1,4 +1,4 @@
-import { createFileRoute, Outlet, Navigate, useLocation } from '@tanstack/react-router'
+import { Navigate, Outlet, createFileRoute, useLocation } from '@tanstack/react-router'
 import { useAuth } from '@/contexts/AuthContext'
 import AdminLayout from '@/sections/admin/AdminLayout'
 

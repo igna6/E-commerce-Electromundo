@@ -1,15 +1,16 @@
-import { useState, useRef } from 'react'
+import { useRef, useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { Upload, FileSpreadsheet, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react'
+import { AlertCircle, CheckCircle2, FileSpreadsheet, Loader2, Upload } from 'lucide-react'
+import type {ImportResult} from '@/services/products.service';
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
-  DialogTitle,
   DialogDescription,
   DialogFooter,
+  DialogHeader,
+  DialogTitle,
 } from '@/components/ui/dialog'
-import { importProductsCSV, type ImportResult } from '@/services/products.service'
+import {  importProductsCSV } from '@/services/products.service'
 
 type State = 'idle' | 'previewing' | 'importing' | 'done'
 
@@ -19,12 +20,12 @@ type PreviewRow = {
   stock: string
 }
 
-function parseCSVPreview(content: string): { headers: string[]; rows: PreviewRow[]; totalRows: number } {
+function parseCSVPreview(content: string): { headers: Array<string>; rows: Array<PreviewRow>; totalRows: number } {
   const lines = content.split(/\r?\n/).filter((l) => l.trim() !== '')
   if (lines.length < 2) return { headers: [], rows: [], totalRows: 0 }
 
-  const parseRow = (line: string): string[] => {
-    const cells: string[] = []
+  const parseRow = (line: string): Array<string> => {
+    const cells: Array<string> = []
     let current = ''
     let inQuotes = false
     for (let i = 0; i < line.length; i++) {
@@ -67,7 +68,7 @@ function parseCSVPreview(content: string): { headers: string[]; rows: PreviewRow
     return item && item.toLowerCase() !== 'nan'
   })
 
-  const previewRows: PreviewRow[] = validLines.slice(0, 5).map((line) => {
+  const previewRows: Array<PreviewRow> = validLines.slice(0, 5).map((line) => {
     const cells = parseRow(line)
     return {
       item: cells[itemIdx] || '',
@@ -87,7 +88,7 @@ type ImportProductsDialogProps = {
 export default function ImportProductsDialog({ open, onOpenChange }: ImportProductsDialogProps) {
   const [state, setState] = useState<State>('idle')
   const [file, setFile] = useState<File | null>(null)
-  const [preview, setPreview] = useState<{ rows: PreviewRow[]; totalRows: number } | null>(null)
+  const [preview, setPreview] = useState<{ rows: Array<PreviewRow>; totalRows: number } | null>(null)
   const [result, setResult] = useState<ImportResult | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const queryClient = useQueryClient()
@@ -201,7 +202,7 @@ export default function ImportProductsDialog({ open, onOpenChange }: ImportProdu
 
             {importMutation.isError && (
               <div className="rounded-md bg-red-50 p-3 text-sm text-red-700">
-                Error: {importMutation.error?.message || 'Error al importar'}
+                Error: {importMutation.error.message || 'Error al importar'}
               </div>
             )}
 

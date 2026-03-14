@@ -1,5 +1,5 @@
-import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { Link, createFileRoute, useNavigate } from '@tanstack/react-router'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { getProduct, updateProduct } from '@/services/products.service'
 import ProductForm from '@/sections/admin/ProductForm'
 
@@ -63,7 +63,7 @@ function EditProductComponent() {
       <div className="rounded-lg border bg-white p-6">
         <ProductForm
           initialData={product}
-          onSubmit={(data) => mutation.mutate(data)}
+          onSubmit={(formData) => mutation.mutate(formData)}
           isLoading={mutation.isPending}
           error={mutation.error?.message}
         />

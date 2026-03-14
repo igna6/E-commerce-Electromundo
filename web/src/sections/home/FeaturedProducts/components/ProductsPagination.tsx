@@ -1,5 +1,5 @@
-import { Button } from '@/components/ui/button'
 import type { Pagination } from '@/types/api'
+import { Button } from '@/components/ui/button'
 
 interface ProductsPaginationProps {
   pagination: Pagination

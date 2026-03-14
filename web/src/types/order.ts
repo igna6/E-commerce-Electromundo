@@ -30,7 +30,7 @@ export type Order = {
   orderText: string
   createdAt: string
   updatedAt: string
-  items: OrderItem[]
+  items: Array<OrderItem>
 }
 
 export type CreateOrderPayload = {
@@ -38,8 +38,8 @@ export type CreateOrderPayload = {
   phone: string
   firstName: string
   lastName: string
-  items: {
+  items: Array<{
     productId: number
     quantity: number
-  }[]
+  }>
 }

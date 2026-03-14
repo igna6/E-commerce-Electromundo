@@ -17,7 +17,7 @@ type Order = {
 }
 
 type OrdersResponse = {
-  data: Order[]
+  data: Array<Order>
   pagination: {
     page: number
     limit: number

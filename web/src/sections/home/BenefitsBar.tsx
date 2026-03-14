@@ -1,4 +1,4 @@
-import { Truck, Shield, Tag, Headphones } from 'lucide-react'
+import { Headphones, Shield, Tag, Truck } from 'lucide-react'
 
 const benefits = [
   {

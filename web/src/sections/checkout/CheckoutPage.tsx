@@ -4,6 +4,8 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMachine } from '@xstate/react'
+import ContactShippingForm from './components/ContactShippingForm'
+import CheckoutOrderSummary from './components/CheckoutOrderSummary'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -14,8 +16,6 @@ import {
 } from '@/components/ui/breadcrumb'
 import { useCart } from '@/contexts/CartContext'
 import { checkoutMachine } from '@/machines/checkoutMachine'
-import ContactShippingForm from './components/ContactShippingForm'
-import CheckoutOrderSummary from './components/CheckoutOrderSummary'
 
 const checkoutSchema = z.object({
   email: z.string().email('Email inválido'),

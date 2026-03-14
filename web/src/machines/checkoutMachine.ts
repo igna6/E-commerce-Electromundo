@@ -1,6 +1,6 @@
-import { setup, assign, fromPromise } from 'xstate'
-import { createOrder } from '@/services/orders.service'
+import { assign, fromPromise, setup } from 'xstate'
 import type { CreateOrderPayload } from '@/types/order'
+import { createOrder } from '@/services/orders.service'
 
 export type StockError = {
   productName: string
@@ -10,7 +10,7 @@ export type StockError = {
 
 export type CheckoutContext = {
   submitError: string | null
-  stockErrors: StockError[]
+  stockErrors: Array<StockError>
 }
 
 export type CheckoutEvent = { type: 'SUBMIT'; formData: CreateOrderPayload }
@@ -19,7 +19,7 @@ export const checkoutMachine = setup({
   types: {
     context: {} as CheckoutContext,
     events: {} as CheckoutEvent,
-    input: {} as { items: { product: { id: number }; quantity: number }[] },
+    input: {} as { items: Array<{ product: { id: number }; quantity: number }> },
   },
   actors: {
     submitOrder: fromPromise(async ({ input }: { input: { formData: CreateOrderPayload } }) => {
@@ -41,7 +41,7 @@ export const checkoutMachine = setup({
           target: 'submitting',
           actions: assign({
             submitError: () => null,
-            stockErrors: () => [] as StockError[],
+            stockErrors: () => [] as Array<StockError>,
           }),
         },
       },
@@ -50,7 +50,6 @@ export const checkoutMachine = setup({
       invoke: {
         src: 'submitOrder',
         input: ({ event }) => {
-          if (event.type !== 'SUBMIT') throw new Error('Unexpected event')
           return { formData: event.formData }
         },
         onDone: 'success',
@@ -59,19 +58,19 @@ export const checkoutMachine = setup({
           actions: assign({
             submitError: ({ event }) => {
               const error = event.error as Record<string, unknown>
-              const data = error?.['data'] as Record<string, unknown> | undefined
-              if (error?.['status'] === 409 && data?.['details']) {
+              const data = error['data'] as Record<string, unknown> | undefined
+              if (error['status'] === 409 && data?.['details']) {
                 return 'Algunos productos no tienen suficiente stock.'
               }
               return 'Error al procesar el pedido. Por favor intenta nuevamente.'
             },
             stockErrors: ({ event }) => {
               const error = event.error as Record<string, unknown>
-              const data = error?.['data'] as Record<string, unknown> | undefined
-              if (error?.['status'] === 409 && data?.['details']) {
-                return data['details'] as StockError[]
+              const data = error['data'] as Record<string, unknown> | undefined
+              if (error['status'] === 409 && data?.['details']) {
+                return data['details'] as Array<StockError>
               }
-              return [] as StockError[]
+              return [] as Array<StockError>
             },
           }),
         },

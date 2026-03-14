@@ -1,6 +1,6 @@
 import { Link, useNavigate } from '@tanstack/react-router'
-import { ShoppingCart, Menu, X, Zap, Search, ChevronRight } from 'lucide-react'
-import { useState, useRef } from 'react'
+import { ChevronRight, Menu, Search, ShoppingCart, X, Zap } from 'lucide-react'
+import { useRef, useState } from 'react'
 import CartSidebar from '@/components/CartSidebar'
 import { useCart } from '@/contexts/CartContext'
 

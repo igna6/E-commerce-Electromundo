@@ -1,6 +1,14 @@
 import { useState } from 'react'
 import { Link, useParams } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
+import ProductImageGallery from './components/ProductImageGallery'
+import ProductInfo from './components/ProductInfo'
+import AddToCartControls from './components/AddToCartControls'
+import ProductDetailTabs from './components/ProductDetailTabs'
+import RelatedProducts from './components/RelatedProducts'
+import { useCart } from '@/contexts/CartContext'
+import { useProducts } from '@/hooks/useProducts'
+import { getProduct } from '@/services/products.service'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -9,14 +17,6 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
-import { getProduct } from '@/services/products.service'
-import { useProducts } from '@/hooks/useProducts'
-import { useCart } from '@/contexts/CartContext'
-import ProductImageGallery from './components/ProductImageGallery'
-import ProductInfo from './components/ProductInfo'
-import AddToCartControls from './components/AddToCartControls'
-import ProductDetailTabs from './components/ProductDetailTabs'
-import RelatedProducts from './components/RelatedProducts'
 import { toTitleCase } from '@/utils/toTitleCase'
 
 function ProductDetail() {

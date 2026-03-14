@@ -1,20 +1,20 @@
-import { useState, useMemo } from 'react'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import {
-  getCategories,
-  createCategory,
-  updateCategory,
-  deleteCategory,
-} from '@/services/categories.service'
+import { useMemo, useState } from 'react'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import type { Category } from '@/types/category'
+import {
+  createCategory,
+  deleteCategory,
+  getCategories,
+  updateCategory,
+} from '@/services/categories.service'
 
 /** Sort categories: parents first (alphabetical), then subcategories grouped under their parent */
-function sortCategoriesHierarchically(categories: Category[]): Category[] {
+function sortCategoriesHierarchically(categories: Array<Category>): Array<Category> {
   const parentCategories = categories
     .filter((c) => c.parentCategoryId === null)
     .sort((a, b) => a.name.localeCompare(b.name))
 
-  const result: Category[] = []
+  const result: Array<Category> = []
   for (const parent of parentCategories) {
     result.push(parent)
     const children = categories
@@ -63,11 +63,11 @@ export default function CategoriesPage() {
   const updateMutation = useMutation({
     mutationFn: ({
       id,
-      data,
+      data: payload,
     }: {
       id: number
       data: { name: string; description: string | null; parentCategoryId: number | null }
-    }) => updateCategory(id, data),
+    }) => updateCategory(id, payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['categories'] })
       setEditingId(null)
@@ -81,7 +81,7 @@ export default function CategoriesPage() {
     },
   })
 
-  const categories: Category[] = useMemo(() => data?.data ?? [], [data])
+  const categories: Array<Category> = useMemo(() => data?.data ?? [], [data])
 
   const sortedCategories = useMemo(
     () => sortCategoriesHierarchically(categories),

@@ -1,10 +1,10 @@
 import { Link, useParams } from '@tanstack/react-router'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import OrderStatusBadge from './OrderStatusBadge'
+import OrderStatusSelect from './OrderStatusSelect'
 import { useAuth } from '@/contexts/AuthContext'
 import { apiRequest } from '@/services/api'
 import { formatPrice } from '@/utils/formatPrice'
-import OrderStatusBadge from './OrderStatusBadge'
-import OrderStatusSelect from './OrderStatusSelect'
 
 type OrderItem = {
   id: number
@@ -36,7 +36,7 @@ type Order = {
   orderText: string
   createdAt: string
   updatedAt: string
-  items: OrderItem[]
+  items: Array<OrderItem>
 }
 
 type OrderResponse = {

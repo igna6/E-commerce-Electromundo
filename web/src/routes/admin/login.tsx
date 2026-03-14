@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { useAuth } from '@/contexts/AuthContext'
 import { useEffect } from 'react'
+import { useAuth } from '@/contexts/AuthContext'
 import LoginForm from '@/sections/auth/LoginForm'
 
 function AdminLoginComponent() {

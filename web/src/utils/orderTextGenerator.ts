@@ -23,7 +23,7 @@ type OrderData = {
   tax: number
   total: number
   createdAt: Date
-  items: OrderItem[]
+  items: Array<OrderItem>
 }
 
 function formatCurrency(cents: number): string {
@@ -46,7 +46,7 @@ function formatDate(date: Date): string {
 }
 
 export function generateOrderText(order: OrderData): string {
-  const lines: string[] = []
+  const lines: Array<string> = []
   const divider = '========================================'
   const thinDivider = '----------------------------------------'
 

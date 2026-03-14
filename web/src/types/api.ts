@@ -8,6 +8,6 @@ export type Pagination = {
 }
 
 export type PaginatedResponse<T> = {
-  data: T[]
+  data: Array<T>
   pagination: Pagination
 }

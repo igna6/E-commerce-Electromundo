@@ -3,7 +3,7 @@ import type { Product } from '@/types/product'
 import { formatPrice } from '@/utils/formatPrice'
 
 type ProductsTableProps = {
-  products: Product[]
+  products: Array<Product>
   onDelete: (id: number) => void
   isDeleting: boolean
   categoryMap?: Record<number, string>

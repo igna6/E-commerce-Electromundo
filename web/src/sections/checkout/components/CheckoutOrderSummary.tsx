@@ -1,14 +1,14 @@
 import { Link } from '@tanstack/react-router'
+import type { CartItem } from '@/types/cart'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { formatPrice } from '@/utils/formatPrice'
-import type { CartItem } from '@/types/cart'
 import { toTitleCase } from '@/utils/toTitleCase'
 
 type CheckoutOrderSummaryProps = {
-  items: CartItem[]
+  items: Array<CartItem>
   subtotal: number
-  unavailableItems?: CartItem[]
+  unavailableItems?: Array<CartItem>
 }
 
 export default function CheckoutOrderSummary({ items, subtotal, unavailableItems = [] }: CheckoutOrderSummaryProps) {

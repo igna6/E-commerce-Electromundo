@@ -1,23 +1,23 @@
 import { useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import {
-  ShoppingCart,
+  ArrowRight,
   Minus,
+  Package,
   Plus,
+  ShoppingCart,
   Trash2,
   Truck,
-  Package,
-  ArrowRight,
   Zap,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   Sheet,
   SheetContent,
+  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-  SheetFooter,
 } from '@/components/ui/sheet'
 import { Badge } from '@/components/ui/badge'
 import { useCart } from '@/contexts/CartContext'

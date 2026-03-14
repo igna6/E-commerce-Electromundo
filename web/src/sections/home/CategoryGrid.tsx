@@ -1,19 +1,19 @@
 import { Link } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import {
-  Smartphone,
-  Tv,
+  Gamepad2,
+  Headphones,
   Laptop,
+  Package,
   Refrigerator,
+  Smartphone,
+  Speaker,
+  Tv,
   WashingMachine,
   Wind,
-  Headphones,
-  Gamepad2,
-  Speaker,
-  Package,
 } from 'lucide-react'
-import { getCategories } from '@/services/categories.service'
 import type { Category } from '@/types/category'
+import { getCategories } from '@/services/categories.service'
 
 // Map common category names to icons
 const categoryIconMap: Record<string, typeof Smartphone> = {
@@ -60,7 +60,7 @@ const categoryColors = [
 
 function CategoryCard({ category, index }: { category: Category; index: number }) {
   const Icon = getCategoryIcon(category.name)
-  const color = categoryColors[index % categoryColors.length]!
+  const color = categoryColors[index % categoryColors.length]
 
   return (
     <Link

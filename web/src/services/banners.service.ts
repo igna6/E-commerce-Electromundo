@@ -1,12 +1,12 @@
 import { apiRequest, authApiRequest } from './api'
 import type { Banner } from '../types/banner'
 
-export async function getActiveBanners(): Promise<{ data: Banner[] }> {
-  return apiRequest<{ data: Banner[] }>('/api/banners')
+export async function getActiveBanners(): Promise<{ data: Array<Banner> }> {
+  return apiRequest<{ data: Array<Banner> }>('/api/banners')
 }
 
-export async function getAllBanners(): Promise<{ data: Banner[] }> {
-  return authApiRequest<{ data: Banner[] }>('/api/admin/banners')
+export async function getAllBanners(): Promise<{ data: Array<Banner> }> {
+  return authApiRequest<{ data: Array<Banner> }>('/api/admin/banners')
 }
 
 export async function getBanner(id: number): Promise<{ data: Banner }> {

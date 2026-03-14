@@ -1,4 +1,4 @@
-import { useQuery, keepPreviousData } from '@tanstack/react-query'
+import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { getProducts } from '../services/products.service'
 import type { GetProductsParams } from '../services/products.service'
 
