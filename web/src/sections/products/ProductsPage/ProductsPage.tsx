@@ -1,4 +1,4 @@
-import { useDeferredValue, useState } from 'react'
+import { useDeferredValue, useEffect, useState } from 'react'
 import {
   ChevronDown,
   Grid3X3,
@@ -22,10 +22,19 @@ import {
 } from '@/components/ui/select'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { useProducts } from '@/hooks/useProducts'
+import { Route } from '@/routes/products.index'
 
 function ProductsPage() {
-  const [searchQuery, setSearchQuery] = useState('')
+  const { search: searchFromRoute } = Route.useSearch()
+  const [searchQuery, setSearchQuery] = useState(searchFromRoute ?? '')
   const deferredSearch = useDeferredValue(searchQuery)
+
+  useEffect(() => {
+    if (searchFromRoute !== undefined) {
+      setSearchQuery(searchFromRoute)
+      setPage(1)
+    }
+  }, [searchFromRoute])
   const [sortBy, setSortBy] = useState('featured')
   const [priceRange, setPriceRange] = useState([0, 500000])
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')

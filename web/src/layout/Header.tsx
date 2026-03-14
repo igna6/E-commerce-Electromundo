@@ -14,7 +14,7 @@ function Header() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
     if (searchQuery.trim()) {
-      navigate({ to: '/products' })
+      navigate({ to: '/products', search: { search: searchQuery.trim() } })
       setSearchQuery('')
       searchInputRef.current?.blur()
     }
