@@ -1,5 +1,4 @@
 import { useQuery } from '@tanstack/react-query'
-import { Link } from '@tanstack/react-router'
 import StatsCard from './StatsCard'
 import RecentOrdersTable from './RecentOrdersTable'
 import { useAuth } from '@/contexts/AuthContext'
@@ -139,13 +138,9 @@ export default function DashboardPage() {
                     key={product.id}
                     className="flex items-center justify-between text-sm"
                   >
-                    <Link
-                      to="/admin/products/$productId/edit"
-                      params={{ productId: String(product.id) }}
-                      className="text-amber-800 hover:underline"
-                    >
+                    <span className="text-amber-800">
                       {product.name}
-                    </Link>
+                    </span>
                     <span
                       className={
                         product.stock === 0
