@@ -18,6 +18,12 @@ export default {
           orange: '#FF6B35',
           purple: '#A855F7',
         },
+        // Brand colors
+        brand: {
+          blue: '#2563EB',
+          dark: '#1E293B',
+          orange: '#FF6B35',
+        },
         // Semantic colors from CSS variables
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
