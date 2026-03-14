@@ -2,6 +2,9 @@ import { Link } from '@tanstack/react-router'
 import { Mail, MapPin, Phone, Zap } from 'lucide-react'
 
 function Footer() {
+  const linkClass = 'text-sm text-slate-400 hover:text-primary transition-colors'
+  const bottomLinkClass = 'text-xs text-slate-500 hover:text-slate-300 transition-colors'
+
   return (
     <footer className="bg-slate-900 text-slate-300">
       {/* Main footer */}
@@ -29,36 +32,24 @@ function Footer() {
             </h3>
             <ul className="space-y-2.5">
               <li>
-                <Link
-                  to="/"
-                  className="text-sm text-slate-400 hover:text-primary transition-colors"
-                >
+                <Link to="/" className={linkClass}>
                   Inicio
                 </Link>
               </li>
               <li>
-                <Link
-                  to="/products"
-                  className="text-sm text-slate-400 hover:text-primary transition-colors"
-                >
+                <Link to="/products" className={linkClass}>
                   Productos
                 </Link>
               </li>
               <li>
-                <a
-                  href="#"
-                  className="text-sm text-slate-400 hover:text-primary transition-colors"
-                >
-                  Ofertas
-                </a>
+                <Link to="/products" search={{ sortBy: 'price-asc', inStock: true }} className={linkClass}>
+                  Mejores Precios
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
-                  className="text-sm text-slate-400 hover:text-primary transition-colors"
-                >
+                <Link to="/terms" className={linkClass}>
                   Términos y Condiciones
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -70,36 +61,24 @@ function Footer() {
             </h3>
             <ul className="space-y-2.5">
               <li>
-                <a
-                  href="#"
-                  className="text-sm text-slate-400 hover:text-primary transition-colors"
-                >
+                <Link to="/faqs" className={linkClass}>
                   Preguntas Frecuentes
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
-                  className="text-sm text-slate-400 hover:text-primary transition-colors"
-                >
+                <Link to="/shipping" className={linkClass}>
                   Política de Envíos
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
-                  className="text-sm text-slate-400 hover:text-primary transition-colors"
-                >
+                <Link to="/returns" className={linkClass}>
                   Cambios y Devoluciones
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
-                  className="text-sm text-slate-400 hover:text-primary transition-colors"
-                >
+                <Link to="/privacy" className={linkClass}>
                   Política de Privacidad
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -141,18 +120,12 @@ function Footer() {
               &copy; {new Date().getFullYear()} ElectroMundo. Todos los derechos reservados.
             </p>
             <div className="flex items-center gap-4">
-              <a
-                href="#"
-                className="text-xs text-slate-500 hover:text-slate-300 transition-colors"
-              >
+              <Link to="/terms" className={bottomLinkClass}>
                 Términos
-              </a>
-              <a
-                href="#"
-                className="text-xs text-slate-500 hover:text-slate-300 transition-colors"
-              >
+              </Link>
+              <Link to="/privacy" className={bottomLinkClass}>
                 Privacidad
-              </a>
+              </Link>
             </div>
           </div>
         </div>
