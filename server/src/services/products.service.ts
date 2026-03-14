@@ -2,6 +2,7 @@ import { and, asc, count, desc, eq, gt, gte, ilike, isNull, lte, or } from 'driz
 import db from '../db/db.ts'
 import { productsTable } from '../db/schema.ts'
 import { NotFoundError } from '../utils/errors.ts'
+import { paginate } from '../utils/pagination.ts'
 import type { CreateProductInput, UpdateProductInput } from '../validators/product.ts'
 
 export type ProductFilters = {
@@ -92,18 +93,9 @@ export async function listProducts(filters: ProductFilters) {
   ])
 
   const total = totalResult[0]?.count ?? 0
-  const totalPages = Math.ceil(total / limit)
 
   return {
-    data: products,
-    pagination: {
-      page,
-      limit,
-      total,
-      totalPages,
-      hasNext: page < totalPages,
-      hasPrev: page > 1,
-    },
+    ...paginate(products, total, page, limit),
     filters: {
       search,
       category,

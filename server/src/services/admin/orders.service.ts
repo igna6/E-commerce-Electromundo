@@ -2,6 +2,7 @@ import { and, count, desc, eq, isNull } from 'drizzle-orm'
 import db from '../../db/db.ts'
 import { ordersTable, orderItemsTable } from '../../db/schema.ts'
 import { BadRequestError, NotFoundError } from '../../utils/errors.ts'
+import { paginate } from '../../utils/pagination.ts'
 
 const VALID_STATUSES = ['pending', 'confirmed', 'shipped', 'delivered', 'cancelled']
 
@@ -44,18 +45,9 @@ export async function listOrders(filters: AdminOrderFilters) {
   ])
 
   const total = totalResult[0]?.count ?? 0
-  const totalPages = Math.ceil(total / limit)
 
   return {
-    data: orders,
-    pagination: {
-      page,
-      limit,
-      total,
-      totalPages,
-      hasNext: page < totalPages,
-      hasPrev: page > 1,
-    },
+    ...paginate(orders, total, page, limit),
     filters: {
       status,
     },
