@@ -1,8 +1,10 @@
+import { useMemo } from 'react'
 import { Link } from '@tanstack/react-router'
 import { ArrowRight } from 'lucide-react'
-import ProductCard from './components/ProductCard'
+import ProductCard from '@/components/ProductCard'
 import ProductsLoading from './components/ProductsLoading'
 import { useProducts } from '@/hooks/useProducts'
+import { useCategories } from '@/hooks/useCategories'
 
 function FeaturedProducts() {
   const { data, isLoading } = useProducts({
@@ -10,6 +12,12 @@ function FeaturedProducts() {
     limit: 8,
     sortBy: 'newest',
   })
+  const { data: categoriesData } = useCategories()
+
+  const categoryMap = useMemo(() => {
+    if (!categoriesData) return new Map<number, string>()
+    return new Map(categoriesData.map((c) => [c.id, c.name]))
+  }, [categoriesData])
 
   const products = data?.data ?? []
 
@@ -39,7 +47,11 @@ function FeaturedProducts() {
         {/* Product grid */}
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
           {products.map((product) => (
-            <ProductCard key={product.id} product={product} />
+            <ProductCard
+              key={product.id}
+              product={product}
+              categoryName={product.category ? categoryMap.get(product.category) : undefined}
+            />
           ))}
         </div>
 
