@@ -4,10 +4,9 @@ import { ordersTable } from '../../db/schema.ts'
 import { BadRequestError, NotFoundError } from '../../utils/errors.ts'
 import { paginate } from '../../utils/pagination.ts'
 import { fetchOrderWithItems } from '../orders.service.ts'
+import { orderStatusSchema, type OrderStatus } from '../../validators/order.ts'
 
-const VALID_STATUSES = ['pending', 'confirmed', 'shipped', 'delivered', 'cancelled']
-
-const VALID_TRANSITIONS: Record<string, string[]> = {
+const VALID_TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
   pending: ['confirmed', 'cancelled'],
   confirmed: ['shipped', 'cancelled'],
   shipped: ['delivered'],
@@ -27,7 +26,7 @@ export async function listOrders(filters: AdminOrderFilters) {
 
   const conditions = [isNull(ordersTable.deletedAt)]
 
-  if (status && VALID_STATUSES.includes(status)) {
+  if (status && orderStatusSchema.safeParse(status).success) {
     conditions.push(eq(ordersTable.status, status))
   }
 
@@ -60,10 +59,12 @@ export async function getOrderById(id: number) {
   return { ...order, items }
 }
 
-export async function updateOrderStatus(id: number, status: string) {
-  if (!status || !VALID_STATUSES.includes(status)) {
-    throw new BadRequestError('Invalid status', { validStatuses: VALID_STATUSES })
+export async function updateOrderStatus(id: number, rawStatus: string) {
+  const parsed = orderStatusSchema.safeParse(rawStatus)
+  if (!parsed.success) {
+    throw new BadRequestError('Invalid status', { validStatuses: orderStatusSchema.options })
   }
+  const status = parsed.data
 
   const order = await db
     .select()
@@ -75,8 +76,8 @@ export async function updateOrderStatus(id: number, status: string) {
     throw new NotFoundError('Order not found')
   }
 
-  const currentStatus = order[0].status
-  const allowedTransitions = VALID_TRANSITIONS[currentStatus] || []
+  const currentStatus = order[0].status as OrderStatus
+  const allowedTransitions = VALID_TRANSITIONS[currentStatus] ?? []
 
   if (!allowedTransitions.includes(status)) {
     throw new BadRequestError(
