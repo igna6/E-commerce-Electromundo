@@ -25,7 +25,7 @@ import { useProducts } from '@/hooks/useProducts'
 import { Route } from '@/routes/products.index'
 
 function ProductsPage() {
-  const { search: searchFromRoute } = Route.useSearch()
+  const { search: searchFromRoute, category: categoryFromRoute } = Route.useSearch()
   const [searchQuery, setSearchQuery] = useState(searchFromRoute ?? '')
   const deferredSearch = useDeferredValue(searchQuery)
 
@@ -35,6 +35,10 @@ function ProductsPage() {
       setPage(1)
     }
   }, [searchFromRoute])
+
+  useEffect(() => {
+    setPage(1)
+  }, [categoryFromRoute])
   const [sortBy, setSortBy] = useState('featured')
   const [priceRange, setPriceRange] = useState([0, 500000])
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
@@ -44,6 +48,7 @@ function ProductsPage() {
     page,
     limit: 24,
     search: deferredSearch || undefined,
+    category: categoryFromRoute,
   })
 
   const clearFilters = () => {

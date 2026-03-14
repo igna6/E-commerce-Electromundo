@@ -65,6 +65,7 @@ function CategoryCard({ category, index }: { category: Category; index: number }
   return (
     <Link
       to="/products"
+      search={{ category: category.id }}
       className={`group flex flex-col items-center gap-3 p-5 sm:p-6 rounded-2xl ${color.bg} ${color.hover} border border-transparent hover:border-slate-200 transition-all duration-200 hover:shadow-sm`}
     >
       <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-white shadow-sm flex items-center justify-center group-hover:scale-105 transition-transform duration-200">
