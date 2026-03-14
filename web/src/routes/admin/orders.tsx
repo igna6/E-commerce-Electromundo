@@ -3,6 +3,8 @@ import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 import { authApiRequest } from '@/services/api'
 import OrdersTable from '@/sections/admin/OrdersTable'
+import AdminLoadingState from '@/components/admin/AdminLoadingState'
+import AdminErrorState from '@/components/admin/AdminErrorState'
 import type { Order } from '@/types/order'
 
 type OrdersResponse = {
@@ -40,19 +42,11 @@ function OrdersComponent() {
   })
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center py-12">
-        <div className="text-lg">Cargando pedidos...</div>
-      </div>
-    )
+    return <AdminLoadingState message="Cargando pedidos..." />
   }
 
   if (error) {
-    return (
-      <div className="rounded-lg bg-red-50 p-4 text-red-700">
-        Error al cargar pedidos: {error.message}
-      </div>
-    )
+    return <AdminErrorState error={error} />
   }
 
   return (

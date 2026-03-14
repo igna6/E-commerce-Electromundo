@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import AdminLoadingState from '@/components/admin/AdminLoadingState'
+import AdminErrorState from '@/components/admin/AdminErrorState'
 import type { Banner } from '@/types/banner'
 import {
   createBanner,
@@ -126,19 +128,11 @@ export default function BannersPage() {
   }
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center py-12">
-        <div className="text-lg">Cargando banners...</div>
-      </div>
-    )
+    return <AdminLoadingState message="Cargando banners..." />
   }
 
   if (error) {
-    return (
-      <div className="rounded-lg bg-red-50 p-4 text-red-700">
-        Error al cargar banners: {error.message}
-      </div>
-    )
+    return <AdminErrorState error={error} />
   }
 
   const banners = data?.data ?? []

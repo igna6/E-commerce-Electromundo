@@ -2,6 +2,8 @@ import { Link, useParams } from '@tanstack/react-router'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import OrderStatusBadge from './OrderStatusBadge'
 import OrderStatusSelect from './OrderStatusSelect'
+import AdminLoadingState from '@/components/admin/AdminLoadingState'
+import AdminErrorState from '@/components/admin/AdminErrorState'
 import { authApiRequest } from '@/services/api'
 import { formatPrice } from '@/utils/formatPrice'
 import type { Order } from '@/types/order'
@@ -54,19 +56,11 @@ export default function OrderDetailPage() {
   }
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center py-12">
-        <div className="text-lg">Cargando pedido...</div>
-      </div>
-    )
+    return <AdminLoadingState message="Cargando pedido..." />
   }
 
   if (error) {
-    return (
-      <div className="rounded-lg bg-red-50 p-4 text-red-700">
-        Error al cargar pedido: {error.message}
-      </div>
-    )
+    return <AdminErrorState error={error} />
   }
 
   const order = data?.data

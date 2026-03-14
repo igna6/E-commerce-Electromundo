@@ -5,6 +5,8 @@ import { deleteProduct, getProducts } from '@/services/products.service'
 import { getCategories } from '@/services/categories.service'
 import ProductsTable from '@/sections/admin/ProductsTable'
 import ImportProductsDialog from '@/sections/admin/ImportProductsDialog'
+import AdminLoadingState from '@/components/admin/AdminLoadingState'
+import AdminErrorState from '@/components/admin/AdminErrorState'
 
 function ProductsIndexComponent() {
   const queryClient = useQueryClient()
@@ -60,11 +62,7 @@ function ProductsIndexComponent() {
   }
 
   if (error) {
-    return (
-      <div className="rounded-lg bg-red-50 p-4 text-red-700">
-        Error al cargar productos: {error.message}
-      </div>
-    )
+    return <AdminErrorState error={error} />
   }
 
   return (
@@ -129,9 +127,7 @@ function ProductsIndexComponent() {
 
       <div className="rounded-lg border bg-white">
         {isLoading ? (
-          <div className="flex items-center justify-center py-12">
-            <div className="text-sm text-gray-500">Cargando productos...</div>
-          </div>
+          <AdminLoadingState message="Cargando productos..." />
         ) : (
           <ProductsTable
             products={data?.data ?? []}
