@@ -237,10 +237,32 @@ function Header() {
       {!categoriesLoading && categoryTree && categoryTree.length > 0 && (
         <div className="hidden lg:block bg-white border-b border-slate-200">
           <div className="container mx-auto px-4 sm:px-6">
-            <nav className="flex items-center gap-0.5 h-10 overflow-x-auto">
-              {categoryTree.map((category) => (
+            <nav className="flex items-center gap-0.5 h-10">
+              {categoryTree.slice(0, 8).map((category) => (
                 <CategoryDropdown key={category.id} category={category} />
               ))}
+              {categoryTree.length > 8 && (
+                <div className="relative group/more">
+                  <button className="flex items-center gap-1 px-3 py-2 text-sm text-slate-700 hover:text-primary font-medium transition-colors whitespace-nowrap">
+                    Ver todas
+                    <ChevronDown className="w-3.5 h-3.5 text-slate-400 group-hover/more:text-primary transition-colors" />
+                  </button>
+                  <div className="absolute top-full right-0 pt-1 invisible group-hover/more:visible opacity-0 group-hover/more:opacity-100 transition-all duration-150 z-50">
+                    <div className="bg-white rounded-lg shadow-lg border border-slate-100 py-1 min-w-[220px] max-h-[400px] overflow-y-auto">
+                      {categoryTree.slice(8).map((cat) => (
+                        <Link
+                          key={cat.id}
+                          to="/products"
+                          search={{ category: cat.id }}
+                          className="block px-4 py-2.5 text-sm text-slate-600 hover:text-primary hover:bg-primary/5 transition-colors"
+                        >
+                          {cat.name}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
             </nav>
           </div>
         </div>
