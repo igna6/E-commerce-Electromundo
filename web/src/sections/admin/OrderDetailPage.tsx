@@ -4,39 +4,7 @@ import OrderStatusBadge from './OrderStatusBadge'
 import OrderStatusSelect from './OrderStatusSelect'
 import { authApiRequest } from '@/services/api'
 import { formatPrice } from '@/utils/formatPrice'
-
-type OrderItem = {
-  id: number
-  productId: number
-  productName: string
-  productPrice: number
-  quantity: number
-  lineTotal: number
-}
-
-type Order = {
-  id: number
-  email: string
-  phone: string
-  firstName: string
-  lastName: string
-  address: string
-  apartment: string | null
-  city: string
-  province: string
-  zipCode: string
-  shippingMethod: string
-  paymentMethod: string
-  subtotal: number
-  shippingCost: number
-  tax: number
-  total: number
-  status: string
-  orderText: string
-  createdAt: string
-  updatedAt: string
-  items: Array<OrderItem>
-}
+import type { Order } from '@/types/order'
 
 type OrderResponse = {
   data: Order

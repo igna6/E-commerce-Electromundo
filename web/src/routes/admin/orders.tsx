@@ -3,17 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 import { authApiRequest } from '@/services/api'
 import OrdersTable from '@/sections/admin/OrdersTable'
-
-type Order = {
-  id: number
-  email: string
-  phone: string
-  firstName: string
-  lastName: string
-  total: number
-  status: string
-  createdAt: string
-}
+import type { Order } from '@/types/order'
 
 type OrdersResponse = {
   data: Array<Order>
