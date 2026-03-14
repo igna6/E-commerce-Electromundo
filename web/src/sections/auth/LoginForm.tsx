@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/contexts/AuthContext'
+import { ApiError } from '@/services/api'
 
 function LoginForm() {
   const navigate = useNavigate()
@@ -21,8 +22,8 @@ function LoginForm() {
     try {
       await login(email, password)
       navigate({ to: '/admin/dashboard' })
-    } catch (err: any) {
-      if (err.status === 401) {
+    } catch (err) {
+      if (err instanceof ApiError && err.status === 401) {
         setError('Email o contraseña incorrectos')
       } else {
         setError('Error al conectar con el servidor')
