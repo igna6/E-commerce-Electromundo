@@ -80,26 +80,6 @@ function LoginForm() {
             </div>
           </div>
 
-          <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                    <input
-                        id="remember-me"
-                        name="remember-me"
-                        type="checkbox"
-                        className="h-4 w-4 text-brand-blue focus:ring-brand-blue border-gray-300 rounded cursor-pointer"
-                    />
-                    <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900 cursor-pointer">
-                        Recordarme
-                    </label>
-            </div>
-
-            <div className="text-sm">
-              <a href="#" className="font-medium text-brand-blue hover:underline">
-                    ¿Olvidaste tu contraseña?
-              </a>
-            </div>
-          </div>
-
           <div>
                 <Button
                     type="submit"
