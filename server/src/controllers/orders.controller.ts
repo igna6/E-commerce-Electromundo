@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 import { createOrderSchema } from '../validators/order.ts'
+import { idParamSchema } from '../validators/common.ts'
 import * as ordersService from '../services/orders.service.ts'
 import { BadRequestError } from '../utils/errors.ts'
 
@@ -15,10 +16,7 @@ export async function create(req: Request, res: Response, next: NextFunction) {
 
 export async function getById(req: Request, res: Response, next: NextFunction) {
   try {
-    const id = parseInt(req.params.id as string)
-    if (isNaN(id)) {
-      throw new BadRequestError('Invalid order ID')
-    }
+    const { id } = idParamSchema.parse(req.params)
     const token = req.query.token as string | undefined
     if (!token) {
       throw new BadRequestError('Order access token is required')
