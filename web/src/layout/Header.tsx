@@ -1,9 +1,10 @@
 import { Link, useNavigate } from '@tanstack/react-router'
 import { ChevronDown, ChevronRight, Menu, Search, ShoppingCart, X, Zap } from 'lucide-react'
 import { useRef, useState } from 'react'
+import type {CategoryWithChildren} from '@/hooks/useCategories';
 import CartSidebar from '@/components/CartSidebar'
 import { useCart } from '@/contexts/CartContext'
-import { useCategoryTree, type CategoryWithChildren } from '@/hooks/useCategories'
+import {  useCategoryTree } from '@/hooks/useCategories'
 
 function CategoryDropdown({ category }: { category: CategoryWithChildren }) {
   return (

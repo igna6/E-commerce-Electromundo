@@ -2,11 +2,11 @@ import { Link, useParams } from '@tanstack/react-router'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import OrderStatusBadge from './OrderStatusBadge'
 import OrderStatusSelect from './OrderStatusSelect'
+import type { Order } from '@/types/order'
 import AdminLoadingState from '@/components/admin/AdminLoadingState'
 import AdminErrorState from '@/components/admin/AdminErrorState'
 import { authApiRequest } from '@/services/api'
 import { formatPrice } from '@/utils/formatPrice'
-import type { Order } from '@/types/order'
 
 type OrderResponse = {
   data: Order

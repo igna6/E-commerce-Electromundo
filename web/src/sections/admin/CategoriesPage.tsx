@@ -1,8 +1,8 @@
 import { useMemo, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import type { Category } from '@/types/category'
 import AdminLoadingState from '@/components/admin/AdminLoadingState'
 import AdminErrorState from '@/components/admin/AdminErrorState'
-import type { Category } from '@/types/category'
 import {
   createCategory,
   deleteCategory,

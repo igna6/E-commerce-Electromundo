@@ -1,11 +1,11 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
+import type { Order } from '@/types/order'
 import { authApiRequest } from '@/services/api'
 import OrdersTable from '@/sections/admin/OrdersTable'
 import AdminLoadingState from '@/components/admin/AdminLoadingState'
 import AdminErrorState from '@/components/admin/AdminErrorState'
-import type { Order } from '@/types/order'
 
 type OrdersResponse = {
   data: Array<Order>

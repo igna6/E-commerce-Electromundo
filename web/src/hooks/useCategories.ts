@@ -1,14 +1,14 @@
 import { useQuery } from '@tanstack/react-query'
-import { getCategories } from '@/services/categories.service'
 import type { Category } from '@/types/category'
+import { getCategories } from '@/services/categories.service'
 
 export type CategoryWithChildren = Category & {
-  children: CategoryWithChildren[]
+  children: Array<CategoryWithChildren>
 }
 
-function buildCategoryTree(categories: Category[]): CategoryWithChildren[] {
+function buildCategoryTree(categories: Array<Category>): Array<CategoryWithChildren> {
   const map = new Map<number, CategoryWithChildren>()
-  const roots: CategoryWithChildren[] = []
+  const roots: Array<CategoryWithChildren> = []
 
   for (const cat of categories) {
     map.set(cat.id, { ...cat, children: [] })

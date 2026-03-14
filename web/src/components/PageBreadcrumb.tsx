@@ -14,7 +14,7 @@ interface BreadcrumbItemDef {
 }
 
 interface PageBreadcrumbProps {
-  items: BreadcrumbItemDef[]
+  items: Array<BreadcrumbItemDef>
 }
 
 function PageBreadcrumb({ items }: PageBreadcrumbProps) {

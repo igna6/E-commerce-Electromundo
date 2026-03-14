@@ -1,9 +1,9 @@
 import { ChevronRight, X } from 'lucide-react'
+import type { CategoryWithChildren } from '@/hooks/useCategories'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Slider } from '@/components/ui/slider'
 import { useCategoryTree } from '@/hooks/useCategories'
-import type { CategoryWithChildren } from '@/hooks/useCategories'
 
 type FilterSidebarProps = {
   priceRange: Array<number>

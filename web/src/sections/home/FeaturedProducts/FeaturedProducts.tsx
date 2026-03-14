@@ -1,8 +1,8 @@
 import { useMemo } from 'react'
 import { Link } from '@tanstack/react-router'
 import { ArrowRight } from 'lucide-react'
-import ProductCard from '@/components/ProductCard'
 import ProductsLoading from './components/ProductsLoading'
+import ProductCard from '@/components/ProductCard'
 import { useProducts } from '@/hooks/useProducts'
 import { useCategories } from '@/hooks/useCategories'
 

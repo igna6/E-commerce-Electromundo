@@ -10,8 +10,10 @@ import {
   Truck,
   X,
 } from 'lucide-react'
+import { useNavigate } from '@tanstack/react-router'
 import ProductGridCard from './components/ProductGridCard'
 import FilterSidebar from './components/FilterSidebar'
+import type { GetProductsParams } from '@/services/products.service'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -25,8 +27,6 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { useProducts } from '@/hooks/useProducts'
 import { useCategories } from '@/hooks/useCategories'
 import { Route } from '@/routes/products.index'
-import { useNavigate } from '@tanstack/react-router'
-import type { GetProductsParams } from '@/services/products.service'
 
 const SORT_MAP: Record<string, GetProductsParams['sortBy'] | undefined> = {
   featured: undefined,

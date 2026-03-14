@@ -1,4 +1,4 @@
-import { Lock, Truck, MessageCircle, ShieldCheck } from 'lucide-react'
+import { Lock, MessageCircle, ShieldCheck, Truck } from 'lucide-react'
 
 const trustItems = [
   {
