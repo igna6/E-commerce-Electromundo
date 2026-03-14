@@ -1,8 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { getMe, login as loginApi, logout as logoutApi, refreshAccessToken } from '@/services/auth.service'
 
-const ACCESS_TOKEN_KEY = 'electromundo-access-token'
-const REFRESH_TOKEN_KEY = 'electromundo-refresh-token'
+import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from '@/constants/auth'
 
 export type User = {
   id: number

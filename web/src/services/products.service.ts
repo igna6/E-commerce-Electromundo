@@ -1,4 +1,5 @@
 import { API_URL } from '../constants/config'
+import { ACCESS_TOKEN_KEY } from '../constants/auth'
 import { ApiError, apiRequest, authApiRequest } from './api'
 import type { Product } from '../types/product'
 import type { PaginatedResponse } from '../types/api'
@@ -98,7 +99,7 @@ export async function importProductsCSV(file: File): Promise<ImportResult> {
   const formData = new FormData()
   formData.append('file', file)
 
-  const token = localStorage.getItem('electromundo-access-token')
+  const token = localStorage.getItem(ACCESS_TOKEN_KEY)
   const response = await fetch(`${API_URL}/api/admin/products/import`, {
     method: 'POST',
     headers: {

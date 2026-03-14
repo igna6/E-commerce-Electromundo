@@ -1,6 +1,5 @@
 import { API_URL } from '../constants/config'
-
-const ACCESS_TOKEN_KEY = 'electromundo-access-token'
+import { ACCESS_TOKEN_KEY } from '../constants/auth'
 
 export class ApiError extends Error {
   constructor(
