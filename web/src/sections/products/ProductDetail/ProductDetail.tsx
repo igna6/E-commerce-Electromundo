@@ -9,14 +9,7 @@ import RelatedProducts from './components/RelatedProducts'
 import { useCart } from '@/contexts/CartContext'
 import { useProducts } from '@/hooks/useProducts'
 import { getProduct } from '@/services/products.service'
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb'
+import PageBreadcrumb from '@/components/PageBreadcrumb'
 import { toTitleCase } from '@/utils/toTitleCase'
 
 function ProductDetail() {
@@ -62,25 +55,13 @@ function ProductDetail() {
       {/* Breadcrumb */}
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 py-4">
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbLink asChild>
-                  <Link to="/">Inicio</Link>
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbLink asChild>
-                  <Link to="/products">Productos</Link>
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbPage>{toTitleCase(product.name)}</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
+          <PageBreadcrumb
+            items={[
+              { label: 'Inicio', href: '/' },
+              { label: 'Productos', href: '/products' },
+              { label: toTitleCase(product.name) },
+            ]}
+          />
         </div>
       </div>
 

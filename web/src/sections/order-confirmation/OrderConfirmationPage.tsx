@@ -3,14 +3,7 @@ import { Link, useNavigate, useSearch } from '@tanstack/react-router'
 import type { Order } from '@/types/order'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb'
+import PageBreadcrumb from '@/components/PageBreadcrumb'
 import { getOrder } from '@/services/orders.service'
 import { formatPrice } from '@/utils/formatPrice'
 import { STORE_WHATSAPP_NUMBER } from '@/constants/config'
@@ -89,19 +82,9 @@ function OrderConfirmationPage() {
       {/* Breadcrumb */}
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-4xl mx-auto px-4 py-4">
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbLink asChild>
-                  <Link to="/">Inicio</Link>
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbPage>Confirmación de Pedido</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
+          <PageBreadcrumb
+            items={[{ label: 'Inicio', href: '/' }, { label: 'Confirmación de Pedido' }]}
+          />
         </div>
       </div>
 

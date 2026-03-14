@@ -6,14 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMachine } from '@xstate/react'
 import ContactShippingForm from './components/ContactShippingForm'
 import CheckoutOrderSummary from './components/CheckoutOrderSummary'
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb'
+import PageBreadcrumb from '@/components/PageBreadcrumb'
 import { useCart } from '@/contexts/CartContext'
 import { checkoutMachine } from '@/machines/checkoutMachine'
 
@@ -91,25 +84,13 @@ function CheckoutPage() {
       {/* Breadcrumb */}
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 py-4">
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbLink asChild>
-                  <Link to="/">Inicio</Link>
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbLink asChild>
-                  <Link to="/cart">Carrito</Link>
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbPage>Checkout</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
+          <PageBreadcrumb
+            items={[
+              { label: 'Inicio', href: '/' },
+              { label: 'Carrito', href: '/cart' },
+              { label: 'Checkout' },
+            ]}
+          />
         </div>
       </div>
 

@@ -4,14 +4,7 @@ import CartItemRow from './components/CartItemRow'
 import CartSummary from './components/CartSummary'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb'
+import PageBreadcrumb from '@/components/PageBreadcrumb'
 import { useCart } from '@/contexts/CartContext'
 
 function CartPage() {
@@ -31,19 +24,7 @@ function CartPage() {
       {/* Breadcrumb */}
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 py-4">
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbLink asChild>
-                  <Link to="/">Inicio</Link>
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbPage>Carrito</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
+          <PageBreadcrumb items={[{ label: 'Inicio', href: '/' }, { label: 'Carrito' }]} />
         </div>
       </div>
 
