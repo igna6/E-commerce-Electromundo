@@ -29,9 +29,10 @@ function ProductsPage() {
   const [sortBy, setSortBy] = useState('featured')
   const [priceRange, setPriceRange] = useState([0, 500000])
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
+  const [page, setPage] = useState(1)
 
   const { data, isLoading } = useProducts({
-    page: 1,
+    page,
     limit: 24,
     search: deferredSearch || undefined,
   })
@@ -39,6 +40,7 @@ function ProductsPage() {
   const clearFilters = () => {
     setSearchQuery('')
     setPriceRange([0, 500000])
+    setPage(1)
   }
 
   const filterSidebarProps = {
@@ -230,28 +232,34 @@ function ProductsPage() {
                   <Button
                     variant="outline"
                     disabled={!data.pagination.hasPrev}
+                    onClick={() => setPage((p) => p - 1)}
                     className="border-slate-200 text-slate-500 hover:bg-slate-100 hover:text-slate-900 disabled:opacity-30"
                   >
                     <ChevronDown className="w-4 h-4 rotate-90" />
                   </Button>
                   {[...Array(Math.min(5, data.pagination.totalPages))].map(
-                    (_, i) => (
-                      <Button
-                        key={i}
-                        variant={i === 0 ? 'default' : 'outline'}
-                        className={
-                          i === 0
-                            ? 'bg-primary text-white hover:bg-primary/90'
-                            : 'border-slate-200 text-slate-500 hover:bg-slate-100 hover:text-slate-900'
-                        }
-                      >
-                        {i + 1}
-                      </Button>
-                    ),
+                    (_, i) => {
+                      const pageNum = i + 1
+                      return (
+                        <Button
+                          key={i}
+                          variant={pageNum === page ? 'default' : 'outline'}
+                          onClick={() => setPage(pageNum)}
+                          className={
+                            pageNum === page
+                              ? 'bg-primary text-white hover:bg-primary/90'
+                              : 'border-slate-200 text-slate-500 hover:bg-slate-100 hover:text-slate-900'
+                          }
+                        >
+                          {pageNum}
+                        </Button>
+                      )
+                    },
                   )}
                   <Button
                     variant="outline"
                     disabled={!data.pagination.hasNext}
+                    onClick={() => setPage((p) => p + 1)}
                     className="border-slate-200 text-slate-500 hover:bg-slate-100 hover:text-slate-900 disabled:opacity-30"
                   >
                     <ChevronDown className="w-4 h-4 -rotate-90" />
