@@ -8,9 +8,10 @@ import { toTitleCase } from '@/utils/toTitleCase'
 
 type ProductCardProps = {
   product: Product
+  categoryName?: string
 }
 
-function ProductCard({ product }: ProductCardProps) {
+function ProductCard({ product, categoryName }: ProductCardProps) {
   const [isAdding, setIsAdding] = useState(false)
   const { addItem } = useCart()
 
@@ -68,6 +69,11 @@ function ProductCard({ product }: ProductCardProps) {
 
       {/* Content */}
       <div className="p-4">
+        {categoryName && (
+          <p className="text-[11px] font-medium text-slate-400 uppercase tracking-wider mb-1">
+            {categoryName}
+          </p>
+        )}
         <h3 className="font-medium text-slate-800 text-sm sm:text-base leading-snug mb-1 line-clamp-2 group-hover:text-primary transition-colors">
           {toTitleCase(product.name)}
         </h3>

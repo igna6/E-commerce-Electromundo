@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from '@tanstack/react-router'
-import { Check, Heart, Minus, Plus, ShoppingCart, Zap } from 'lucide-react'
+import { Check, Minus, Plus, ShoppingCart, Zap } from 'lucide-react'
 import type { Product } from '@/types/product'
 import { Button } from '@/components/ui/button'
 import ProductCard from '@/components/ProductCard'
@@ -12,12 +12,12 @@ type ProductGridCardProps = {
   product: Product
   viewMode: 'grid' | 'list'
   index?: number
+  categoryName?: string
 }
 
-function ProductGridCard({ product, viewMode, index = 0 }: ProductGridCardProps) {
+function ProductGridCard({ product, viewMode, index = 0, categoryName }: ProductGridCardProps) {
   const [quantity, setQuantity] = useState(1)
   const [isAdding, setIsAdding] = useState(false)
-  const [isWishlisted, setIsWishlisted] = useState(false)
   const { addItem } = useCart()
 
   const handleAddToCart = () => {
@@ -33,7 +33,7 @@ function ProductGridCard({ product, viewMode, index = 0 }: ProductGridCardProps)
   const animationDelay = `${(index % 6) * 100}ms`
 
   if (viewMode === 'grid') {
-    return <ProductCard product={product} />
+    return <ProductCard product={product} categoryName={categoryName} />
   }
 
   return (
@@ -67,6 +67,11 @@ function ProductGridCard({ product, viewMode, index = 0 }: ProductGridCardProps)
         <div>
           <div className="flex items-start justify-between gap-4">
             <div>
+              {categoryName && (
+                <p className="text-[11px] font-medium text-slate-400 uppercase tracking-wider mb-0.5">
+                  {categoryName}
+                </p>
+              )}
               <Link
                 to="/products/$productId"
                 params={{ productId: String(product.id) }}
@@ -129,17 +134,6 @@ function ProductGridCard({ product, viewMode, index = 0 }: ProductGridCardProps)
             )}
           </Button>
 
-          {/* Wishlist button */}
-          <button
-            onClick={() => setIsWishlisted(!isWishlisted)}
-            className={`p-3 rounded-xl border transition-all duration-300 ${
-              isWishlisted
-                ? 'bg-pink-50 border-pink-200 text-pink-500'
-                : 'border-slate-200 text-slate-400 hover:border-pink-200 hover:text-pink-500 hover:bg-pink-50'
-            }`}
-          >
-            <Heart className={`w-5 h-5 ${isWishlisted ? 'fill-current' : ''}`} />
-          </button>
         </div>
       </div>
     </div>

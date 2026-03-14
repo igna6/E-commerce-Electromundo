@@ -1,4 +1,4 @@
-import { useDeferredValue, useEffect, useState } from 'react'
+import { useDeferredValue, useEffect, useMemo, useState } from 'react'
 import {
   ChevronDown,
   Grid3X3,
@@ -116,10 +116,13 @@ function ProductsPage() {
 
   const { data: categoriesData } = useCategories()
 
+  const categoryMap = useMemo(() => {
+    if (!categoriesData) return new Map<number, string>()
+    return new Map(categoriesData.map((c) => [c.id, c.name]))
+  }, [categoriesData])
+
   const categoryName =
-    categoryFromRoute && categoriesData
-      ? categoriesData.find((c) => c.id === categoryFromRoute)?.name
-      : undefined
+    categoryFromRoute !== undefined ? categoryMap.get(categoryFromRoute) : undefined
 
   const { data, isLoading } = useProducts({
     page,
@@ -478,6 +481,7 @@ function ProductsPage() {
                     product={product}
                     viewMode={viewMode}
                     index={index}
+                    categoryName={product.category ? categoryMap.get(product.category) : undefined}
                   />
                 ))}
               </div>
