@@ -112,7 +112,7 @@ export async function updateOrderStatus(id: number, status: string) {
   const updatedOrder = await db
     .update(ordersTable)
     .set({ status, updatedAt: new Date() })
-    .where(eq(ordersTable.id, id))
+    .where(and(eq(ordersTable.id, id), isNull(ordersTable.deletedAt)))
     .returning()
 
   return updatedOrder[0]
