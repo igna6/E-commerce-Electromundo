@@ -130,8 +130,6 @@ export async function refreshToken(token: string) {
     throw new UnauthorizedError('User not found')
   }
 
-  await db.delete(refreshTokensTable).where(eq(refreshTokensTable.id, storedToken.id))
-
   const tokenPayload: JwtPayload = {
     userId: user.id,
     email: user.email,
@@ -143,10 +141,13 @@ export async function refreshToken(token: string) {
   const hashedNewRefreshToken = hashToken(newRefreshToken)
   const expiresAt = getRefreshTokenExpiry()
 
-  await db.insert(refreshTokensTable).values({
-    userId: user.id,
-    token: hashedNewRefreshToken,
-    expiresAt,
+  await db.transaction(async (tx) => {
+    await tx.delete(refreshTokensTable).where(eq(refreshTokensTable.id, storedToken.id))
+    await tx.insert(refreshTokensTable).values({
+      userId: user.id,
+      token: hashedNewRefreshToken,
+      expiresAt,
+    })
   })
 
   return {
