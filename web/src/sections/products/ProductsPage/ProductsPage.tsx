@@ -23,11 +23,47 @@ import {
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { useProducts } from '@/hooks/useProducts'
 import { Route } from '@/routes/products.index'
+import { useNavigate } from '@tanstack/react-router'
+import type { GetProductsParams } from '@/services/products.service'
+
+const SORT_MAP: Record<string, GetProductsParams['sortBy'] | undefined> = {
+  featured: undefined,
+  'price-low': 'price-asc',
+  'price-high': 'price-desc',
+  newest: 'newest',
+  rating: undefined,
+}
+
+const DEFAULT_PRICE_MIN = 0
+const DEFAULT_PRICE_MAX = 500000
 
 function ProductsPage() {
-  const { search: searchFromRoute, category: categoryFromRoute } = Route.useSearch()
+  const navigate = useNavigate()
+  const {
+    search: searchFromRoute,
+    category: categoryFromRoute,
+    minPrice: minPriceFromRoute,
+    maxPrice: maxPriceFromRoute,
+    sortBy: sortByFromRoute,
+    inStock: inStockFromRoute,
+  } = Route.useSearch()
+
   const [searchQuery, setSearchQuery] = useState(searchFromRoute ?? '')
   const deferredSearch = useDeferredValue(searchQuery)
+
+  // Initialize state from URL params
+  const [sortBy, setSortBy] = useState(() => {
+    if (!sortByFromRoute) return 'featured'
+    const entry = Object.entries(SORT_MAP).find(([, v]) => v === sortByFromRoute)
+    return entry ? entry[0] : 'featured'
+  })
+  const [priceRange, setPriceRange] = useState([
+    minPriceFromRoute ?? DEFAULT_PRICE_MIN,
+    maxPriceFromRoute ?? DEFAULT_PRICE_MAX,
+  ])
+  const [inStock, setInStock] = useState(inStockFromRoute ?? false)
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
+  const [page, setPage] = useState(1)
 
   useEffect(() => {
     if (searchFromRoute !== undefined) {
@@ -39,28 +75,92 @@ function ProductsPage() {
   useEffect(() => {
     setPage(1)
   }, [categoryFromRoute])
-  const [sortBy, setSortBy] = useState('featured')
-  const [priceRange, setPriceRange] = useState([0, 500000])
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
-  const [page, setPage] = useState(1)
+
+  // Sync filter state to URL search params
+  useEffect(() => {
+    const mappedSort = SORT_MAP[sortBy]
+    const minP = priceRange[0] !== DEFAULT_PRICE_MIN ? priceRange[0] : undefined
+    const maxP = priceRange[1] !== DEFAULT_PRICE_MAX ? priceRange[1] : undefined
+
+    void navigate({
+      to: '/products',
+      search: (prev) => ({
+        ...prev,
+        sortBy: mappedSort,
+        minPrice: minP,
+        maxPrice: maxP,
+        inStock: inStock || undefined,
+      }),
+      replace: true,
+    })
+  }, [sortBy, priceRange, inStock, navigate])
+
+  // Map UI sort value to API param
+  const mappedSortBy = SORT_MAP[sortBy]
+
+  // Only send price params when they differ from defaults
+  const apiMinPrice =
+    priceRange[0] !== DEFAULT_PRICE_MIN ? priceRange[0] * 100 : undefined
+  const apiMaxPrice =
+    priceRange[1] !== DEFAULT_PRICE_MAX ? priceRange[1] * 100 : undefined
 
   const { data, isLoading } = useProducts({
     page,
     limit: 24,
     search: deferredSearch || undefined,
     category: categoryFromRoute,
+    minPrice: apiMinPrice,
+    maxPrice: apiMaxPrice,
+    sortBy: mappedSortBy,
+    inStock: inStock || undefined,
   })
+
+  const handleSortChange = (value: string) => {
+    setSortBy(value)
+    setPage(1)
+  }
+
+  const handlePriceRangeChange = (range: Array<number>) => {
+    setPriceRange(range)
+    setPage(1)
+  }
+
+  const handleInStockChange = (checked: boolean) => {
+    setInStock(checked)
+    setPage(1)
+  }
+
+  const handleCategoryChange = (categoryId: number | undefined) => {
+    void navigate({
+      to: '/products',
+      search: (prev) => ({
+        ...prev,
+        category: categoryId,
+      }),
+    })
+    setPage(1)
+  }
 
   const clearFilters = () => {
     setSearchQuery('')
-    setPriceRange([0, 500000])
+    setPriceRange([DEFAULT_PRICE_MIN, DEFAULT_PRICE_MAX])
+    setSortBy('featured')
+    setInStock(false)
     setPage(1)
+    void navigate({
+      to: '/products',
+      search: {},
+    })
   }
 
   const filterSidebarProps = {
     priceRange,
-    onPriceRangeChange: setPriceRange,
+    onPriceRangeChange: handlePriceRangeChange,
     onClearFilters: clearFilters,
+    inStock,
+    onInStockChange: handleInStockChange,
+    selectedCategoryId: categoryFromRoute,
+    onCategoryChange: handleCategoryChange,
   }
 
   return (
@@ -113,7 +213,7 @@ function ProductsPage() {
             </div>
 
             {/* Sort Dropdown */}
-            <Select value={sortBy} onValueChange={setSortBy}>
+            <Select value={sortBy} onValueChange={handleSortChange}>
               <SelectTrigger className="w-full lg:w-52 h-12 bg-slate-50 border-slate-200 text-slate-700 rounded-xl">
                 <SelectValue placeholder="Ordenar por" />
               </SelectTrigger>
