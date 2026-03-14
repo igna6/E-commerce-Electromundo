@@ -1,8 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
-import { useAuth } from '@/contexts/AuthContext'
-import { apiRequest } from '@/services/api'
+import { authApiRequest } from '@/services/api'
 import OrdersTable from '@/sections/admin/OrdersTable'
 
 type Order = {
@@ -38,7 +37,6 @@ const STATUSES = [
 ]
 
 function OrdersComponent() {
-  const { getAccessToken } = useAuth()
   const [page, setPage] = useState(1)
   const [statusFilter, setStatusFilter] = useState('')
 
@@ -47,11 +45,7 @@ function OrdersComponent() {
     queryFn: () => {
       const params = new URLSearchParams({ page: String(page), limit: '20' })
       if (statusFilter) params.append('status', statusFilter)
-      return apiRequest<OrdersResponse>(`/api/admin/orders?${params}`, {
-        headers: {
-          Authorization: `Bearer ${getAccessToken()}`,
-        },
-      })
+      return authApiRequest<OrdersResponse>(`/api/admin/orders?${params}`)
     },
   })
 

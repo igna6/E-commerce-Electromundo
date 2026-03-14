@@ -1,8 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import StatsCard from './StatsCard'
 import RecentOrdersTable from './RecentOrdersTable'
-import { useAuth } from '@/contexts/AuthContext'
-import { apiRequest } from '@/services/api'
+import { authApiRequest } from '@/services/api'
 import { formatPrice } from '@/utils/formatPrice'
 
 type StatsResponse = {
@@ -53,16 +52,9 @@ type StatsResponse = {
 }
 
 export default function DashboardPage() {
-  const { getAccessToken } = useAuth()
-
   const { data, isLoading, error } = useQuery({
     queryKey: ['admin', 'stats'],
-    queryFn: () =>
-      apiRequest<StatsResponse>('/api/admin/stats', {
-        headers: {
-          Authorization: `Bearer ${getAccessToken()}`,
-        },
-      }),
+    queryFn: () => authApiRequest<StatsResponse>('/api/admin/stats'),
   })
 
   if (isLoading) {

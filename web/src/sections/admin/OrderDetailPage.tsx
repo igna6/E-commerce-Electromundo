@@ -2,8 +2,7 @@ import { Link, useParams } from '@tanstack/react-router'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import OrderStatusBadge from './OrderStatusBadge'
 import OrderStatusSelect from './OrderStatusSelect'
-import { useAuth } from '@/contexts/AuthContext'
-import { apiRequest } from '@/services/api'
+import { authApiRequest } from '@/services/api'
 import { formatPrice } from '@/utils/formatPrice'
 
 type OrderItem = {
@@ -45,26 +44,18 @@ type OrderResponse = {
 
 export default function OrderDetailPage() {
   const { orderId } = useParams({ from: '/admin/orders/$orderId' })
-  const { getAccessToken } = useAuth()
   const queryClient = useQueryClient()
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['admin', 'orders', orderId],
     queryFn: () =>
-      apiRequest<OrderResponse>(`/api/admin/orders/${orderId}`, {
-        headers: {
-          Authorization: `Bearer ${getAccessToken()}`,
-        },
-      }),
+      authApiRequest<OrderResponse>(`/api/admin/orders/${orderId}`),
   })
 
   const updateStatusMutation = useMutation({
     mutationFn: (newStatus: string) =>
-      apiRequest(`/api/admin/orders/${orderId}/status`, {
+      authApiRequest(`/api/admin/orders/${orderId}/status`, {
         method: 'PUT',
-        headers: {
-          Authorization: `Bearer ${getAccessToken()}`,
-        },
         body: JSON.stringify({ status: newStatus }),
       }),
     onSuccess: () => {
