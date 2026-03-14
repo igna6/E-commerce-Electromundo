@@ -1,4 +1,3 @@
-import { Link } from '@tanstack/react-router'
 import type { Product } from '@/types/product'
 import { Button } from '@/components/ui/button'
 
@@ -52,73 +51,39 @@ export default function AddToCartControls({
         )}
       </div>
 
-      <div className="flex gap-3">
-        <Button
-          onClick={onAddToCart}
-          disabled={product.stock === 0}
-          size="lg"
-          className={`flex-1 h-14 text-lg transition-all ${
-            product.stock === 0
-              ? 'bg-gray-400 cursor-not-allowed'
-              : isAdding
-                ? 'bg-green-500 hover:bg-green-600'
-                : 'bg-brand-orange hover:bg-orange-600'
-          }`}
-        >
-          {product.stock === 0 ? (
-            'Producto Agotado'
-          ) : isAdding ? (
-            <>
-              <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-              Agregado al Carrito!
-            </>
-          ) : (
-            <>
-              <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                />
-              </svg>
-              Agregar al Carrito
-            </>
-          )}
-        </Button>
-        <Button
-          variant="outline"
-          size="lg"
-          className="h-14 px-6 border-brand-blue text-brand-blue hover:bg-brand-blue hover:text-white"
-        >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-            />
-          </svg>
-        </Button>
-      </div>
-
       <Button
-        asChild={product.stock > 0}
-        variant="outline"
-        size="lg"
+        onClick={onAddToCart}
         disabled={product.stock === 0}
-        className={`w-full h-14 text-lg ${
+        size="lg"
+        className={`w-full h-14 text-lg transition-all ${
           product.stock === 0
-            ? 'border-gray-300 text-gray-400 cursor-not-allowed'
-            : 'border-brand-dark text-brand-dark hover:bg-brand-dark hover:text-white'
+            ? 'bg-gray-400 cursor-not-allowed'
+            : isAdding
+              ? 'bg-green-500 hover:bg-green-600'
+              : 'bg-brand-orange hover:bg-orange-600'
         }`}
       >
-        {product.stock > 0 ? (
-          <Link to="/checkout">Comprar Ahora</Link>
-        ) : (
+        {product.stock === 0 ? (
           'Producto Agotado'
+        ) : isAdding ? (
+          <>
+            <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+            Agregado al Carrito!
+          </>
+        ) : (
+          <>
+            <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+              />
+            </svg>
+            Agregar al Carrito
+          </>
         )}
       </Button>
     </div>

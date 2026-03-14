@@ -6,13 +6,19 @@ import { toTitleCase } from '@/utils/toTitleCase'
 
 type ProductInfoProps = {
   product: Product
+  categoryName?: string
 }
 
-export default function ProductInfo({ product }: ProductInfoProps) {
+export default function ProductInfo({ product, categoryName }: ProductInfoProps) {
   return (
     <>
       {/* Header */}
       <div className="mb-6">
+        {categoryName && (
+          <p className="text-[11px] font-medium text-slate-400 uppercase tracking-wider mb-2">
+            {categoryName}
+          </p>
+        )}
         <div className="flex items-center gap-2 mb-2">
           {product.stock > 0 ? (
             <Badge className="bg-green-500 hover:bg-green-600">En Stock</Badge>
