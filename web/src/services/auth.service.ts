@@ -12,15 +12,12 @@ type RefreshResponse = {
   refreshToken: string
 }
 
-type MeResponse = {
-  data: User
-}
-
 export async function login(email: string, password: string): Promise<LoginResponse> {
-  return apiRequest<LoginResponse>('/api/auth/login', {
+  const response = await apiRequest<{ data: LoginResponse }>('/api/auth/login', {
     method: 'POST',
     body: JSON.stringify({ email, password }),
   })
+  return response.data
 }
 
 export async function logout(refreshToken: string): Promise<void> {
@@ -31,14 +28,15 @@ export async function logout(refreshToken: string): Promise<void> {
 }
 
 export async function refreshAccessToken(refreshToken: string): Promise<RefreshResponse> {
-  return apiRequest<RefreshResponse>('/api/auth/refresh', {
+  const response = await apiRequest<{ data: RefreshResponse }>('/api/auth/refresh', {
     method: 'POST',
     body: JSON.stringify({ refreshToken }),
   })
+  return response.data
 }
 
-export async function getMe(accessToken: string): Promise<MeResponse> {
-  return apiRequest<MeResponse>('/api/auth/me', {
+export async function getMe(accessToken: string): Promise<{ data: User }> {
+  return apiRequest<{ data: User }>('/api/auth/me', {
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },

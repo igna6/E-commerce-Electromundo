@@ -7,7 +7,7 @@ export async function login(req: Request, res: Response, next: NextFunction) {
   try {
     const validatedData = loginSchema.parse(req.body)
     const result = await authService.login(validatedData.email, validatedData.password)
-    res.json(result)
+    res.json({ data: result })
   } catch (error) {
     next(error)
   }
@@ -17,7 +17,7 @@ export async function refresh(req: Request, res: Response, next: NextFunction) {
   try {
     const validatedData = refreshTokenSchema.parse(req.body)
     const result = await authService.refreshToken(validatedData.refreshToken)
-    res.json(result)
+    res.json({ data: result })
   } catch (error) {
     next(error)
   }
