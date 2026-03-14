@@ -4,21 +4,9 @@ import db from '../db/db.ts'
 import { ordersTable, orderItemsTable, productsTable } from '../db/schema.ts'
 import { generateOrderText } from '../utils/orderTextGenerator.ts'
 import { BadRequestError, ConflictError, NotFoundError, UnauthorizedError } from '../utils/errors.ts'
+import type { CreateOrderInput } from '../validators/order.ts'
 
 const TAX_RATE = 0.21
-
-type CreateOrderInput = {
-  email: string
-  phone: string
-  firstName: string
-  lastName: string
-  address?: string | null | undefined
-  apartment?: string | null | undefined
-  city?: string | null | undefined
-  province?: string | null | undefined
-  zipCode?: string | null | undefined
-  items: Array<{ productId: number; quantity: number }>
-}
 
 export async function createOrder(data: CreateOrderInput) {
   const productIds = data.items.map(item => item.productId)
