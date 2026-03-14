@@ -17,6 +17,7 @@ export const ordersTable = pgTable('orders', {
   shippingCost: integer().notNull().default(0),
   tax: integer().notNull(),
   total: integer().notNull(),
+  accessToken: varchar({ length: 64 }).notNull(),
   status: varchar({ length: 50 }).notNull().default('pending'),
   orderText: text().notNull(),
   createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),

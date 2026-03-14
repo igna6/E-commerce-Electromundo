@@ -1,8 +1,9 @@
+import { randomBytes } from 'crypto'
 import { and, eq, isNull, inArray, sql } from 'drizzle-orm'
 import db from '../db/db.ts'
 import { ordersTable, orderItemsTable, productsTable } from '../db/schema.ts'
 import { generateOrderText } from '../utils/orderTextGenerator.ts'
-import { BadRequestError, ConflictError, NotFoundError } from '../utils/errors.ts'
+import { BadRequestError, ConflictError, NotFoundError, UnauthorizedError } from '../utils/errors.ts'
 
 const TAX_RATE = 0.21
 
@@ -72,6 +73,7 @@ export async function createOrder(data: CreateOrderInput) {
   const shippingCost = 0
   const tax = Math.round(subtotal * TAX_RATE)
   const total = subtotal + tax
+  const accessToken = randomBytes(32).toString('hex')
 
   const result = await db.transaction(async (tx) => {
     for (const item of data.items) {
@@ -95,6 +97,7 @@ export async function createOrder(data: CreateOrderInput) {
         zipCode: data.zipCode ?? null,
         shippingMethod: 'pickup',
         paymentMethod: null,
+        accessToken,
         subtotal,
         shippingCost,
         tax,
@@ -152,7 +155,7 @@ export async function createOrder(data: CreateOrderInput) {
   }
 }
 
-export async function getOrderById(id: number) {
+export async function getOrderById(id: number, token: string) {
   const order = await db
     .select()
     .from(ordersTable)
@@ -163,13 +166,18 @@ export async function getOrderById(id: number) {
     throw new NotFoundError('Order not found')
   }
 
+  if (order[0].accessToken !== token) {
+    throw new UnauthorizedError('Invalid order access token')
+  }
+
   const items = await db
     .select()
     .from(orderItemsTable)
     .where(eq(orderItemsTable.orderId, id))
 
+  const { accessToken: _token, ...orderWithoutToken } = order[0]
   return {
-    ...order[0],
+    ...orderWithoutToken,
     items,
   }
 }

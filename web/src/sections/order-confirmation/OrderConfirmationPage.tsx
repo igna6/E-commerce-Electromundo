@@ -18,21 +18,21 @@ import { toTitleCase } from '@/utils/toTitleCase'
 
 function OrderConfirmationPage() {
   const navigate = useNavigate()
-  const { orderId } = useSearch({ from: '/order-confirmation' })
+  const { orderId, token } = useSearch({ from: '/order-confirmation' })
   const [order, setOrder] = useState<Order | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
 
   useEffect(() => {
-    if (!orderId) {
+    if (!orderId || !token) {
       navigate({ to: '/' })
       return
     }
 
     async function fetchOrder() {
       try {
-        const response = await getOrder(orderId)
+        const response = await getOrder(orderId, token)
         setOrder(response.data)
       } catch (err) {
         console.error('Error fetching order:', err)
@@ -43,7 +43,7 @@ function OrderConfirmationPage() {
     }
 
     fetchOrder()
-  }, [orderId, navigate])
+  }, [orderId, token, navigate])
 
   const copyToClipboard = async () => {
     if (!order?.orderText) return

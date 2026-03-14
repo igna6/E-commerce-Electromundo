@@ -8,6 +8,6 @@ export async function createOrder(data: CreateOrderPayload): Promise<{ data: Ord
   })
 }
 
-export async function getOrder(id: number): Promise<{ data: Order }> {
-  return apiRequest<{ data: Order }>(`/api/orders/${id}`)
+export async function getOrder(id: number, token: string): Promise<{ data: Order }> {
+  return apiRequest<{ data: Order }>(`/api/orders/${id}?token=${encodeURIComponent(token)}`)
 }

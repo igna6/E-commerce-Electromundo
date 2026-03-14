@@ -4,6 +4,7 @@ import OrderConfirmationPage from '@/sections/order-confirmation/OrderConfirmati
 
 const searchSchema = z.object({
   orderId: z.number().catch(0),
+  token: z.string().catch(''),
 })
 
 export const Route = createFileRoute('/order-confirmation')({

@@ -60,7 +60,8 @@ function CheckoutPage() {
     if (state.matches('success')) {
       const event = state.output
       clearCart()
-      navigate({ to: '/order-confirmation', search: { orderId: (event as { id: number }).id } })
+      const orderData = event as { id: number; accessToken: string }
+      navigate({ to: '/order-confirmation', search: { orderId: orderData.id, token: orderData.accessToken } })
     }
   }, [state, clearCart, navigate])
 

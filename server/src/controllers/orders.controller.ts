@@ -19,7 +19,11 @@ export async function getById(req: Request, res: Response, next: NextFunction) {
     if (isNaN(id)) {
       throw new BadRequestError('Invalid order ID')
     }
-    const order = await ordersService.getOrderById(id)
+    const token = req.query.token as string | undefined
+    if (!token) {
+      throw new BadRequestError('Order access token is required')
+    }
+    const order = await ordersService.getOrderById(id, token)
     res.json({ data: order })
   } catch (error) {
     next(error)
