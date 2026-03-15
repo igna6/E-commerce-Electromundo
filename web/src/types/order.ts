@@ -38,6 +38,13 @@ export type CreateOrderPayload = {
   phone: string
   firstName: string
   lastName: string
+  address?: string | null
+  apartment?: string | null
+  city?: string | null
+  province?: string | null
+  zipCode?: string | null
+  shippingMethod?: string | null
+  paymentMethod?: string | null
   items: Array<{
     productId: number
     quantity: number

@@ -21,8 +21,11 @@ import { Route as CartRouteImport } from './routes/cart'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProductsIndexRouteImport } from './routes/products.index'
+import { Route as CheckoutIndexRouteImport } from './routes/checkout/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as ProductsProductIdRouteImport } from './routes/products.$productId'
+import { Route as CheckoutInformacionRouteImport } from './routes/checkout/informacion'
+import { Route as CheckoutConfirmarRouteImport } from './routes/checkout/confirmar'
 import { Route as AdminProductsRouteImport } from './routes/admin/products'
 import { Route as AdminOrdersRouteImport } from './routes/admin/orders'
 import { Route as AdminLoginRouteImport } from './routes/admin/login'
@@ -94,6 +97,11 @@ const ProductsIndexRoute = ProductsIndexRouteImport.update({
   path: '/',
   getParentRoute: () => ProductsRoute,
 } as any)
+const CheckoutIndexRoute = CheckoutIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => CheckoutRoute,
+} as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -103,6 +111,16 @@ const ProductsProductIdRoute = ProductsProductIdRouteImport.update({
   id: '/$productId',
   path: '/$productId',
   getParentRoute: () => ProductsRoute,
+} as any)
+const CheckoutInformacionRoute = CheckoutInformacionRouteImport.update({
+  id: '/informacion',
+  path: '/informacion',
+  getParentRoute: () => CheckoutRoute,
+} as any)
+const CheckoutConfirmarRoute = CheckoutConfirmarRouteImport.update({
+  id: '/confirmar',
+  path: '/confirmar',
+  getParentRoute: () => CheckoutRoute,
 } as any)
 const AdminProductsRoute = AdminProductsRouteImport.update({
   id: '/products',
@@ -160,7 +178,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/cart': typeof CartRoute
-  '/checkout': typeof CheckoutRoute
+  '/checkout': typeof CheckoutRouteWithChildren
   '/faqs': typeof FaqsRoute
   '/order-confirmation': typeof OrderConfirmationRoute
   '/privacy': typeof PrivacyRoute
@@ -174,8 +192,11 @@ export interface FileRoutesByFullPath {
   '/admin/login': typeof AdminLoginRoute
   '/admin/orders': typeof AdminOrdersRouteWithChildren
   '/admin/products': typeof AdminProductsRouteWithChildren
+  '/checkout/confirmar': typeof CheckoutConfirmarRoute
+  '/checkout/informacion': typeof CheckoutInformacionRoute
   '/products/$productId': typeof ProductsProductIdRoute
   '/admin/': typeof AdminIndexRoute
+  '/checkout/': typeof CheckoutIndexRoute
   '/products/': typeof ProductsIndexRoute
   '/admin/orders/$orderId': typeof AdminOrdersOrderIdRoute
   '/admin/products/new': typeof AdminProductsNewRoute
@@ -185,7 +206,6 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/cart': typeof CartRoute
-  '/checkout': typeof CheckoutRoute
   '/faqs': typeof FaqsRoute
   '/order-confirmation': typeof OrderConfirmationRoute
   '/privacy': typeof PrivacyRoute
@@ -197,8 +217,11 @@ export interface FileRoutesByTo {
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/orders': typeof AdminOrdersRouteWithChildren
+  '/checkout/confirmar': typeof CheckoutConfirmarRoute
+  '/checkout/informacion': typeof CheckoutInformacionRoute
   '/products/$productId': typeof ProductsProductIdRoute
   '/admin': typeof AdminIndexRoute
+  '/checkout': typeof CheckoutIndexRoute
   '/products': typeof ProductsIndexRoute
   '/admin/orders/$orderId': typeof AdminOrdersOrderIdRoute
   '/admin/products/new': typeof AdminProductsNewRoute
@@ -210,7 +233,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/cart': typeof CartRoute
-  '/checkout': typeof CheckoutRoute
+  '/checkout': typeof CheckoutRouteWithChildren
   '/faqs': typeof FaqsRoute
   '/order-confirmation': typeof OrderConfirmationRoute
   '/privacy': typeof PrivacyRoute
@@ -224,8 +247,11 @@ export interface FileRoutesById {
   '/admin/login': typeof AdminLoginRoute
   '/admin/orders': typeof AdminOrdersRouteWithChildren
   '/admin/products': typeof AdminProductsRouteWithChildren
+  '/checkout/confirmar': typeof CheckoutConfirmarRoute
+  '/checkout/informacion': typeof CheckoutInformacionRoute
   '/products/$productId': typeof ProductsProductIdRoute
   '/admin/': typeof AdminIndexRoute
+  '/checkout/': typeof CheckoutIndexRoute
   '/products/': typeof ProductsIndexRoute
   '/admin/orders/$orderId': typeof AdminOrdersOrderIdRoute
   '/admin/products/new': typeof AdminProductsNewRoute
@@ -252,8 +278,11 @@ export interface FileRouteTypes {
     | '/admin/login'
     | '/admin/orders'
     | '/admin/products'
+    | '/checkout/confirmar'
+    | '/checkout/informacion'
     | '/products/$productId'
     | '/admin/'
+    | '/checkout/'
     | '/products/'
     | '/admin/orders/$orderId'
     | '/admin/products/new'
@@ -263,7 +292,6 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/cart'
-    | '/checkout'
     | '/faqs'
     | '/order-confirmation'
     | '/privacy'
@@ -275,8 +303,11 @@ export interface FileRouteTypes {
     | '/admin/dashboard'
     | '/admin/login'
     | '/admin/orders'
+    | '/checkout/confirmar'
+    | '/checkout/informacion'
     | '/products/$productId'
     | '/admin'
+    | '/checkout'
     | '/products'
     | '/admin/orders/$orderId'
     | '/admin/products/new'
@@ -301,8 +332,11 @@ export interface FileRouteTypes {
     | '/admin/login'
     | '/admin/orders'
     | '/admin/products'
+    | '/checkout/confirmar'
+    | '/checkout/informacion'
     | '/products/$productId'
     | '/admin/'
+    | '/checkout/'
     | '/products/'
     | '/admin/orders/$orderId'
     | '/admin/products/new'
@@ -314,7 +348,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
   CartRoute: typeof CartRoute
-  CheckoutRoute: typeof CheckoutRoute
+  CheckoutRoute: typeof CheckoutRouteWithChildren
   FaqsRoute: typeof FaqsRoute
   OrderConfirmationRoute: typeof OrderConfirmationRoute
   PrivacyRoute: typeof PrivacyRoute
@@ -410,6 +444,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProductsIndexRouteImport
       parentRoute: typeof ProductsRoute
     }
+    '/checkout/': {
+      id: '/checkout/'
+      path: '/'
+      fullPath: '/checkout/'
+      preLoaderRoute: typeof CheckoutIndexRouteImport
+      parentRoute: typeof CheckoutRoute
+    }
     '/admin/': {
       id: '/admin/'
       path: '/'
@@ -423,6 +464,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/products/$productId'
       preLoaderRoute: typeof ProductsProductIdRouteImport
       parentRoute: typeof ProductsRoute
+    }
+    '/checkout/informacion': {
+      id: '/checkout/informacion'
+      path: '/informacion'
+      fullPath: '/checkout/informacion'
+      preLoaderRoute: typeof CheckoutInformacionRouteImport
+      parentRoute: typeof CheckoutRoute
+    }
+    '/checkout/confirmar': {
+      id: '/checkout/confirmar'
+      path: '/confirmar'
+      fullPath: '/checkout/confirmar'
+      preLoaderRoute: typeof CheckoutConfirmarRouteImport
+      parentRoute: typeof CheckoutRoute
     }
     '/admin/products': {
       id: '/admin/products'
@@ -547,6 +602,22 @@ const AdminRouteChildren: AdminRouteChildren = {
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
+interface CheckoutRouteChildren {
+  CheckoutConfirmarRoute: typeof CheckoutConfirmarRoute
+  CheckoutInformacionRoute: typeof CheckoutInformacionRoute
+  CheckoutIndexRoute: typeof CheckoutIndexRoute
+}
+
+const CheckoutRouteChildren: CheckoutRouteChildren = {
+  CheckoutConfirmarRoute: CheckoutConfirmarRoute,
+  CheckoutInformacionRoute: CheckoutInformacionRoute,
+  CheckoutIndexRoute: CheckoutIndexRoute,
+}
+
+const CheckoutRouteWithChildren = CheckoutRoute._addFileChildren(
+  CheckoutRouteChildren,
+)
+
 interface ProductsRouteChildren {
   ProductsProductIdRoute: typeof ProductsProductIdRoute
   ProductsIndexRoute: typeof ProductsIndexRoute
@@ -565,7 +636,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
   CartRoute: CartRoute,
-  CheckoutRoute: CheckoutRoute,
+  CheckoutRoute: CheckoutRouteWithChildren,
   FaqsRoute: FaqsRoute,
   OrderConfirmationRoute: OrderConfirmationRoute,
   PrivacyRoute: PrivacyRoute,

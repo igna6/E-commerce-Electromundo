@@ -15,6 +15,8 @@ export const createOrderSchema = z.object({
   city: z.string().max(100).optional().nullable(),
   province: z.string().max(100).optional().nullable(),
   zipCode: z.string().max(20).optional().nullable(),
+  shippingMethod: z.enum(['pickup', 'delivery']).optional().nullable(),
+  paymentMethod: z.enum(['transfer', 'cash', 'mercadopago']).optional().nullable(),
   items: z.array(orderItemSchema).min(1, 'At least one item is required'),
 })
 

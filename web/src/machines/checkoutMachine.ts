@@ -8,9 +8,15 @@ export type StockError = {
   available: number
 }
 
+export type OrderResult = {
+  id: number
+  accessToken: string
+}
+
 export type CheckoutContext = {
   submitError: string | null
   stockErrors: Array<StockError>
+  orderResult: OrderResult | null
 }
 
 export type CheckoutEvent = { type: 'SUBMIT'; formData: CreateOrderPayload }
@@ -29,13 +35,14 @@ export const checkoutMachine = setup({
   },
 }).createMachine({
   id: 'checkout',
-  initial: 'contactInfo',
+  initial: 'idle',
   context: {
     submitError: null,
     stockErrors: [],
+    orderResult: null,
   },
   states: {
-    contactInfo: {
+    idle: {
       on: {
         SUBMIT: {
           target: 'submitting',
@@ -52,9 +59,14 @@ export const checkoutMachine = setup({
         input: ({ event }) => {
           return { formData: event.formData }
         },
-        onDone: 'success',
+        onDone: {
+          target: 'success',
+          actions: assign({
+            orderResult: ({ event }) => event.output as OrderResult,
+          }),
+        },
         onError: {
-          target: 'contactInfo',
+          target: 'idle',
           actions: assign({
             submitError: ({ event }) => {
               const error = event.error as Record<string, unknown>
