@@ -47,26 +47,21 @@ function formatDate(date: Date): string {
 
 export function generateOrderText(order: OrderData): string {
   const lines: string[] = []
-  const divider = '========================================'
-  const thinDivider = '----------------------------------------'
 
-  // Header
-  lines.push(divider)
-  lines.push(`        PEDIDO #${formatOrderNumber(order.id)}`)
-  lines.push(divider)
-  lines.push(`FECHA: ${formatDate(order.createdAt)}`)
+  // Greeting
+  lines.push(
+    `Hola! Soy ${order.firstName} ${order.lastName} y quiero realizar el siguiente pedido:`,
+  )
   lines.push('')
 
-  // Contact info
-  lines.push('DATOS DE CONTACTO')
-  lines.push(`Nombre: ${order.firstName} ${order.lastName}`)
-  lines.push(`Email: ${order.email}`)
-  lines.push(`Teléfono: ${order.phone}`)
+  // Header
+  lines.push(`*Pedido #${formatOrderNumber(order.id)}*`)
+  lines.push(`${formatDate(order.createdAt)}`)
   lines.push('')
 
   // Shipping address (only if address is provided)
   if (order.address) {
-    lines.push('DIRECCIÓN DE ENVÍO')
+    lines.push(`*Dirección de envío*`)
     lines.push(order.address)
     if (order.apartment) {
       lines.push(order.apartment)
@@ -80,33 +75,26 @@ export function generateOrderText(order: OrderData): string {
     lines.push('')
   }
 
-  // Products
-  lines.push('PRODUCTOS')
+  // Products (prices include IVA)
+  lines.push(`*Productos*`)
   for (const item of order.items) {
-    lines.push(`- ${item.productName}`)
-    lines.push(`  Cantidad: ${item.quantity} x ${formatCurrency(item.productPrice)}`)
-    lines.push(`  Subtotal: ${formatCurrency(item.lineTotal)}`)
+    const lineTotalWithTax = Math.round(item.lineTotal * 1.21)
+    lines.push(
+      `• ${item.productName} (x${item.quantity}) — ${formatCurrency(lineTotalWithTax)}`,
+    )
   }
   lines.push('')
 
   // Summary
-  lines.push('RESUMEN')
-  lines.push(`Subtotal: ${formatCurrency(order.subtotal)}`)
+  lines.push(`*Resumen*`)
   if (order.shippingCost > 0) {
     lines.push(`Envío: ${formatCurrency(order.shippingCost)}`)
   }
-  lines.push(`IVA (21%): ${formatCurrency(order.tax)}`)
-  lines.push(thinDivider)
-  lines.push(`TOTAL: ${formatCurrency(order.total)}`)
-  lines.push('')
-
-  // Pickup notice
-  lines.push('Retiro en Sucursal')
+  lines.push(`*Total: ${formatCurrency(order.total)}* (IVA incluido)`)
   lines.push('')
 
   // Footer
-  lines.push('Gracias por tu compra en Electromundo!')
-  lines.push(divider)
+  lines.push(`¡Gracias por tu compra en *Electromundo*!`)
 
   return lines.join('\n')
 }

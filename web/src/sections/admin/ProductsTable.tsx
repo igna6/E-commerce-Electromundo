@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router'
 import type { Product } from '@/types/product'
-import { formatPrice } from '@/utils/formatPrice'
+import { applyTax, formatPrice } from '@/utils/formatPrice'
 import { Badge } from '@/components/ui/badge'
 import {
   Table,
@@ -68,7 +68,7 @@ export default function ProductsTable({
                 {product.sku || '—'}
               </span>
             </TableCell>
-            <TableCell className="px-4 text-sm">{formatPrice(product.price)}</TableCell>
+            <TableCell className="px-4 text-sm">{formatPrice(applyTax(product.price))}</TableCell>
             <TableCell className="px-4">
               {product.stock === 0 ? (
                 <Badge variant="destructive" className="bg-red-100 text-red-700 hover:bg-red-100 border-transparent">

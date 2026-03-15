@@ -3,7 +3,7 @@ import { Link } from '@tanstack/react-router'
 import { Check, Package, ShoppingCart } from 'lucide-react'
 import type { Product } from '@/types/product'
 import { useCart } from '@/contexts/CartContext'
-import { formatPrice } from '@/utils/formatPrice'
+import { applyTax, formatPrice } from '@/utils/formatPrice'
 import { toTitleCase } from '@/utils/toTitleCase'
 
 type ProductCardProps = {
@@ -83,7 +83,7 @@ function ProductCard({ product, categoryName }: ProductCardProps) {
           </p>
         )}
         <p className="text-primary font-bold text-lg sm:text-xl">
-          {formatPrice(product.price)}
+          {formatPrice(applyTax(product.price))}
         </p>
         {product.stock > 0 && (
           <p className="text-xs text-emerald-600 mt-1 font-medium">

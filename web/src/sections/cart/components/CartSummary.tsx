@@ -65,10 +65,11 @@ export default function CartSummary({ subtotal, shipping, discount, total }: Car
         <Separator className="my-6" />
 
         {/* Total */}
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex justify-between items-center mb-2">
           <span className="text-lg font-semibold text-brand-dark">Total</span>
           <span className="text-2xl font-bold text-brand-orange">{formatPrice(total)}</span>
         </div>
+        <p className="text-xs text-gray-400 mb-6">IVA incluido</p>
 
         {/* Checkout Button */}
         <Button

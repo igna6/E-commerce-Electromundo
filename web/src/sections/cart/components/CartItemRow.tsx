@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router'
 import type { CartItem } from '@/types/cart'
-import { formatPrice } from '@/utils/formatPrice'
+import { applyTax, formatPrice } from '@/utils/formatPrice'
 import { toTitleCase } from '@/utils/toTitleCase'
 
 type CartItemRowProps = {
@@ -83,7 +83,7 @@ export default function CartItemRow({ item, onUpdateQuantity, onRemove }: CartIt
         <div className="md:col-span-2 text-center">
           <span className="md:hidden text-sm text-gray-500">Precio: </span>
           <span className="font-medium text-brand-dark">
-            {formatPrice(item.product.price)}
+            {formatPrice(applyTax(item.product.price))}
           </span>
         </div>
 
@@ -116,7 +116,7 @@ export default function CartItemRow({ item, onUpdateQuantity, onRemove }: CartIt
         <div className="md:col-span-2 text-right">
           <span className="md:hidden text-sm text-gray-500">Total: </span>
           <span className="font-bold text-brand-orange text-lg">
-            {formatPrice(item.product.price * item.quantity)}
+            {formatPrice(applyTax(item.product.price * item.quantity))}
           </span>
         </div>
       </div>

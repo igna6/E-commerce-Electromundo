@@ -6,14 +6,16 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import PageBreadcrumb from '@/components/PageBreadcrumb'
 import { useCart } from '@/contexts/CartContext'
+import { applyTax } from '@/utils/formatPrice'
 
 function CartPage() {
   const { items, subtotal, totalItems, updateQuantity, removeItem, clearCart } = useCart()
 
-  // All values in cents
-  const shipping = subtotal > 5000000 ? 0 : 500000
+  // All values in cents, prices include IVA
+  const subtotalWithTax = applyTax(subtotal)
+  const shipping = subtotalWithTax > 5000000 ? 0 : 500000
   const discount = 0
-  const total = subtotal + shipping - discount
+  const total = subtotalWithTax + shipping - discount
 
   if (items.length === 0) {
     return <EmptyCart />
@@ -86,7 +88,7 @@ function CartPage() {
 
           {/* Order Summary */}
           <CartSummary
-            subtotal={subtotal}
+            subtotal={subtotalWithTax}
             shipping={shipping}
             discount={discount}
             total={total}

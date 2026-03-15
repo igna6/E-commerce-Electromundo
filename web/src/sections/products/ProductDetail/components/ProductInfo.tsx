@@ -1,7 +1,7 @@
 import type { Product } from '@/types/product'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
-import { formatPrice } from '@/utils/formatPrice'
+import { applyTax, formatPrice } from '@/utils/formatPrice'
 import { toTitleCase } from '@/utils/toTitleCase'
 
 type ProductInfoProps = {
@@ -36,8 +36,9 @@ export default function ProductInfo({ product, categoryName }: ProductInfoProps)
       {/* Price */}
       <div className="mb-6">
         <span className="text-4xl font-bold text-brand-orange">
-          {formatPrice(product.price)}
+          {formatPrice(applyTax(product.price))}
         </span>
+        <p className="text-sm text-gray-500 mt-1">IVA incluido</p>
       </div>
 
       {/* Description */}

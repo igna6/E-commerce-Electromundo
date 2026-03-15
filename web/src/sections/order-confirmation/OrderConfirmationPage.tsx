@@ -193,17 +193,14 @@ function OrderConfirmationPage() {
           <div className="space-y-2">
             <div className="flex justify-between text-gray-600">
               <span>Subtotal</span>
-              <span>{formatPrice(order.subtotal)}</span>
-            </div>
-            <div className="flex justify-between text-gray-600">
-              <span>IVA (21%)</span>
-              <span>{formatPrice(order.tax)}</span>
+              <span>{formatPrice(order.total)}</span>
             </div>
             <Separator className="my-2" />
             <div className="flex justify-between text-lg font-bold">
               <span className="text-brand-dark">Total</span>
               <span className="text-brand-orange">{formatPrice(order.total)}</span>
             </div>
+            <p className="text-xs text-gray-400">IVA incluido</p>
           </div>
         </div>
 

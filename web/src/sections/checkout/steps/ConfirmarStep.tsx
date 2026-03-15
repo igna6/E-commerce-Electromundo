@@ -1,14 +1,15 @@
 import { useEffect } from 'react'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { useMachine } from '@xstate/react'
-import { useCheckout, type CheckoutData } from '@/contexts/CheckoutContext'
+import CheckoutStepLayout from '../CheckoutStepLayout'
+import type { CheckoutData } from '@/contexts/CheckoutContext'
+import { useCheckout } from '@/contexts/CheckoutContext'
 import { useCart } from '@/contexts/CartContext'
 import { checkoutMachine } from '@/machines/checkoutMachine'
-import CheckoutStepLayout from '../CheckoutStepLayout'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
-import { formatPrice } from '@/utils/formatPrice'
+import { applyTax, formatPrice } from '@/utils/formatPrice'
 import { toTitleCase } from '@/utils/toTitleCase'
 
 export default function ConfirmarStep() {
@@ -23,16 +24,17 @@ export default function ConfirmarStep() {
 
   useEffect(() => {
     if (state.matches('success') && state.context.orderResult) {
-      clearCart()
       navigate({
         to: '/order-confirmation',
-        search: { orderId: state.context.orderResult.id, token: state.context.orderResult.accessToken },
-      })
+        search: {
+          orderId: state.context.orderResult.id,
+          token: state.context.orderResult.accessToken,
+        },
+      }).then(() => clearCart())
     }
   }, [state, clearCart, navigate])
 
-  const tax = Math.round(subtotal * 0.21)
-  const total = subtotal + tax
+  const total = applyTax(subtotal)
 
   const handleConfirm = () => {
     actorRef.send({
@@ -43,7 +45,7 @@ export default function ConfirmarStep() {
         firstName: d.firstName,
         lastName: d.lastName,
         shippingMethod: 'pickup',
-        paymentMethod: 'mercadopago',
+        paymentMethod: 'cash',
         items: items.map((item) => ({
           productId: item.product.id,
           quantity: item.quantity,
@@ -63,13 +65,17 @@ export default function ConfirmarStep() {
               <ul className="mt-2 space-y-1">
                 {state.context.stockErrors.map((item, i) => (
                   <li key={i}>
-                    <strong>{toTitleCase(item.productName)}</strong>: pediste {item.requested}, disponible{' '}
+                    <strong>{toTitleCase(item.productName)}</strong>: pediste{' '}
+                    {item.requested}, disponible{' '}
                     {item.available === 0 ? 'agotado' : item.available}
                   </li>
                 ))}
               </ul>
             )}
-            <Link to="/cart" className="inline-block mt-2 text-primary hover:underline font-medium">
+            <Link
+              to="/cart"
+              className="inline-block mt-2 text-primary hover:underline font-medium"
+            >
               Volver al carrito para ajustar
             </Link>
           </div>
@@ -90,7 +96,9 @@ export default function ConfirmarStep() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
             <div>
               <span className="text-gray-500">Nombre:</span>{' '}
-              <span className="font-medium text-slate-900">{d.firstName} {d.lastName}</span>
+              <span className="font-medium text-slate-900">
+                {d.firstName} {d.lastName}
+              </span>
             </div>
             <div>
               <span className="text-gray-500">Email:</span>{' '}
@@ -107,15 +115,40 @@ export default function ConfirmarStep() {
         <div className="bg-white rounded-xl border border-gray-200 p-6">
           <div className="flex items-center justify-between gap-4 flex-wrap">
             <div className="flex items-center gap-2">
-              <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              <svg
+                className="w-5 h-5 text-primary"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                />
               </svg>
               <Badge variant="secondary">Retiro en sucursal</Badge>
             </div>
             <div className="flex items-center gap-2">
-              <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+              <svg
+                className="w-5 h-5 text-primary"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.5}
+                  d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"
+                />
               </svg>
               <Badge variant="secondary">MercadoPago</Badge>
             </div>
@@ -124,10 +157,15 @@ export default function ConfirmarStep() {
 
         {/* Products */}
         <div className="bg-white rounded-xl border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-slate-900 mb-4">Productos</h3>
+          <h3 className="text-lg font-semibold text-slate-900 mb-4">
+            Productos
+          </h3>
           <div className="space-y-3">
             {items.map((item) => (
-              <div key={item.product.id} className="flex items-center justify-between text-sm">
+              <div
+                key={item.product.id}
+                className="flex items-center justify-between text-sm"
+              >
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
                     {item.product.image ? (
@@ -138,19 +176,31 @@ export default function ConfirmarStep() {
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-gray-400">
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        <svg
+                          className="w-5 h-5"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={1.5}
+                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                          />
                         </svg>
                       </div>
                     )}
                   </div>
                   <div>
-                    <p className="font-medium text-slate-900">{toTitleCase(item.product.name)}</p>
+                    <p className="font-medium text-slate-900">
+                      {toTitleCase(item.product.name)}
+                    </p>
                     <p className="text-gray-500">Cant: {item.quantity}</p>
                   </div>
                 </div>
                 <p className="font-semibold text-slate-900">
-                  {formatPrice(item.product.price * item.quantity)}
+                  {formatPrice(applyTax(item.product.price * item.quantity))}
                 </p>
               </div>
             ))}
@@ -161,18 +211,17 @@ export default function ConfirmarStep() {
           <div className="space-y-2 text-sm">
             <div className="flex justify-between text-gray-600">
               <span>Subtotal</span>
-              <span>{formatPrice(subtotal)}</span>
-            </div>
-            <div className="flex justify-between text-gray-600">
-              <span>IVA (21%)</span>
-              <span>{formatPrice(tax)}</span>
+              <span>{formatPrice(total)}</span>
             </div>
           </div>
           <Separator className="my-4" />
           <div className="flex justify-between items-center">
             <span className="text-lg font-semibold text-slate-900">Total</span>
-            <span className="text-2xl font-bold text-primary">{formatPrice(total)}</span>
+            <span className="text-2xl font-bold text-primary">
+              {formatPrice(total)}
+            </span>
           </div>
+          <p className="text-xs text-gray-400 mt-1">IVA incluido</p>
         </div>
 
         {/* Actions */}
@@ -183,8 +232,18 @@ export default function ConfirmarStep() {
             size="lg"
             onClick={() => navigate({ to: '/checkout/informacion' })}
           >
-            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            <svg
+              className="w-5 h-5 mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 19l-7-7 7-7"
+              />
             </svg>
             Volver
           </Button>
@@ -197,8 +256,19 @@ export default function ConfirmarStep() {
           >
             {state.matches('submitting') ? (
               <>
-                <svg className="animate-spin -ml-1 mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <svg
+                  className="animate-spin -ml-1 mr-2 h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  />
                   <path
                     className="opacity-75"
                     fill="currentColor"
@@ -209,7 +279,12 @@ export default function ConfirmarStep() {
               </>
             ) : (
               <>
-                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg
+                  className="w-5 h-5 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"

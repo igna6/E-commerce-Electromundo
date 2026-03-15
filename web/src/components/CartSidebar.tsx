@@ -21,7 +21,7 @@ import {
 } from '@/components/ui/sheet'
 import { Badge } from '@/components/ui/badge'
 import { useCart } from '@/contexts/CartContext'
-import { formatPrice } from '@/utils/formatPrice'
+import { applyTax, formatPrice } from '@/utils/formatPrice'
 import { toTitleCase } from '@/utils/toTitleCase'
 
 type CartSidebarProps = {
@@ -33,11 +33,12 @@ function CartSidebar({ children }: CartSidebarProps) {
   const { items, subtotal, totalItems, updateQuantity, removeItem } = useCart()
 
   const itemCount = totalItems
+  const subtotalWithTax = applyTax(subtotal)
   const freeShippingThreshold = 5000000 // 50,000 ARS in cents
-  const remainingForFreeShipping = Math.max(0, freeShippingThreshold - subtotal)
+  const remainingForFreeShipping = Math.max(0, freeShippingThreshold - subtotalWithTax)
   const freeShippingProgress = Math.min(
     100,
-    (subtotal / freeShippingThreshold) * 100,
+    (subtotalWithTax / freeShippingThreshold) * 100,
   )
 
   return (
@@ -116,7 +117,7 @@ function CartSidebar({ children }: CartSidebarProps) {
                         {toTitleCase(item.product.name)}
                       </Link>
                       <p className="text-primary font-bold mt-1">
-                        {formatPrice(item.product.price)}
+                        {formatPrice(applyTax(item.product.price))}
                       </p>
 
                       <div className="flex items-center justify-between mt-3">
@@ -192,11 +193,11 @@ function CartSidebar({ children }: CartSidebarProps) {
               <div className="flex justify-between items-center w-full">
                 <span className="text-slate-500">Subtotal</span>
                 <span className="text-2xl font-bold text-primary">
-                  {formatPrice(subtotal)}
+                  {formatPrice(subtotalWithTax)}
                 </span>
               </div>
               <p className="text-xs text-slate-400 text-center">
-                Impuestos y envío calculados en el checkout
+                IVA incluido. Envío calculado en el checkout
               </p>
               <div className="flex gap-3 w-full">
                 <Button

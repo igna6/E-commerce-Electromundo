@@ -5,7 +5,7 @@ import type { Product } from '@/types/product'
 import { Button } from '@/components/ui/button'
 import ProductCard from '@/components/ProductCard'
 import { useCart } from '@/contexts/CartContext'
-import { formatPrice } from '@/utils/formatPrice'
+import { applyTax, formatPrice } from '@/utils/formatPrice'
 import { toTitleCase } from '@/utils/toTitleCase'
 
 type ProductGridCardProps = {
@@ -82,7 +82,7 @@ function ProductGridCard({ product, viewMode, index = 0, categoryName }: Product
               </Link>
             </div>
             <div className="text-right flex-shrink-0">
-              <p className="text-primary font-bold text-xl">{formatPrice(product.price)}</p>
+              <p className="text-primary font-bold text-xl">{formatPrice(applyTax(product.price))}</p>
             </div>
           </div>
           {product.description && (

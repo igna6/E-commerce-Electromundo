@@ -2,7 +2,7 @@ import { Link } from '@tanstack/react-router'
 import type { CartItem } from '@/types/cart'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
-import { formatPrice } from '@/utils/formatPrice'
+import { applyTax, formatPrice } from '@/utils/formatPrice'
 import { toTitleCase } from '@/utils/toTitleCase'
 
 type CheckoutOrderSummaryProps = {
@@ -12,8 +12,7 @@ type CheckoutOrderSummaryProps = {
 }
 
 export default function CheckoutOrderSummary({ items, subtotal, unavailableItems = [] }: CheckoutOrderSummaryProps) {
-  const tax = Math.round(subtotal * 0.21)
-  const total = subtotal + tax
+  const total = applyTax(subtotal)
 
   return (
     <div className="lg:col-span-1">
@@ -52,7 +51,7 @@ export default function CheckoutOrderSummary({ items, subtotal, unavailableItems
                   {toTitleCase(item.product.name)}
                 </p>
                 <p className="text-primary font-semibold text-sm">
-                  {formatPrice(item.product.price * item.quantity)}
+                  {formatPrice(applyTax(item.product.price * item.quantity))}
                 </p>
               </div>
             </div>
@@ -90,21 +89,18 @@ export default function CheckoutOrderSummary({ items, subtotal, unavailableItems
         <div className="space-y-3">
           <div className="flex justify-between text-gray-600">
             <span>Subtotal</span>
-            <span>{formatPrice(subtotal)}</span>
-          </div>
-          <div className="flex justify-between text-gray-600">
-            <span>IVA (21%)</span>
-            <span>{formatPrice(tax)}</span>
+            <span>{formatPrice(total)}</span>
           </div>
         </div>
 
         <Separator className="my-4" />
 
         {/* Total */}
-        <div className="flex justify-between items-center mb-4">
+        <div className="flex justify-between items-center mb-1">
           <span className="text-lg font-semibold text-slate-900">Total</span>
           <span className="text-2xl font-bold text-primary">{formatPrice(total)}</span>
         </div>
+        <p className="text-xs text-gray-400 mb-4">IVA incluido</p>
 
         {/* Trust Badge */}
         <div className="flex items-center gap-2 p-3 bg-green-50 rounded-lg text-sm text-green-700">
