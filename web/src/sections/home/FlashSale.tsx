@@ -1,54 +1,19 @@
-import { useState, useEffect, useMemo } from 'react'
 import { Link } from '@tanstack/react-router'
 import { Zap } from 'lucide-react'
-import { useProducts } from '@/hooks/useProducts'
+import { useQuery } from '@tanstack/react-query'
+import { getFeaturedProducts } from '@/services/featuredProducts.service'
 import { applyTax, formatPrice } from '@/utils/formatPrice'
 import { toTitleCase } from '@/utils/toTitleCase'
 
-function useCountdown(endTime: Date) {
-  const getTimeLeft = () => {
-    const diff = endTime.getTime() - Date.now()
-    if (diff <= 0) return { h: 0, m: 0, s: 0 }
-    const h = Math.floor(diff / 3600000)
-    const m = Math.floor((diff % 3600000) / 60000)
-    const s = Math.floor((diff % 60000) / 1000)
-    return { h, m, s }
-  }
-  const [time, setTime] = useState(getTimeLeft)
-  useEffect(() => {
-    const t = setInterval(() => setTime(getTimeLeft()), 1000)
-    return () => clearInterval(t)
-  }, [])
-  return time
-}
-
-function TimeBlock({ value, label }: { value: number; label: string }) {
-  return (
-    <div className="flex flex-col items-center">
-      <div className="bg-white/20 rounded-lg px-3 py-1.5 min-w-[3rem] text-center">
-        <span className="text-2xl font-black text-white tabular-nums">
-          {String(value).padStart(2, '0')}
-        </span>
-      </div>
-      <span className="text-white/70 text-xs mt-1">{label}</span>
-    </div>
-  )
-}
-
 function FlashSale() {
-  const { data, isLoading } = useProducts({
-    page: 1,
-    limit: 4,
-    inStock: true,
-    sortBy: 'price-asc',
+  const { data, isLoading } = useQuery({
+    queryKey: ['featured-products', 'flash'],
+    queryFn: () => getFeaturedProducts('flash'),
   })
 
-  const endTime = useMemo(() => new Date(Date.now() + 4 * 3600000 + 23 * 60000 + 47000), [])
-  const { h, m, s } = useCountdown(endTime)
+  const items = data?.data ?? []
 
-  const products = data?.data ?? []
-
-  if (isLoading || products.length === 0) return null
+  if (isLoading || items.length === 0) return null
 
   return (
     <section className="bg-gradient-to-r from-[#1a1a2e] to-[#16213e] py-6">
@@ -65,16 +30,6 @@ function FlashSale() {
             </div>
           </div>
 
-          {/* Countdown */}
-          <div className="flex items-center gap-2">
-            <span className="text-white/60 text-sm mr-1">Termina en:</span>
-            <TimeBlock value={h} label="Hs" />
-            <span className="text-white/60 text-xl font-black mb-4">:</span>
-            <TimeBlock value={m} label="Min" />
-            <span className="text-white/60 text-xl font-black mb-4">:</span>
-            <TimeBlock value={s} label="Seg" />
-          </div>
-
           <Link
             to="/products"
             search={{ sortBy: 'price-asc', inStock: true }}
@@ -86,11 +41,12 @@ function FlashSale() {
 
         {/* Products */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {products.map((product) => {
+          {items.map((item) => {
+            const { product } = item
             const priceWithTax = applyTax(product.price)
             return (
               <Link
-                key={product.id}
+                key={item.id}
                 to="/products/$productId"
                 params={{ productId: String(product.id) }}
                 className="bg-white/5 border border-white/10 rounded-xl overflow-hidden hover:border-amber-500/50 hover:bg-white/10 transition-all cursor-pointer group"

@@ -4,6 +4,7 @@ import * as adminOrdersController from '../../controllers/admin/orders.controlle
 import * as statsController from '../../controllers/admin/stats.controller.ts'
 import * as importProductsController from '../../controllers/admin/importProducts.controller.ts'
 import * as bannersController from '../../controllers/banners.controller.ts'
+import * as featuredProductsController from '../../controllers/featuredProducts.controller.ts'
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -36,5 +37,11 @@ router.get('/banners/:id', bannersController.getById)
 router.post('/banners', bannersController.create)
 router.put('/banners/:id', bannersController.update)
 router.delete('/banners/:id', bannersController.remove)
+
+// Featured Products
+router.get('/featured-products', featuredProductsController.listBySection)
+router.post('/featured-products', featuredProductsController.create)
+router.put('/featured-products/:id', featuredProductsController.update)
+router.delete('/featured-products/:id', featuredProductsController.remove)
 
 export default router

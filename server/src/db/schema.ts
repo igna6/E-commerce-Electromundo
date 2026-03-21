@@ -5,5 +5,6 @@ import { ordersTable } from '../entities/orders'
 import { orderItemsTable } from '../entities/orderItems'
 import { refreshTokensTable } from '../entities/refreshTokens'
 import { bannersTable } from '../entities/banners'
+import { featuredProductsTable } from '../entities/featuredProducts'
 
-export { productsTable, productCategoriesTable, usersTable, ordersTable, orderItemsTable, refreshTokensTable, bannersTable }
+export { productsTable, productCategoriesTable, usersTable, ordersTable, orderItemsTable, refreshTokensTable, bannersTable, featuredProductsTable }
