@@ -1,4 +1,9 @@
-import { HeadContent, Scripts, createRootRoute, useLocation } from '@tanstack/react-router'
+import {
+  HeadContent,
+  Scripts,
+  createRootRoute,
+  useLocation,
+} from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
@@ -55,7 +60,7 @@ function RootContent({ children }: { children: React.ReactNode }) {
     <>
       {!isAdminRoute && <Header />}
       {/* Spacer for fixed header: announcement (28px) + main bar (56px) + mobile search (40px on <md) + cat nav (40px on sm+) */}
-      {!isAdminRoute && <div className="h-[164px] sm:h-[164px] md:h-[124px]" />}
+      {!isAdminRoute && <div className="h-[164px] sm:h-[164px] md:h-[134px]" />}
       {children}
       {!isAdminRoute && <Footer />}
       {!isAdminRoute && <FloatingWhatsApp />}
@@ -72,25 +77,25 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <body>
         <QueryClientProvider client={queryClient}>
           <AuthProvider>
-          <CartProvider>
-            <RootContent>{children}</RootContent>
+            <CartProvider>
+              <RootContent>{children}</RootContent>
 
-          <TanStackDevtools
-            config={{
-              position: 'bottom-right',
-            }}
-            plugins={[
-              {
-                name: 'Tanstack Router',
-                render: <TanStackRouterDevtoolsPanel />,
-              },
-              {
-                name: 'React Query',
-                render: <ReactQueryDevtools />,
-              },
-            ]}
-          />
-          </CartProvider>
+              <TanStackDevtools
+                config={{
+                  position: 'bottom-right',
+                }}
+                plugins={[
+                  {
+                    name: 'Tanstack Router',
+                    render: <TanStackRouterDevtoolsPanel />,
+                  },
+                  {
+                    name: 'React Query',
+                    render: <ReactQueryDevtools />,
+                  },
+                ]}
+              />
+            </CartProvider>
           </AuthProvider>
         </QueryClientProvider>
         <Scripts />

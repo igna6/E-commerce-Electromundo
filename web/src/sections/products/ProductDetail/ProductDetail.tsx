@@ -38,6 +38,10 @@ function ProductDetail() {
   const categoryName = product?.category ? categoryMap.get(product.category) : undefined
 
   const images = product?.image ? [product.image] : []
+  const hasPromotion = product?.promotionPrice != null && product.promotionPrice < product.price
+  const discount = hasPromotion
+    ? Math.round(((product.price - product.promotionPrice!) / product.price) * 100)
+    : 0
 
   const handleAddToCart = () => {
     if (product) {
@@ -52,9 +56,9 @@ function ProductDetail() {
 
   if (!product) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-brand-blue border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <div className="w-16 h-16 border-4 border-electric-cyan border-t-transparent rounded-full animate-spin mx-auto mb-4" />
           <p className="text-gray-600">Cargando producto...</p>
         </div>
       </div>
@@ -71,42 +75,44 @@ function ProductDetail() {
   ]
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="bg-gray-100 min-h-screen">
       {/* Breadcrumb */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 py-4">
+      <div className="bg-white border-b border-gray-100">
+        <div className="max-w-7xl mx-auto px-4 py-2.5">
           <PageBreadcrumb items={breadcrumbItems} />
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
+      {/* Product Main */}
+      <div className="max-w-7xl mx-auto px-4 py-4">
+        <div className="bg-white rounded-2xl shadow-sm p-4 sm:p-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[1fr_1.1fr_0.9fr] gap-6 lg:gap-8">
+            {/* Gallery */}
             <ProductImageGallery
               images={images}
               productName={toTitleCase(product.name)}
               selectedImage={selectedImage}
               onSelectImage={setSelectedImage}
+              discount={discount}
             />
 
-            <div className="p-6 lg:p-8 flex flex-col">
-              <ProductInfo product={product} categoryName={categoryName} />
-              <AddToCartControls
-                product={product}
-                quantity={quantity}
-                onQuantityChange={setQuantity}
-                onAddToCart={handleAddToCart}
-                isAdding={isAdding}
-              />
-            </div>
+            {/* Info */}
+            <ProductInfo product={product} categoryName={categoryName} />
+
+            {/* Buy Panel */}
+            <AddToCartControls
+              product={product}
+              quantity={quantity}
+              onQuantityChange={setQuantity}
+              onAddToCart={handleAddToCart}
+              isAdding={isAdding}
+            />
           </div>
         </div>
-
-        <RelatedProducts
-          product={product}
-          categoryName={categoryName}
-        />
       </div>
+
+      {/* Related Products */}
+      <RelatedProducts product={product} categoryName={categoryName} />
     </div>
   )
 }

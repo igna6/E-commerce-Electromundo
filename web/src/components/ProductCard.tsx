@@ -30,7 +30,13 @@ function ProductCard({ product, categoryName }: ProductCardProps) {
     setWished(!wished)
   }
 
-  const priceWithTax = applyTax(product.price)
+  const hasPromotion = product.promotionPrice != null && product.promotionPrice < product.price
+  const effectivePrice = hasPromotion ? product.promotionPrice! : product.price
+  const priceWithTax = applyTax(effectivePrice)
+  const originalPriceWithTax = hasPromotion ? applyTax(product.price) : null
+  const discount = hasPromotion
+    ? Math.round(((product.price - product.promotionPrice!) / product.price) * 100)
+    : 0
   const installmentPrice = Math.round(priceWithTax / 12)
 
   return (
@@ -55,6 +61,11 @@ function ProductCard({ product, categoryName }: ProductCardProps) {
 
         {/* Badges top-left */}
         <div className="absolute top-2 left-2 flex flex-col gap-1">
+          {hasPromotion && (
+            <span className="bg-red-500 text-white text-[10px] font-black px-2 py-0.5 rounded">
+              -{discount}%
+            </span>
+          )}
           {product.stock <= 3 && product.stock > 0 && (
             <span className="bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded">
               ¡ÚLTIMAS UNIDADES!
@@ -101,9 +112,16 @@ function ProductCard({ product, categoryName }: ProductCardProps) {
 
         {/* Price */}
         <div className="mb-2">
-          <p className="text-xl font-black text-slate-900">
-            {formatPrice(priceWithTax)}
-          </p>
+          <div className="flex items-baseline gap-1.5 flex-wrap">
+            <p className="text-xl font-black text-slate-900">
+              {formatPrice(priceWithTax)}
+            </p>
+            {originalPriceWithTax && (
+              <span className="text-xs text-gray-400 line-through">
+                {formatPrice(originalPriceWithTax)}
+              </span>
+            )}
+          </div>
           <p className="text-xs text-emerald-600 font-semibold">
             12x {formatPrice(installmentPrice)} sin interés
           </p>

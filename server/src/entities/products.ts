@@ -5,6 +5,7 @@ export const productsTable = pgTable('products', {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   name: varchar().notNull(),
   price: integer().notNull(),
+  promotionPrice: integer(),
   description: text(),
   image: varchar(),
   category: integer().references(() => productCategoriesTable.id),

@@ -3,13 +3,11 @@ const formatter = new Intl.NumberFormat('es-AR', {
   currency: 'ARS',
 })
 
-const TAX_RATE = 0.21
-
 /**
- * Apply 21% IVA tax to a price in cents.
+ * @deprecated Tax is no longer applied on the frontend. This function is a passthrough for backwards compatibility.
  */
 export function applyTax(cents: number): number {
-  return Math.round(cents * (1 + TAX_RATE))
+  return cents
 }
 
 /**

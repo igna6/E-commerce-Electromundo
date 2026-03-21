@@ -5,6 +5,7 @@ export { idParamSchema } from './common.ts'
 export const createProductSchema = z.object({
   name: z.string().min(1, 'Product name is required').max(200),
   price: z.number().int().positive('Price must be positive'),
+  promotionPrice: z.number().int().positive().optional().nullable(),
   description: z.string().optional().nullable(),
   image: z.string().url().optional().nullable(),
   category: z.number().int().positive().optional().nullable(),

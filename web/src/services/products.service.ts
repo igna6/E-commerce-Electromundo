@@ -50,6 +50,7 @@ export async function getProduct(id: number): Promise<{ data: Product }> {
 export async function createProduct(data: {
   name: string
   price: number
+  promotionPrice?: number | null
   description?: string | null
   image?: string | null
   category?: number | null
@@ -66,6 +67,7 @@ export async function updateProduct(
   data: Partial<{
     name: string
     price: number
+    promotionPrice: number | null
     description: string | null
     image: string | null
     category: number | null

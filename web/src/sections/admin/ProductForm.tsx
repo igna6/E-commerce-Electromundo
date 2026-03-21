@@ -6,6 +6,7 @@ import { getCategories } from '@/services/categories.service'
 type ProductFormData = {
   name: string
   price: number
+  promotionPrice?: number | null
   description?: string | null
   image?: string | null
   category?: number | null
@@ -27,6 +28,9 @@ export default function ProductForm({
 }: ProductFormProps) {
   const [name, setName] = useState(initialData?.name || '')
   const [price, setPrice] = useState(initialData ? String(initialData.price / 100) : '')
+  const [promotionPrice, setPromotionPrice] = useState(
+    initialData?.promotionPrice ? String(initialData.promotionPrice / 100) : ''
+  )
   const [description, setDescription] = useState(initialData?.description || '')
   const [image, setImage] = useState(initialData?.image || '')
   const [category, setCategory] = useState<string>(
@@ -43,10 +47,14 @@ export default function ProductForm({
     e.preventDefault()
 
     const priceInCents = Math.round(parseFloat(price) * 100)
+    const promoPriceInCents = promotionPrice
+      ? Math.round(parseFloat(promotionPrice) * 100)
+      : null
 
     onSubmit({
       name,
       price: priceInCents,
+      promotionPrice: promoPriceInCents,
       description: description || null,
       image: image || null,
       category: category ? parseInt(category) : null,
@@ -91,6 +99,22 @@ export default function ProductForm({
           step="0.01"
           className="mt-1 block w-full rounded-md border px-3 py-2"
           placeholder="0.00"
+        />
+      </div>
+
+      <div>
+        <label htmlFor="promotionPrice" className="block text-sm font-medium text-gray-700">
+          Precio Promoción (ARS)
+        </label>
+        <input
+          type="number"
+          id="promotionPrice"
+          value={promotionPrice}
+          onChange={(e) => setPromotionPrice(e.target.value)}
+          min="0"
+          step="0.01"
+          className="mt-1 block w-full rounded-md border px-3 py-2"
+          placeholder="Dejar vacío si no hay promoción"
         />
       </div>
 

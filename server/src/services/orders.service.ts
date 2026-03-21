@@ -6,7 +6,6 @@ import { generateOrderText } from '../utils/orderTextGenerator.ts'
 import { BadRequestError, ConflictError, NotFoundError, UnauthorizedError } from '../utils/errors.ts'
 import type { CreateOrderInput } from '../validators/order.ts'
 
-const TAX_RATE = 0.21
 
 export async function createOrder(data: CreateOrderInput) {
   const productIds = data.items.map(item => item.productId)
@@ -59,8 +58,8 @@ export async function createOrder(data: CreateOrderInput) {
   })
 
   const shippingCost = 0
-  const tax = Math.round(subtotal * TAX_RATE)
-  const total = subtotal + tax
+  const tax = 0
+  const total = subtotal
   const accessToken = randomBytes(32).toString('hex')
 
   const result = await db.transaction(async (tx) => {

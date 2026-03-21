@@ -1,3 +1,5 @@
+import { ChevronRight } from 'lucide-react'
+import { Link } from '@tanstack/react-router'
 import type { Product } from '@/types/product'
 import ProductCard from '@/components/ProductCard'
 import { useProducts } from '@/hooks/useProducts'
@@ -21,9 +23,25 @@ export default function RelatedProducts({ product, categoryName }: RelatedProduc
   if (related.length === 0) return null
 
   return (
-    <div className="mt-8">
-      <h2 className="text-2xl font-bold text-brand-dark mb-6">Productos Relacionados</h2>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div className="max-w-7xl mx-auto px-4 py-6">
+      <div className="flex items-end justify-between mb-5">
+        <div>
+          <div className="flex items-center gap-2 mb-1">
+            <div className="w-1 h-6 rounded-full bg-electric-cyan" />
+            <h2 className="text-xl font-black text-gray-900">Productos Relacionados</h2>
+          </div>
+          <p className="text-gray-500 text-sm">También te puede interesar</p>
+        </div>
+        <Link
+          to="/products"
+          search={product.category ? { category: product.category } : {}}
+          className="flex items-center gap-1 text-sm font-semibold text-electric-cyan hover:underline"
+        >
+          Ver todos
+          <ChevronRight size={16} />
+        </Link>
+      </div>
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
         {related.map((relatedProduct) => (
           <ProductCard
             key={relatedProduct.id}

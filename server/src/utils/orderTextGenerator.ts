@@ -75,12 +75,11 @@ export function generateOrderText(order: OrderData): string {
     lines.push('')
   }
 
-  // Products (prices include IVA)
+  // Products
   lines.push(`*Productos*`)
   for (const item of order.items) {
-    const lineTotalWithTax = Math.round(item.lineTotal * 1.21)
     lines.push(
-      `• ${item.productName} (x${item.quantity}) — ${formatCurrency(lineTotalWithTax)}`,
+      `• ${item.productName} (x${item.quantity}) — ${formatCurrency(item.lineTotal)}`,
     )
   }
   lines.push('')
@@ -90,7 +89,7 @@ export function generateOrderText(order: OrderData): string {
   if (order.shippingCost > 0) {
     lines.push(`Envío: ${formatCurrency(order.shippingCost)}`)
   }
-  lines.push(`*Total: ${formatCurrency(order.total)}* (IVA incluido)`)
+  lines.push(`*Total: ${formatCurrency(order.total)}*`)
   lines.push('')
 
   // Footer
