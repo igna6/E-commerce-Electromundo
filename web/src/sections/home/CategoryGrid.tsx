@@ -1,41 +1,74 @@
 import { Link } from '@tanstack/react-router'
-import { useQuery } from '@tanstack/react-query'
 import {
+  Baby,
+  Bike,
+  Cable,
+  Droplets,
   Gamepad2,
+  Hammer,
   Headphones,
+  HeartPulse,
+  Home,
   Laptop,
   Package,
   Refrigerator,
+  Scissors,
+  ShieldCheck,
   Smartphone,
+  Sofa,
   Speaker,
+  Tent,
+  Thermometer,
   Tv,
-  WashingMachine,
+  Watch,
   Wind,
+  Waves,
 } from 'lucide-react'
 import type { Category } from '@/types/category'
-import { getCategories } from '@/services/categories.service'
+import { useCategories } from '@/hooks/useCategories'
 
-// Map common category names to icons
 const categoryIconMap: Record<string, typeof Smartphone> = {
   celulares: Smartphone,
   telefonos: Smartphone,
   smartphones: Smartphone,
+  'tv y video': Tv,
   televisores: Tv,
   tv: Tv,
-  smart: Tv,
-  computacion: Laptop,
-  notebooks: Laptop,
-  computadoras: Laptop,
-  heladeras: Refrigerator,
-  refrigeracion: Refrigerator,
-  lavarropas: WashingMachine,
-  lavado: WashingMachine,
-  climatizacion: Wind,
-  aire: Wind,
   audio: Speaker,
   parlantes: Speaker,
   auriculares: Headphones,
+  informatica: Laptop,
+  'informática': Laptop,
+  notebooks: Laptop,
+  computadoras: Laptop,
+  computacion: Laptop,
+  electrodomesticos: Refrigerator,
+  'electrodomésticos': Refrigerator,
+  'pequeños': Package,
+  climatizacion: Wind,
+  'climatización': Wind,
+  aire: Wind,
+  belleza: Scissors,
+  'cuidado personal': Scissors,
+  salud: HeartPulse,
+  bicicletas: Bike,
+  camping: Tent,
+  'hogar y muebles': Sofa,
+  hogar: Home,
+  herramientas: Hammer,
+  'jardín': Hammer,
+  termotanques: Thermometer,
+  accesorios: Cable,
+  cables: Cable,
+  smartwatches: Watch,
+  wearables: Watch,
   gaming: Gamepad2,
+  consolas: Gamepad2,
+  seguridad: ShieldCheck,
+  purificadores: Droplets,
+  piletas: Waves,
+  'bebés': Baby,
+  'niños': Baby,
 }
 
 function getCategoryIcon(name: string) {
@@ -46,32 +79,37 @@ function getCategoryIcon(name: string) {
   return Package
 }
 
-// Assign a color from a palette based on index
 const categoryColors = [
-  { bg: 'bg-cyan-50', text: 'text-cyan-600', hover: 'hover:bg-cyan-100' },
-  { bg: 'bg-amber-50', text: 'text-amber-600', hover: 'hover:bg-amber-100' },
-  { bg: 'bg-violet-50', text: 'text-violet-600', hover: 'hover:bg-violet-100' },
-  { bg: 'bg-emerald-50', text: 'text-emerald-600', hover: 'hover:bg-emerald-100' },
-  { bg: 'bg-rose-50', text: 'text-rose-600', hover: 'hover:bg-rose-100' },
-  { bg: 'bg-blue-50', text: 'text-blue-600', hover: 'hover:bg-blue-100' },
-  { bg: 'bg-orange-50', text: 'text-orange-600', hover: 'hover:bg-orange-100' },
-  { bg: 'bg-teal-50', text: 'text-teal-600', hover: 'hover:bg-teal-100' },
+  { color: '#00bcd4', bg: '#e0f7fa' },
+  { color: '#9c27b0', bg: '#f3e5f5' },
+  { color: '#f44336', bg: '#ffebee' },
+  { color: '#2196f3', bg: '#e3f2fd' },
+  { color: '#ff9800', bg: '#fff3e0' },
+  { color: '#4caf50', bg: '#e8f5e9' },
+  { color: '#e91e63', bg: '#fce4ec' },
+  { color: '#3f51b5', bg: '#e8eaf6' },
+  { color: '#009688', bg: '#e0f2f1' },
+  { color: '#795548', bg: '#efebe9' },
 ]
 
 function CategoryCard({ category, index }: { category: Category; index: number }) {
   const Icon = getCategoryIcon(category.name)
-  const color = categoryColors[index % categoryColors.length]
+  const palette = categoryColors[index % categoryColors.length]
 
   return (
     <Link
       to="/products"
       search={{ category: category.id }}
-      className={`group flex flex-col items-center gap-3 p-5 sm:p-6 rounded-2xl ${color.bg} ${color.hover} border border-transparent hover:border-slate-200 transition-all duration-200 hover:shadow-sm`}
+      className="flex flex-col items-center gap-2 p-4 rounded-xl hover:shadow-md transition-all hover:-translate-y-0.5 cursor-pointer flex-shrink-0 w-[110px]"
+      style={{ backgroundColor: palette.bg }}
     >
-      <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-white shadow-sm flex items-center justify-center group-hover:scale-105 transition-transform duration-200">
-        <Icon className={`w-6 h-6 sm:w-7 sm:h-7 ${color.text}`} />
+      <div
+        className="w-11 h-11 rounded-xl flex items-center justify-center"
+        style={{ backgroundColor: palette.color + '22' }}
+      >
+        <Icon size={22} style={{ color: palette.color }} />
       </div>
-      <span className="font-semibold text-sm sm:text-base text-slate-800 text-center leading-tight">
+      <span className="text-xs text-slate-700 font-medium text-center leading-tight">
         {category.name}
       </span>
     </Link>
@@ -80,11 +118,11 @@ function CategoryCard({ category, index }: { category: Category; index: number }
 
 function CategoryGridSkeleton() {
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
-      {[...Array(6)].map((_, i) => (
-        <div key={i} className="flex flex-col items-center gap-3 p-6 rounded-2xl bg-slate-50 animate-pulse">
-          <div className="w-14 h-14 rounded-xl bg-slate-200" />
-          <div className="h-4 w-20 rounded bg-slate-200" />
+    <div className="grid grid-cols-4 sm:grid-cols-5 lg:grid-cols-10 gap-2 sm:gap-3">
+      {[...Array(10)].map((_, i) => (
+        <div key={i} className="flex flex-col items-center gap-2 p-3 rounded-xl bg-slate-50 animate-pulse">
+          <div className="w-10 h-10 rounded-xl bg-slate-200" />
+          <div className="h-3 w-12 rounded bg-slate-200" />
         </div>
       ))}
     </div>
@@ -92,20 +130,18 @@ function CategoryGridSkeleton() {
 }
 
 function CategoryGrid() {
-  const { data, isLoading } = useQuery({
-    queryKey: ['categories'],
-    queryFn: getCategories,
-  })
+  const { data, isLoading } = useCategories()
 
-  const categories = data?.data ?? []
+  // Only show top-level categories (no parent) on the homepage grid
+  const categories = (data ?? []).filter((c) => c.parentCategoryId === null)
 
   if (isLoading) {
     return (
-      <section className="bg-slate-50 py-10 lg:py-14">
+      <section className="py-6">
         <div className="container mx-auto px-4 sm:px-6">
-          <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-8 text-center">
-            Explorá por Categoría
-          </h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-black text-slate-800">Categorías</h2>
+          </div>
           <CategoryGridSkeleton />
         </div>
       </section>
@@ -114,14 +150,25 @@ function CategoryGrid() {
 
   if (categories.length === 0) return null
 
+  // Show up to 10 on the grid, link to see all
+  const visibleCategories = categories.slice(0, 10)
+
   return (
-    <section className="bg-slate-50 py-10 lg:py-14">
+    <section className="py-6">
       <div className="container mx-auto px-4 sm:px-6">
-        <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-8 text-center">
-          Explorá por Categoría
-        </h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
-          {categories.map((category, index) => (
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-black text-slate-800">Categorías</h2>
+          {categories.length > 10 && (
+            <Link
+              to="/products"
+              className="text-primary text-sm font-semibold hover:underline"
+            >
+              Ver todas →
+            </Link>
+          )}
+        </div>
+        <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+          {visibleCategories.map((category, index) => (
             <CategoryCard key={category.id} category={category} index={index} />
           ))}
         </div>

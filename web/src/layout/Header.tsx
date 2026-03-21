@@ -1,10 +1,10 @@
 import { Link, useNavigate } from '@tanstack/react-router'
-import { ChevronDown, ChevronRight, Menu, Search, ShoppingCart, X, Zap } from 'lucide-react'
+import { ChevronDown, Heart, MapPin, Menu, Phone, Search, ShoppingCart, User, X, Zap } from 'lucide-react'
 import { useCallback, useRef, useState } from 'react'
-import type {CategoryWithChildren} from '@/hooks/useCategories';
+import type { CategoryWithChildren } from '@/hooks/useCategories'
 import CartSidebar from '@/components/CartSidebar'
 import { useCart } from '@/contexts/CartContext'
-import {  useCategoryTree } from '@/hooks/useCategories'
+import { useCategoryTree } from '@/hooks/useCategories'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 
 
@@ -34,7 +34,7 @@ function CategoryDropdown({ category }: { category: CategoryWithChildren }) {
       <Link
         to="/products"
         search={{ category: category.id }}
-        className="flex items-center gap-1 px-3 py-2 text-sm text-slate-700 hover:text-primary font-medium transition-colors whitespace-nowrap"
+        className="flex items-center gap-1 flex-shrink-0 text-white/90 hover:text-white hover:bg-white/15 px-4 py-2.5 text-sm transition-colors whitespace-nowrap"
       >
         {category.name}
       </Link>
@@ -45,9 +45,9 @@ function CategoryDropdown({ category }: { category: CategoryWithChildren }) {
     <Popover open={open} onOpenChange={setOpen}>
       <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
         <PopoverTrigger asChild>
-          <button className="flex items-center gap-1 px-3 py-2 text-sm text-slate-700 hover:text-primary font-medium transition-colors whitespace-nowrap">
+          <button className="flex items-center gap-1 flex-shrink-0 text-white/90 hover:text-white hover:bg-white/15 px-4 py-2.5 text-sm transition-colors whitespace-nowrap">
             {category.name}
-            <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
+            <ChevronDown className={`w-3.5 h-3.5 text-white/60 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
           </button>
         </PopoverTrigger>
       </div>
@@ -148,9 +148,8 @@ function VerTodasDropdown({ categories }: { categories: CategoryWithChildren[] }
     <Popover open={open} onOpenChange={setOpen}>
       <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
         <PopoverTrigger asChild>
-          <button className="flex items-center gap-1 px-3 py-2 text-sm text-slate-700 hover:text-primary font-medium transition-colors whitespace-nowrap">
-            Ver todas
-            <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
+          <button className="flex items-center gap-1 flex-shrink-0 text-amber-500 hover:text-amber-400 px-4 py-2.5 text-sm transition-colors font-semibold whitespace-nowrap">
+            Más categorías <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
           </button>
         </PopoverTrigger>
       </div>
@@ -195,126 +194,113 @@ function Header() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50">
-      {/* Top promotional bar */}
-      <div className="bg-slate-900 text-white">
-        <div className="container mx-auto px-4 sm:px-6">
-          <div className="flex items-center justify-center h-9 text-xs sm:text-sm">
-            <span className="flex items-center gap-1.5">
-              <Zap className="w-3.5 h-3.5 text-amber-400" />
-              <span className="font-medium">Envio gratis</span> en compras mayores a $50,000
-              <ChevronRight className="w-3.5 h-3.5 text-slate-400 hidden sm:block" />
-            </span>
-          </div>
-        </div>
+      {/* Top announcement bar */}
+      <div className="bg-[#0097a7] text-white text-xs py-1.5 px-4 flex items-center justify-between">
+        <span className="hidden sm:flex items-center gap-1">
+          <Phone size={11} />
+          Ventas: 0800-333-4567
+        </span>
+        <p className="text-center flex-1 font-medium tracking-wide flex items-center justify-center gap-1.5">
+          <Zap className="w-3.5 h-3.5 text-amber-300" />
+          <span>
+            Envío gratis en compras mayores a $50.000 · 12 cuotas sin interés con todas las tarjetas
+          </span>
+        </p>
+        <span className="hidden sm:flex items-center gap-1">
+          <MapPin size={11} />
+          Sucursales
+        </span>
       </div>
 
       {/* Main header */}
-      <div className="bg-primary shadow-md">
-        <div className="container mx-auto px-4 sm:px-6">
-          <div className="flex items-center gap-4 h-16">
-            {/* Mobile menu button */}
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 -ml-2 text-white/90 hover:text-white transition-colors"
-            >
-              {mobileMenuOpen ? (
-                <X className="w-6 h-6" />
-              ) : (
-                <Menu className="w-6 h-6" />
-              )}
-            </button>
-
-            {/* Logo */}
-            <Link
-              to="/"
-              className="flex items-center gap-2 flex-shrink-0"
-            >
-              <div className="w-9 h-9 rounded-lg bg-white/20 flex items-center justify-center">
-                <Zap className="w-5 h-5 text-white" />
-              </div>
-              <span className="font-display text-xl font-bold text-white tracking-tight hidden sm:block">
-                Electro<span className="text-amber-300">Mundo</span>
+      <div className="bg-primary px-4 py-3">
+        <div className="container mx-auto flex items-center gap-4">
+          {/* Logo */}
+          <Link to="/" className="flex-shrink-0">
+            <div>
+              <span className="text-2xl font-black tracking-tight leading-none text-white">
+                Electro
               </span>
-            </Link>
-
-            {/* Search bar - desktop */}
-            <form onSubmit={handleSearch} className="hidden md:flex flex-1 max-w-2xl mx-4">
-              <div className="relative w-full">
-                <input
-                  ref={searchInputRef}
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Buscar productos..."
-                  className="w-full h-11 pl-4 pr-12 rounded-lg bg-white text-slate-900 placeholder:text-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-white/30"
-                />
-                <button
-                  type="submit"
-                  className="absolute right-0 top-0 h-11 w-11 flex items-center justify-center bg-amber-500 hover:bg-amber-600 rounded-r-lg transition-colors"
-                >
-                  <Search className="w-5 h-5 text-white" />
-                </button>
-              </div>
-            </form>
-
-            {/* Right actions */}
-            <div className="flex items-center gap-2 ml-auto">
-              {/* Nav links - desktop */}
-              <nav className="hidden lg:flex items-center gap-1 mr-2">
-                <Link
-                  to="/"
-                  className="px-3 py-2 text-sm font-medium text-white/80 hover:text-white transition-colors rounded-lg hover:bg-white/10"
-                >
-                  Inicio
-                </Link>
-                <Link
-                  to="/products"
-                  className="px-3 py-2 text-sm font-medium text-white/80 hover:text-white transition-colors rounded-lg hover:bg-white/10"
-                >
-                  Productos
-                </Link>
-              </nav>
-
-              {/* Cart */}
-              <CartSidebar>
-                <button className="relative p-2.5 text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-all">
-                  <ShoppingCart className="w-5 h-5" />
-                  {totalItems > 0 && (
-                    <span className="absolute -top-0.5 -right-0.5 w-5 h-5 bg-amber-500 text-white text-[11px] font-bold rounded-full flex items-center justify-center">
-                      {totalItems}
-                    </span>
-                  )}
-                </button>
-              </CartSidebar>
+              <span className="text-2xl font-black tracking-tight leading-none text-amber-300">
+                Mundo
+              </span>
             </div>
-          </div>
+          </Link>
 
-          {/* Search bar - mobile */}
-          <form onSubmit={handleSearch} className="md:hidden pb-3">
-            <div className="relative">
+          {/* Search bar */}
+          <form onSubmit={handleSearch} className="flex-1 max-w-2xl mx-auto hidden md:block">
+            <div className="flex bg-white rounded-lg overflow-hidden shadow-md">
               <input
+                ref={searchInputRef}
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Buscar productos..."
-                className="w-full h-10 pl-4 pr-11 rounded-lg bg-white text-slate-900 placeholder:text-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-white/30"
+                placeholder="Buscar productos, marcas y más..."
+                className="flex-1 px-4 py-2.5 text-sm outline-none text-slate-700 placeholder-slate-400"
               />
               <button
                 type="submit"
-                className="absolute right-0 top-0 h-10 w-10 flex items-center justify-center bg-amber-500 hover:bg-amber-600 rounded-r-lg transition-colors"
+                className="bg-amber-500 hover:bg-amber-600 px-5 py-2.5 flex items-center justify-center transition-colors"
               >
-                <Search className="w-4 h-4 text-white" />
+                <Search size={18} className="text-white" />
               </button>
             </div>
           </form>
+
+          {/* Right icons */}
+          <div className="flex items-center gap-1 text-white ml-auto">
+            <button className="hidden sm:flex flex-col items-center px-3 py-1 hover:bg-white/10 rounded-lg transition-colors">
+              <User size={20} />
+              <span className="text-xs mt-0.5">Mi cuenta</span>
+            </button>
+            <button className="hidden sm:flex flex-col items-center px-3 py-1 hover:bg-white/10 rounded-lg transition-colors">
+              <Heart size={20} />
+              <span className="text-xs mt-0.5">Favoritos</span>
+            </button>
+            <CartSidebar>
+              <button className="flex flex-col items-center px-3 py-1 hover:bg-white/10 rounded-lg transition-colors relative">
+                <ShoppingCart size={20} />
+                {totalItems > 0 && (
+                  <span className="absolute -top-0.5 right-0.5 bg-amber-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+                    {totalItems}
+                  </span>
+                )}
+                <span className="text-xs mt-0.5">Carrito</span>
+              </button>
+            </CartSidebar>
+            <button
+              className="sm:hidden p-2"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Category navigation bar - desktop */}
+      {/* Mobile search */}
+      <div className="md:hidden bg-primary px-4 pb-3">
+        <form onSubmit={handleSearch}>
+          <div className="flex bg-white rounded-lg overflow-hidden">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Buscar productos..."
+              className="flex-1 px-4 py-2 text-sm outline-none bg-transparent"
+            />
+            <button type="submit" className="bg-amber-500 px-4">
+              <Search size={16} className="text-white" />
+            </button>
+          </div>
+        </form>
+      </div>
+
+      {/* Category nav - desktop */}
       {!categoriesLoading && categoryTree && categoryTree.length > 0 && (
-        <div className="hidden lg:block bg-white border-b border-slate-200">
+        <div className="hidden sm:block bg-[#007c8a]">
           <div className="container mx-auto px-4 sm:px-6">
-            <nav className="flex items-center gap-0.5 h-10">
+            <nav className="flex items-center overflow-x-auto scrollbar-hide">
               {categoryTree.slice(0, 8).map((category) => (
                 <CategoryDropdown key={category.id} category={category} />
               ))}
@@ -326,9 +312,9 @@ function Header() {
         </div>
       )}
 
-      {/* Mobile Navigation Drawer */}
+      {/* Mobile menu */}
       <div
-        className={`lg:hidden overflow-hidden transition-all duration-300 ease-out bg-white shadow-lg ${
+        className={`sm:hidden overflow-hidden transition-all duration-300 ease-out bg-white shadow-lg ${
           mobileMenuOpen ? 'max-h-[80vh] opacity-100' : 'max-h-0 opacity-0'
         }`}
       >

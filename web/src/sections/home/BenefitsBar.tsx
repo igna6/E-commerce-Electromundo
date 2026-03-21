@@ -1,51 +1,73 @@
-import { Headphones, Shield, Tag, Truck } from 'lucide-react'
+import { CreditCard, Headphones, RotateCcw, Shield, Tag, Truck } from 'lucide-react'
 
-const benefits = [
+const badges = [
   {
     icon: Truck,
     title: 'Envío Gratis',
-    description: 'En compras +$50,000',
+    subtitle: 'En compras +$50.000',
+    color: '#00bcd4',
   },
   {
-    icon: Shield,
-    title: 'Garantía Oficial',
-    description: 'En todos los productos',
+    icon: CreditCard,
+    title: '12 Cuotas Sin Interés',
+    subtitle: 'Con todas las tarjetas',
+    color: '#4caf50',
   },
   {
     icon: Tag,
     title: 'Mejores Precios',
-    description: 'Precios competitivos',
+    subtitle: 'Te igualamos el precio',
+    color: '#ff9800',
+  },
+  {
+    icon: RotateCcw,
+    title: 'Cambios Gratis',
+    subtitle: '30 días sin preguntas',
+    color: '#9c27b0',
+  },
+  {
+    icon: Shield,
+    title: 'Garantía Oficial',
+    subtitle: 'En todos los productos',
+    color: '#f44336',
   },
   {
     icon: Headphones,
-    title: 'Atención Personalizada',
-    description: 'Estamos para ayudarte',
+    title: 'Atención 24/7',
+    subtitle: 'Chat, mail y teléfono',
+    color: '#2196f3',
   },
 ]
 
 function BenefitsBar() {
   return (
-    <section className="bg-white border-b border-slate-100">
-      <div className="container mx-auto px-4 sm:px-6 py-6 lg:py-8">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-8">
-          {benefits.map((benefit) => (
-            <div
-              key={benefit.title}
-              className="flex items-center gap-3 sm:gap-4"
-            >
-              <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                <benefit.icon className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
+    <section className="bg-white border-b border-slate-100 shadow-sm">
+      <div className="container mx-auto px-4 sm:px-6 py-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+          {badges.map((badge) => {
+            const Icon = badge.icon
+            return (
+              <div
+                key={badge.title}
+                className="flex items-center gap-3 py-2 px-3 rounded-xl hover:bg-slate-50 transition-colors cursor-pointer group"
+              >
+                <div
+                  className="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center"
+                  style={{ backgroundColor: badge.color + '18' }}
+                >
+                  <Icon size={18} style={{ color: badge.color }} />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-xs font-semibold text-slate-800 leading-tight">
+                    {badge.title}
+                  </p>
+                  <p className="text-xs text-slate-500 leading-tight mt-0.5 hidden sm:block">
+                    {badge.subtitle}
+                  </p>
+                </div>
               </div>
-              <div className="min-w-0">
-                <p className="font-semibold text-slate-900 text-sm sm:text-base leading-tight">
-                  {benefit.title}
-                </p>
-                <p className="text-xs sm:text-sm text-slate-500 leading-tight mt-0.5 hidden sm:block">
-                  {benefit.description}
-                </p>
-              </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
       </div>
     </section>

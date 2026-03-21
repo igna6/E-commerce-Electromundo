@@ -1,53 +1,65 @@
 import { Link } from '@tanstack/react-router'
-import { ArrowRight, ShieldCheck, Truck } from 'lucide-react'
+import { Shield, Truck } from 'lucide-react'
 
 function PromoSection() {
   return (
-    <section className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 py-12 lg:py-16">
+    <section className="py-4">
       <div className="container mx-auto px-4 sm:px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-          {/* Left block — Garantía */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5 bg-white/5 rounded-2xl p-6 sm:p-8">
-            <div className="flex-shrink-0 w-14 h-14 rounded-2xl bg-primary/20 flex items-center justify-center">
-              <ShieldCheck className="w-7 h-7 text-primary" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {/* Banner 1 — Garantía */}
+          <div className="bg-gradient-to-r from-[#004d40] to-[#00897b] rounded-2xl p-6 flex items-center gap-5 overflow-hidden relative">
+            <div
+              className="absolute right-0 top-0 bottom-0 w-40 opacity-10"
+              style={{
+                background: 'radial-gradient(circle at 80% 50%, white 0%, transparent 70%)',
+              }}
+            />
+            <div className="bg-white/20 p-3 rounded-xl flex-shrink-0">
+              <Shield size={28} className="text-white" />
             </div>
-            <div className="flex-1">
-              <h2 className="text-lg sm:text-xl font-bold text-white mb-1">
-                Garantía en todos nuestros productos
-              </h2>
-              <p className="text-slate-400 text-sm mb-4">
-                Comprá con confianza. Todos nuestros productos cuentan con
-                garantía oficial del fabricante.
+            <div>
+              <h3 className="text-white font-black text-lg leading-tight">
+                Garantía en todos
+                <br />
+                nuestros productos
+              </h3>
+              <p className="text-white/70 text-sm mt-1">
+                Soporte técnico y servicio postventa
               </p>
               <Link
                 to="/products"
-                className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary/80 transition-colors"
+                className="inline-block mt-3 text-xs font-bold text-cyan-300 hover:underline"
               >
-                Ver productos
-                <ArrowRight className="w-4 h-4" />
+                Más información →
               </Link>
             </div>
           </div>
 
-          {/* Right block — Envío gratis */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5 bg-white/5 rounded-2xl p-6 sm:p-8">
-            <div className="flex-shrink-0 w-14 h-14 rounded-2xl bg-emerald-500/20 flex items-center justify-center">
-              <Truck className="w-7 h-7 text-emerald-400" />
+          {/* Banner 2 — Envío gratis */}
+          <div className="bg-gradient-to-r from-[#1a237e] to-[#283593] rounded-2xl p-6 flex items-center gap-5 overflow-hidden relative">
+            <div
+              className="absolute right-0 top-0 bottom-0 w-40 opacity-10"
+              style={{
+                background: 'radial-gradient(circle at 80% 50%, white 0%, transparent 70%)',
+              }}
+            />
+            <div className="bg-white/20 p-3 rounded-xl flex-shrink-0">
+              <Truck size={28} className="text-white" />
             </div>
-            <div className="flex-1">
-              <h2 className="text-lg sm:text-xl font-bold text-white mb-1">
-                Envío gratis en compras +$50,000
-              </h2>
-              <p className="text-slate-400 text-sm mb-4">
-                Hacé tu pedido y recibilo en la puerta de tu casa sin costo de
-                envío en compras mayores a $50,000.
+            <div>
+              <h3 className="text-white font-black text-lg leading-tight">
+                Envío gratis en compras
+                <br />
+                mayores a $50.000
+              </h3>
+              <p className="text-white/70 text-sm mt-1">
+                A todo el país · Llega en 24-48hs
               </p>
               <Link
                 to="/products"
-                className="inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-400 hover:text-emerald-300 transition-colors"
+                className="inline-block mt-3 text-xs font-bold text-amber-300 hover:underline"
               >
-                Empezar a comprar
-                <ArrowRight className="w-4 h-4" />
+                Empezar a comprar →
               </Link>
             </div>
           </div>

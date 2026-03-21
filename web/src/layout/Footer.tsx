@@ -1,36 +1,66 @@
 import { Link } from '@tanstack/react-router'
-import { Mail, MapPin, Phone, Zap } from 'lucide-react'
+import { Facebook, Instagram, Mail, MapPin, Phone, Shield, Twitter, Youtube } from 'lucide-react'
 
 function Footer() {
-  const linkClass = 'text-sm text-slate-400 hover:text-primary transition-colors'
-  const bottomLinkClass = 'text-xs text-slate-500 hover:text-slate-300 transition-colors'
+  const linkClass = 'text-sm text-white/50 hover:text-white transition-colors'
 
   return (
-    <footer className="bg-slate-900 text-slate-300">
-      {/* Main footer */}
-      <div className="container mx-auto px-4 sm:px-6 py-12 lg:py-16">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8">
-          {/* Brand */}
-          <div className="sm:col-span-2 lg:col-span-1">
-            <Link to="/" className="flex items-center gap-2 mb-4">
-              <div className="w-9 h-9 rounded-lg bg-primary/20 flex items-center justify-center">
-                <Zap className="w-5 h-5 text-primary" />
-              </div>
-              <span className="font-display text-xl font-bold text-white tracking-tight">
-                Electro<span className="text-primary">Mundo</span>
-              </span>
-            </Link>
-            <p className="text-sm text-slate-400 leading-relaxed max-w-xs">
-              Tu tienda de tecnología y electrodomésticos con los mejores precios y garantía oficial en cada producto.
+    <footer className="bg-[#1a1a2e] text-white mt-6">
+      {/* Newsletter */}
+      <div className="bg-primary py-5">
+        <div className="container mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div>
+            <p className="font-black text-white text-lg">
+              Suscribite a nuestras ofertas
+            </p>
+            <p className="text-white/80 text-sm">
+              Recibí descuentos exclusivos y novedades
             </p>
           </div>
+          <div className="flex gap-2 w-full sm:w-auto">
+            <input
+              type="email"
+              placeholder="Tu email aquí..."
+              className="flex-1 sm:w-64 px-4 py-2.5 rounded-lg bg-white text-slate-800 text-sm outline-none"
+            />
+            <button className="bg-amber-500 hover:bg-amber-600 text-white font-bold px-5 py-2.5 rounded-lg text-sm transition-colors whitespace-nowrap">
+              Suscribirme
+            </button>
+          </div>
+        </div>
+      </div>
 
-          {/* Quick Links */}
+      {/* Main footer */}
+      <div className="container mx-auto px-4 sm:px-6 py-10">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-8">
+          {/* Brand */}
+          <div className="col-span-2 sm:col-span-1">
+            <div className="mb-3">
+              <span className="text-2xl font-black">Electro</span>
+              <span className="text-2xl font-black text-amber-500">Mundo</span>
+            </div>
+            <p className="text-white/50 text-sm leading-relaxed mb-4">
+              Tu tienda de electrónica y tecnología de confianza.
+            </p>
+            <div className="flex gap-3">
+              {[Facebook, Instagram, Twitter, Youtube].map((Icon, i) => (
+                <a
+                  key={i}
+                  href="#"
+                  className="w-8 h-8 rounded-lg bg-white/10 hover:bg-primary flex items-center justify-center transition-colors"
+                >
+                  <Icon size={15} />
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* Empresa */}
           <div>
-            <h3 className="font-display font-semibold text-white mb-4">
-              Enlaces
-            </h3>
-            <ul className="space-y-2.5">
+            <h4 className="font-black text-white mb-4 text-sm uppercase tracking-wide">
+              Empresa
+            </h4>
+            <ul className="space-y-2">
               <li>
                 <Link to="/" className={linkClass}>
                   Inicio
@@ -54,15 +84,15 @@ function Footer() {
             </ul>
           </div>
 
-          {/* Help */}
+          {/* Ayuda */}
           <div>
-            <h3 className="font-display font-semibold text-white mb-4">
+            <h4 className="font-black text-white mb-4 text-sm uppercase tracking-wide">
               Ayuda
-            </h3>
-            <ul className="space-y-2.5">
+            </h4>
+            <ul className="space-y-2">
               <li>
                 <Link to="/faqs" className={linkClass}>
-                  Preguntas Frecuentes
+                  Preguntas frecuentes
                 </Link>
               </li>
               <li>
@@ -83,28 +113,28 @@ function Footer() {
             </ul>
           </div>
 
-          {/* Contact */}
+          {/* Contacto */}
           <div>
-            <h3 className="font-display font-semibold text-white mb-4">
+            <h4 className="font-black text-white mb-4 text-sm uppercase tracking-wide">
               Contacto
-            </h3>
+            </h4>
             <ul className="space-y-3">
-              <li className="flex items-start gap-2.5">
-                <Mail className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                <span className="text-sm text-slate-400">
-                  contacto@electromundo.com
+              <li className="flex items-start gap-2">
+                <MapPin size={14} className="text-primary flex-shrink-0 mt-0.5" />
+                <span className="text-white/50 text-sm">
+                  Argentina
                 </span>
               </li>
-              <li className="flex items-start gap-2.5">
-                <Phone className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                <span className="text-sm text-slate-400">
+              <li className="flex items-center gap-2">
+                <Phone size={14} className="text-primary flex-shrink-0" />
+                <span className="text-white/50 text-sm">
                   +54 9 3407 66-9329
                 </span>
               </li>
-              <li className="flex items-start gap-2.5">
-                <MapPin className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                <span className="text-sm text-slate-400">
-                  Argentina
+              <li className="flex items-center gap-2">
+                <Mail size={14} className="text-primary flex-shrink-0" />
+                <span className="text-white/50 text-sm">
+                  contacto@electromundo.com
                 </span>
               </li>
             </ul>
@@ -113,20 +143,22 @@ function Footer() {
       </div>
 
       {/* Bottom bar */}
-      <div className="border-t border-slate-800">
-        <div className="container mx-auto px-4 sm:px-6 py-5">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-            <p className="text-xs text-slate-500">
-              &copy; {new Date().getFullYear()} ElectroMundo. Todos los derechos reservados.
-            </p>
-            <div className="flex items-center gap-4">
-              <Link to="/terms" className={bottomLinkClass}>
-                Términos
-              </Link>
-              <Link to="/privacy" className={bottomLinkClass}>
-                Privacidad
-              </Link>
-            </div>
+      <div className="border-t border-white/10 py-4">
+        <div className="container mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-2">
+          <p className="text-white/30 text-xs">
+            &copy; {new Date().getFullYear()} ElectroMundo. Todos los derechos reservados.
+          </p>
+          <div className="flex items-center gap-3 text-white/30 text-xs">
+            <Shield size={12} className="text-emerald-500" />
+            <span>Sitio seguro</span>
+            <span>·</span>
+            <Link to="/privacy" className="hover:text-white transition-colors">
+              Privacidad
+            </Link>
+            <span>·</span>
+            <Link to="/terms" className="hover:text-white transition-colors">
+              Términos
+            </Link>
           </div>
         </div>
       </div>

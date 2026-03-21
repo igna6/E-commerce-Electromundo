@@ -54,8 +54,8 @@ function RootContent({ children }: { children: React.ReactNode }) {
   return (
     <>
       {!isAdminRoute && <Header />}
-      {/* Spacer for fixed header: top bar (36px) + main bar (64px) + mobile search (52px on <md) */}
-      {!isAdminRoute && <div className="h-[152px] md:h-[100px]" />}
+      {/* Spacer for fixed header: announcement (28px) + main bar (56px) + mobile search (40px on <md) + cat nav (40px on sm+) */}
+      {!isAdminRoute && <div className="h-[164px] sm:h-[164px] md:h-[124px]" />}
       {children}
       {!isAdminRoute && <Footer />}
       {!isAdminRoute && <FloatingWhatsApp />}
