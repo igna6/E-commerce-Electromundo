@@ -34,6 +34,7 @@
     --sidebar-accent-foreground: 220 20% 10%;
     --sidebar-border: 220 15% 88%;
     --sidebar-ring: 185 100% 40%;
+    --radius: 0.5rem;
   }
 }
 

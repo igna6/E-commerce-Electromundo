@@ -1,12 +1,26 @@
 import { Link, useNavigate } from '@tanstack/react-router'
-import { ChevronDown, Heart, MapPin, Menu, Phone, Search, ShoppingCart, User, X, Zap } from 'lucide-react'
+import {
+  ChevronDown,
+  Heart,
+  MapPin,
+  Menu,
+  Phone,
+  Search,
+  ShoppingCart,
+  X,
+  Zap,
+} from 'lucide-react'
 import { useCallback, useRef, useState } from 'react'
 import type { CategoryWithChildren } from '@/hooks/useCategories'
 import CartSidebar from '@/components/CartSidebar'
 import { useCart } from '@/contexts/CartContext'
 import { useCategoryTree } from '@/hooks/useCategories'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
+import { Input } from '@/components/ui/input'
 
 function useHoverPopover(closeDelay = 150) {
   const [open, setOpen] = useState(false)
@@ -27,7 +41,8 @@ function useHoverPopover(closeDelay = 150) {
 }
 
 function CategoryDropdown({ category }: { category: CategoryWithChildren }) {
-  const { open, setOpen, handleMouseEnter, handleMouseLeave, close } = useHoverPopover()
+  const { open, setOpen, handleMouseEnter, handleMouseLeave, close } =
+    useHoverPopover()
 
   if (category.children.length === 0) {
     return (
@@ -47,7 +62,9 @@ function CategoryDropdown({ category }: { category: CategoryWithChildren }) {
         <PopoverTrigger asChild>
           <button className="flex items-center gap-1 flex-shrink-0 text-white/90 hover:text-white hover:bg-white/15 px-4 py-2.5 text-sm transition-colors whitespace-nowrap">
             {category.name}
-            <ChevronDown className={`w-3.5 h-3.5 text-white/60 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
+            <ChevronDown
+              className={`w-3.5 h-3.5 text-white/60 transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
+            />
           </button>
         </PopoverTrigger>
       </div>
@@ -141,15 +158,23 @@ function MobileCategorySection({
   )
 }
 
-function VerTodasDropdown({ categories }: { categories: CategoryWithChildren[] }) {
-  const { open, setOpen, handleMouseEnter, handleMouseLeave, close } = useHoverPopover()
+function VerTodasDropdown({
+  categories,
+}: {
+  categories: CategoryWithChildren[]
+}) {
+  const { open, setOpen, handleMouseEnter, handleMouseLeave, close } =
+    useHoverPopover()
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
         <PopoverTrigger asChild>
           <button className="flex items-center gap-1 flex-shrink-0 text-amber-500 hover:text-amber-400 px-4 py-2.5 text-sm transition-colors font-semibold whitespace-nowrap">
-            Más categorías <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
+            Más categorías{' '}
+            <ChevronDown
+              className={`w-3.5 h-3.5 transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
+            />
           </button>
         </PopoverTrigger>
       </div>
@@ -203,7 +228,8 @@ function Header() {
         <p className="text-center flex-1 font-medium tracking-wide flex items-center justify-center gap-1.5">
           <Zap className="w-3.5 h-3.5 text-amber-300" />
           <span>
-            Envío gratis en compras mayores a $50.000 · 12 cuotas sin interés con todas las tarjetas
+            Envío gratis en compras mayores a $50.000 · 12 cuotas sin interés
+            con todas las tarjetas
           </span>
         </p>
         <span className="hidden sm:flex items-center gap-1">
@@ -228,7 +254,10 @@ function Header() {
           </Link>
 
           {/* Search bar */}
-          <form onSubmit={handleSearch} className="flex-1 max-w-2xl mx-auto hidden md:block">
+          <form
+            onSubmit={handleSearch}
+            className="flex-1 max-w-2xl mx-auto hidden md:block"
+          >
             <div className="flex bg-white rounded-lg overflow-hidden shadow-md">
               <input
                 ref={searchInputRef}
@@ -249,10 +278,6 @@ function Header() {
 
           {/* Right icons */}
           <div className="flex items-center gap-1 text-white ml-auto">
-            <button className="hidden sm:flex flex-col items-center px-3 py-1 hover:bg-white/10 rounded-lg transition-colors">
-              <User size={20} />
-              <span className="text-xs mt-0.5">Mi cuenta</span>
-            </button>
             <button className="hidden sm:flex flex-col items-center px-3 py-1 hover:bg-white/10 rounded-lg transition-colors">
               <Heart size={20} />
               <span className="text-xs mt-0.5">Favoritos</span>
@@ -282,12 +307,12 @@ function Header() {
       <div className="md:hidden bg-primary px-4 pb-3">
         <form onSubmit={handleSearch}>
           <div className="flex bg-white rounded-lg overflow-hidden">
-            <input
+            <Input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Buscar productos..."
-              className="flex-1 px-4 py-2 text-sm outline-none bg-transparent"
+              className="flex-1 text-sm outline-none bg-transparent"
             />
             <button type="submit" className="bg-amber-500 px-4">
               <Search size={16} className="text-white" />
