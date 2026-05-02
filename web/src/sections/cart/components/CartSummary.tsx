@@ -2,13 +2,12 @@ import { useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { formatPrice } from '@/utils/formatPrice'
 
 type CartSummaryProps = {
   subtotal: number
-  shipping: number
+  shipping: number | null
   discount: number
   total: number
 }
@@ -46,13 +45,8 @@ export default function CartSummary({ subtotal, shipping, discount, total }: Car
             <span>{formatPrice(subtotal)}</span>
           </div>
           <div className="flex justify-between text-gray-600">
-            <span className="flex items-center gap-1">
-              Envío
-              {shipping === 0 && (
-                <Badge className="bg-green-100 text-green-700 text-xs">Gratis</Badge>
-              )}
-            </span>
-            <span>{shipping === 0 ? 'Gratis' : formatPrice(shipping)}</span>
+            <span>Envío</span>
+            <span>{shipping == null ? 'A coordinar' : formatPrice(shipping)}</span>
           </div>
           {discount > 0 && (
             <div className="flex justify-between text-green-600">

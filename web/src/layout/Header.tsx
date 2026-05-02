@@ -21,6 +21,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { Input } from '@/components/ui/input'
+import { STORE_PHONE_DISPLAY } from '@/constants/config'
 
 function useHoverPopover(closeDelay = 150) {
   const [open, setOpen] = useState(false)
@@ -223,14 +224,11 @@ function Header() {
       <div className="bg-[#0097a7] text-white text-xs py-1.5 px-4 flex items-center justify-between">
         <span className="hidden sm:flex items-center gap-1">
           <Phone size={11} />
-          Ventas: 0800-333-4567
+          Ventas: {STORE_PHONE_DISPLAY}
         </span>
         <p className="text-center flex-1 font-medium tracking-wide flex items-center justify-center gap-1.5">
           <Zap className="w-3.5 h-3.5 text-amber-300" />
-          <span>
-            Envío gratis en compras mayores a $50.000 · 12 cuotas sin interés
-            con todas las tarjetas
-          </span>
+          <span>12 cuotas sin interés con todas las tarjetas</span>
         </p>
         <span className="hidden sm:flex items-center gap-1">
           <MapPin size={11} />

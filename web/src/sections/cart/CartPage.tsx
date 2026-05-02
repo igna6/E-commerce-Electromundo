@@ -13,9 +13,8 @@ function CartPage() {
 
   // All values in cents, prices include IVA
   const subtotalWithTax = applyTax(subtotal)
-  const shipping = subtotalWithTax > 5000000 ? 0 : 500000
   const discount = 0
-  const total = subtotalWithTax + shipping - discount
+  const total = subtotalWithTax - discount
 
   if (items.length === 0) {
     return <EmptyCart />
@@ -89,7 +88,7 @@ function CartPage() {
           {/* Order Summary */}
           <CartSummary
             subtotal={subtotalWithTax}
-            shipping={shipping}
+            shipping={null}
             discount={discount}
             total={total}
           />

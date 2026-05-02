@@ -7,7 +7,6 @@ import {
   Plus,
   ShoppingCart,
   Trash2,
-  Truck,
   Zap,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -34,12 +33,6 @@ function CartSidebar({ children }: CartSidebarProps) {
 
   const itemCount = totalItems
   const subtotalWithTax = applyTax(subtotal)
-  const freeShippingThreshold = 5000000 // 50,000 ARS in cents
-  const remainingForFreeShipping = Math.max(0, freeShippingThreshold - subtotalWithTax)
-  const freeShippingProgress = Math.min(
-    100,
-    (subtotalWithTax / freeShippingThreshold) * 100,
-  )
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -150,42 +143,6 @@ function CartSidebar({ children }: CartSidebarProps) {
                   </div>
                 </div>
               ))}
-            </div>
-
-            {/* Free Shipping Progress */}
-            <div className="px-6">
-              <div className="bg-slate-50 rounded-xl p-4 border border-slate-100">
-                <div className="flex items-center gap-3 mb-3">
-                  <div
-                    className={`p-2 rounded-lg ${remainingForFreeShipping === 0 ? 'bg-emerald-100 border border-emerald-200' : 'bg-primary/10 border border-primary/20'}`}
-                  >
-                    <Truck
-                      className={`w-4 h-4 ${remainingForFreeShipping === 0 ? 'text-emerald-600' : 'text-primary'}`}
-                    />
-                  </div>
-                  <p className="text-sm text-slate-600">
-                    {remainingForFreeShipping === 0 ? (
-                      <span className="text-emerald-600 font-medium">
-                        ¡Envío gratis desbloqueado!
-                      </span>
-                    ) : (
-                      <>
-                        Agrega{' '}
-                        <span className="text-primary font-semibold">
-                          {formatPrice(remainingForFreeShipping)}
-                        </span>{' '}
-                        más para envío gratis
-                      </>
-                    )}
-                  </p>
-                </div>
-                <div className="h-2 rounded-full bg-slate-200 overflow-hidden">
-                  <div
-                    className={`h-full rounded-full transition-all duration-500 ${remainingForFreeShipping === 0 ? 'bg-emerald-500' : 'bg-primary'}`}
-                    style={{ width: `${freeShippingProgress}%` }}
-                  />
-                </div>
-              </div>
             </div>
 
             {/* Footer */}

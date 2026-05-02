@@ -10,7 +10,6 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TermsRouteImport } from './routes/terms'
-import { Route as ShippingRouteImport } from './routes/shipping'
 import { Route as ReturnsRouteImport } from './routes/returns'
 import { Route as ProductsRouteImport } from './routes/products'
 import { Route as PrivacyRouteImport } from './routes/privacy'
@@ -41,11 +40,6 @@ import { Route as AdminProductsProductIdEditRouteImport } from './routes/admin/p
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
   path: '/terms',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ShippingRoute = ShippingRouteImport.update({
-  id: '/shipping',
-  path: '/shipping',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ReturnsRoute = ReturnsRouteImport.update({
@@ -190,7 +184,6 @@ export interface FileRoutesByFullPath {
   '/privacy': typeof PrivacyRoute
   '/products': typeof ProductsRouteWithChildren
   '/returns': typeof ReturnsRoute
-  '/shipping': typeof ShippingRoute
   '/terms': typeof TermsRoute
   '/admin/banners': typeof AdminBannersRoute
   '/admin/categories': typeof AdminCategoriesRoute
@@ -217,7 +210,6 @@ export interface FileRoutesByTo {
   '/order-confirmation': typeof OrderConfirmationRoute
   '/privacy': typeof PrivacyRoute
   '/returns': typeof ReturnsRoute
-  '/shipping': typeof ShippingRoute
   '/terms': typeof TermsRoute
   '/admin/banners': typeof AdminBannersRoute
   '/admin/categories': typeof AdminCategoriesRoute
@@ -247,7 +239,6 @@ export interface FileRoutesById {
   '/privacy': typeof PrivacyRoute
   '/products': typeof ProductsRouteWithChildren
   '/returns': typeof ReturnsRoute
-  '/shipping': typeof ShippingRoute
   '/terms': typeof TermsRoute
   '/admin/banners': typeof AdminBannersRoute
   '/admin/categories': typeof AdminCategoriesRoute
@@ -279,7 +270,6 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/products'
     | '/returns'
-    | '/shipping'
     | '/terms'
     | '/admin/banners'
     | '/admin/categories'
@@ -306,7 +296,6 @@ export interface FileRouteTypes {
     | '/order-confirmation'
     | '/privacy'
     | '/returns'
-    | '/shipping'
     | '/terms'
     | '/admin/banners'
     | '/admin/categories'
@@ -335,7 +324,6 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/products'
     | '/returns'
-    | '/shipping'
     | '/terms'
     | '/admin/banners'
     | '/admin/categories'
@@ -366,7 +354,6 @@ export interface RootRouteChildren {
   PrivacyRoute: typeof PrivacyRoute
   ProductsRoute: typeof ProductsRouteWithChildren
   ReturnsRoute: typeof ReturnsRoute
-  ShippingRoute: typeof ShippingRoute
   TermsRoute: typeof TermsRoute
 }
 
@@ -377,13 +364,6 @@ declare module '@tanstack/react-router' {
       path: '/terms'
       fullPath: '/terms'
       preLoaderRoute: typeof TermsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/shipping': {
-      id: '/shipping'
-      path: '/shipping'
-      fullPath: '/shipping'
-      preLoaderRoute: typeof ShippingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/returns': {
@@ -663,7 +643,6 @@ const rootRouteChildren: RootRouteChildren = {
   PrivacyRoute: PrivacyRoute,
   ProductsRoute: ProductsRouteWithChildren,
   ReturnsRoute: ReturnsRoute,
-  ShippingRoute: ShippingRoute,
   TermsRoute: TermsRoute,
 }
 export const routeTree = rootRouteImport

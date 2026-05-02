@@ -7,7 +7,6 @@ import {
   Shield,
   SlidersHorizontal,
   Tag,
-  Truck,
   X,
 } from 'lucide-react'
 import { useNavigate } from '@tanstack/react-router'
@@ -240,10 +239,6 @@ function ProductsPage() {
             </div>
 
             <div className="flex flex-wrap gap-4 lg:gap-6">
-              <div className="flex items-center gap-2 text-slate-600">
-                <Truck className="w-4 h-4 text-primary" />
-                <span className="text-sm">Envío gratis +$50,000</span>
-              </div>
               <div className="flex items-center gap-2 text-slate-600">
                 <Shield className="w-4 h-4 text-primary" />
                 <span className="text-sm">Garantía incluida</span>

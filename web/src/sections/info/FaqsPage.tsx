@@ -25,7 +25,7 @@ const faqs = [
   {
     question: '¿El envío tiene costo?',
     answer:
-      'Los envíos son gratuitos para compras superiores a $50.000. Para pedidos de menor monto, el costo del envío se calcula en función de tu ubicación y se informa al momento de coordinar la compra por WhatsApp. También ofrecemos la opción de retiro en nuestro punto de entrega sin costo adicional.',
+      'El costo del envío se calcula en función de tu ubicación y se informa al momento de coordinar la compra por WhatsApp. También ofrecemos la opción de retiro en nuestro punto de entrega sin costo adicional.',
   },
   {
     question: '¿Puedo hacer un seguimiento de mi pedido?',

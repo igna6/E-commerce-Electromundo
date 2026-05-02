@@ -96,11 +96,6 @@ function Footer() {
                 </Link>
               </li>
               <li>
-                <Link to="/shipping" className={linkClass}>
-                  Política de Envíos
-                </Link>
-              </li>
-              <li>
                 <Link to="/returns" className={linkClass}>
                   Cambios y Devoluciones
                 </Link>

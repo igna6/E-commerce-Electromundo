@@ -89,14 +89,6 @@ function ProductCard({ product, categoryName }: ProductCardProps) {
           />
         </button>
 
-        {/* Free shipping badge */}
-        {priceWithTax >= 5000000 && (
-          <div className="absolute bottom-2 left-2">
-            <span className="bg-primary text-white text-[10px] font-semibold px-2 py-0.5 rounded-full">
-              Envío gratis
-            </span>
-          </div>
-        )}
       </div>
 
       {/* Info */}

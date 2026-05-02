@@ -94,7 +94,7 @@ function DefaultHero() {
             Tecnología y electrodomésticos al mejor precio
           </h1>
           <p className="text-lg sm:text-xl text-white/80 mb-8 max-w-xl leading-relaxed">
-            Equipá tu hogar con calidad garantizada. Envío gratis, las mejores marcas y atención personalizada.
+            Equipá tu hogar con calidad garantizada. Las mejores marcas y atención personalizada.
           </p>
           <Link
             to="/products"
