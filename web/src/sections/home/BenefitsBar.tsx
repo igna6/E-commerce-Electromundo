@@ -1,12 +1,6 @@
-import { CreditCard, Headphones, RotateCcw, Shield, Tag } from 'lucide-react'
+import { Headphones, RotateCcw, Shield, Tag } from 'lucide-react'
 
 const badges = [
-  {
-    icon: CreditCard,
-    title: '12 Cuotas Sin Interés',
-    subtitle: 'Con todas las tarjetas',
-    color: '#4caf50',
-  },
   {
     icon: Tag,
     title: 'Mejores Precios',
@@ -37,7 +31,7 @@ function BenefitsBar() {
   return (
     <section className="bg-white border-b border-slate-100 shadow-sm">
       <div className="container mx-auto px-4 sm:px-6 py-4">
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
           {badges.map((badge) => {
             const Icon = badge.icon
             return (

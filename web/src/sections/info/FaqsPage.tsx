@@ -65,15 +65,21 @@ function FaqsPage() {
       <div className="border-b border-gray-200">
         <div className="max-w-4xl mx-auto px-4 py-4">
           <PageBreadcrumb
-            items={[{ label: 'Inicio', href: '/' }, { label: 'Preguntas Frecuentes' }]}
+            items={[
+              { label: 'Inicio', href: '/' },
+              { label: 'Preguntas Frecuentes' },
+            ]}
           />
         </div>
       </div>
 
       <div className="max-w-4xl mx-auto px-4 py-10">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Preguntas Frecuentes</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          Preguntas Frecuentes
+        </h1>
         <p className="text-gray-600 mb-8">
-          Encontrá respuestas a las consultas más comunes sobre compras, envíos, pagos y más.
+          Encontrá respuestas a las consultas más comunes sobre compras, envíos,
+          pagos y más.
         </p>
 
         <Accordion type="single" collapsible className="w-full">
@@ -94,7 +100,8 @@ function FaqsPage() {
             ¿No encontraste lo que buscabas?
           </h2>
           <p className="text-gray-600">
-            Escribinos por WhatsApp y nuestro equipo te va a ayudar con tu consulta.
+            Escribinos por WhatsApp y nuestro equipo te va a ayudar con tu
+            consulta.
           </p>
         </div>
       </div>

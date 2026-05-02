@@ -9,7 +9,8 @@ function PromoSection() {
           <div
             className="absolute right-0 top-0 bottom-0 w-40 opacity-10"
             style={{
-              background: 'radial-gradient(circle at 80% 50%, white 0%, transparent 70%)',
+              background:
+                'radial-gradient(circle at 80% 50%, white 0%, transparent 70%)',
             }}
           />
           <div className="bg-white/20 p-3 rounded-xl flex-shrink-0">

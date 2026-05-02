@@ -1,6 +1,6 @@
-import { and, asc, count, desc, eq, gt, gte, ilike, isNull, lte, or } from 'drizzle-orm'
+import { and, asc, count, desc, eq, gt, gte, ilike, inArray, isNull, lte, or } from 'drizzle-orm'
 import db from '../db/db.ts'
-import { productsTable } from '../db/schema.ts'
+import { featuredProductsTable, productsTable } from '../db/schema.ts'
 import { NotFoundError } from '../utils/errors.ts'
 import { paginate } from '../utils/pagination.ts'
 import type { CreateProductInput, UpdateProductInput } from '../validators/product.ts'
@@ -14,6 +14,7 @@ export type ProductFilters = {
   maxPrice?: number | undefined
   sortBy?: string | undefined
   inStock?: boolean | undefined
+  featured?: boolean | undefined
 }
 
 export async function getProductById(id: number) {
@@ -31,10 +32,27 @@ export async function getProductById(id: number) {
 }
 
 export async function listProducts(filters: ProductFilters) {
-  const { page, limit, search, category, minPrice, maxPrice, sortBy = 'newest', inStock } = filters
+  const { page, limit, search, category, minPrice, maxPrice, sortBy = 'newest', inStock, featured } = filters
   const offset = (page - 1) * limit
 
   const conditions = [isNull(productsTable.deletedAt)]
+
+  if (featured) {
+    conditions.push(
+      inArray(
+        productsTable.id,
+        db
+          .select({ id: featuredProductsTable.productId })
+          .from(featuredProductsTable)
+          .where(
+            and(
+              eq(featuredProductsTable.section, 'home'),
+              isNull(featuredProductsTable.deletedAt),
+            ),
+          ),
+      ),
+    )
+  }
 
   if (search) {
     conditions.push(

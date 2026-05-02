@@ -17,6 +17,7 @@ export async function listBySection(section: string) {
         id: productsTable.id,
         name: productsTable.name,
         price: productsTable.price,
+        promotionPrice: productsTable.promotionPrice,
         description: productsTable.description,
         image: productsTable.image,
         category: productsTable.category,

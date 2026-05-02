@@ -44,7 +44,9 @@ export default function InformacionStep() {
   return (
     <CheckoutStepLayout currentStep="informacion" stepLabel="Contacto">
       <div className="bg-white rounded-xl border border-gray-200 p-6 md:p-8">
-        <h2 className="text-2xl font-bold text-slate-900 mb-6">Informacion de Contacto</h2>
+        <h2 className="text-2xl font-bold text-slate-900 mb-6">
+          Informacion de Contacto
+        </h2>
 
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -57,7 +59,9 @@ export default function InformacionStep() {
                 {...register('firstName')}
               />
               {errors.firstName && (
-                <p className="text-red-500 text-sm mt-1">{errors.firstName.message}</p>
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.firstName.message}
+                </p>
               )}
             </div>
             <div>
@@ -69,7 +73,9 @@ export default function InformacionStep() {
                 {...register('lastName')}
               />
               {errors.lastName && (
-                <p className="text-red-500 text-sm mt-1">{errors.lastName.message}</p>
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.lastName.message}
+                </p>
               )}
             </div>
             <div>
@@ -82,7 +88,9 @@ export default function InformacionStep() {
                 {...register('email')}
               />
               {errors.email && (
-                <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.email.message}
+                </p>
               )}
             </div>
             <div>
@@ -95,16 +103,32 @@ export default function InformacionStep() {
                 {...register('phone')}
               />
               {errors.phone && (
-                <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.phone.message}
+                </p>
               )}
             </div>
           </div>
 
           <div className="flex justify-end mt-8">
-            <Button type="submit" size="lg" className="bg-primary hover:bg-primary/90">
+            <Button
+              type="submit"
+              size="lg"
+              className="bg-primary hover:bg-primary/90"
+            >
               Revisar Pedido
-              <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              <svg
+                className="w-5 h-5 ml-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
               </svg>
             </Button>
           </div>

@@ -8,12 +8,20 @@ type ProductInfoProps = {
   categoryName?: string
 }
 
-export default function ProductInfo({ product, categoryName }: ProductInfoProps) {
-  const hasPromotion = product.promotionPrice != null && product.promotionPrice < product.price
-  const displayPrice = applyTax(hasPromotion ? product.promotionPrice! : product.price)
+export default function ProductInfo({
+  product,
+  categoryName,
+}: ProductInfoProps) {
+  const hasPromotion =
+    product.promotionPrice != null && product.promotionPrice < product.price
+  const displayPrice = applyTax(
+    hasPromotion ? product.promotionPrice! : product.price,
+  )
   const originalPrice = hasPromotion ? applyTax(product.price) : null
   const discount = hasPromotion
-    ? Math.round(((product.price - product.promotionPrice!) / product.price) * 100)
+    ? Math.round(
+        ((product.price - product.promotionPrice!) / product.price) * 100,
+      )
     : 0
 
   return (
@@ -54,7 +62,9 @@ export default function ProductInfo({ product, categoryName }: ProductInfoProps)
       {product.sku && (
         <p className="text-xs text-gray-400">
           SKU: {product.sku} &nbsp;|&nbsp; Vendido por:{' '}
-          <span className="text-electric-cyan font-semibold">ElectroMundo Oficial</span>
+          <span className="text-electric-cyan font-semibold">
+            ElectroMundo Oficial
+          </span>
         </p>
       )}
 
@@ -84,8 +94,12 @@ export default function ProductInfo({ product, categoryName }: ProductInfoProps)
       {/* Description */}
       {product.description && (
         <div>
-          <h3 className="text-sm font-semibold text-gray-700 mb-1">Descripción</h3>
-          <p className="text-sm text-gray-600 leading-relaxed">{product.description}</p>
+          <h3 className="text-sm font-semibold text-gray-700 mb-1">
+            Descripción
+          </h3>
+          <p className="text-sm text-gray-600 leading-relaxed">
+            {product.description}
+          </p>
         </div>
       )}
     </div>

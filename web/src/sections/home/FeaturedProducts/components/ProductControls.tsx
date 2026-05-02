@@ -52,7 +52,7 @@ export default function ProductControls({
             onChange={(e) =>
               onPriceChange(
                 e.target.value ? parseInt(e.target.value) : undefined,
-                maxPrice
+                maxPrice,
               )
             }
           />
@@ -63,7 +63,7 @@ export default function ProductControls({
             onChange={(e) =>
               onPriceChange(
                 minPrice,
-                e.target.value ? parseInt(e.target.value) : undefined
+                e.target.value ? parseInt(e.target.value) : undefined,
               )
             }
           />

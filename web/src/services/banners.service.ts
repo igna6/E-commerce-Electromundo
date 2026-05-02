@@ -38,7 +38,7 @@ export async function updateBanner(
     image: string | null
     displayOrder: number
     isActive: boolean
-  }>
+  }>,
 ): Promise<{ data: Banner }> {
   return authApiRequest<{ data: Banner }>(`/api/admin/banners/${id}`, {
     method: 'PUT',

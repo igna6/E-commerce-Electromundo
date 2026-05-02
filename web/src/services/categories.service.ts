@@ -22,7 +22,11 @@ export async function createCategory(data: {
 
 export async function updateCategory(
   id: number,
-  data: Partial<{ name: string; description: string | null; parentCategoryId: number | null }>
+  data: Partial<{
+    name: string
+    description: string | null
+    parentCategoryId: number | null
+  }>,
 ): Promise<{ data: Category }> {
   return authApiRequest<{ data: Category }>(`/api/categories/${id}`, {
     method: 'PUT',

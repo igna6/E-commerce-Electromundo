@@ -27,16 +27,20 @@ export default function ProductForm({
   error,
 }: ProductFormProps) {
   const [name, setName] = useState(initialData?.name || '')
-  const [price, setPrice] = useState(initialData ? String(initialData.price / 100) : '')
+  const [price, setPrice] = useState(
+    initialData ? String(initialData.price / 100) : '',
+  )
   const [promotionPrice, setPromotionPrice] = useState(
-    initialData?.promotionPrice ? String(initialData.promotionPrice / 100) : ''
+    initialData?.promotionPrice ? String(initialData.promotionPrice / 100) : '',
   )
   const [description, setDescription] = useState(initialData?.description || '')
   const [image, setImage] = useState(initialData?.image || '')
   const [category, setCategory] = useState<string>(
-    initialData?.category ? String(initialData.category) : ''
+    initialData?.category ? String(initialData.category) : '',
   )
-  const [stock, setStock] = useState(initialData ? String(initialData.stock) : '0')
+  const [stock, setStock] = useState(
+    initialData ? String(initialData.stock) : '0',
+  )
 
   const { data: categoriesData } = useQuery({
     queryKey: ['categories'],
@@ -71,7 +75,10 @@ export default function ProductForm({
       )}
 
       <div>
-        <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="name"
+          className="block text-sm font-medium text-gray-700"
+        >
           Nombre *
         </label>
         <input
@@ -86,7 +93,10 @@ export default function ProductForm({
       </div>
 
       <div>
-        <label htmlFor="price" className="block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="price"
+          className="block text-sm font-medium text-gray-700"
+        >
           Precio (ARS) *
         </label>
         <input
@@ -103,7 +113,10 @@ export default function ProductForm({
       </div>
 
       <div>
-        <label htmlFor="promotionPrice" className="block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="promotionPrice"
+          className="block text-sm font-medium text-gray-700"
+        >
           Precio Promoción (ARS)
         </label>
         <input
@@ -119,7 +132,10 @@ export default function ProductForm({
       </div>
 
       <div>
-        <label htmlFor="description" className="block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="description"
+          className="block text-sm font-medium text-gray-700"
+        >
           Descripción
         </label>
         <textarea
@@ -133,7 +149,10 @@ export default function ProductForm({
       </div>
 
       <div>
-        <label htmlFor="image" className="block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="image"
+          className="block text-sm font-medium text-gray-700"
+        >
           URL de Imagen
         </label>
         <input
@@ -159,7 +178,10 @@ export default function ProductForm({
       </div>
 
       <div>
-        <label htmlFor="category" className="block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="category"
+          className="block text-sm font-medium text-gray-700"
+        >
           Categoría
         </label>
         <select
@@ -178,7 +200,10 @@ export default function ProductForm({
       </div>
 
       <div>
-        <label htmlFor="stock" className="block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="stock"
+          className="block text-sm font-medium text-gray-700"
+        >
           Stock disponible *
         </label>
         <input

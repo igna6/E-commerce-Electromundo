@@ -66,7 +66,9 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
             <TableCell className="px-4">
               {order.firstName} {order.lastName}
             </TableCell>
-            <TableCell className="px-4 text-sm text-muted-foreground">{order.email}</TableCell>
+            <TableCell className="px-4 text-sm text-muted-foreground">
+              {order.email}
+            </TableCell>
             <TableCell className="px-4">{formatPrice(order.total)}</TableCell>
             <TableCell className="px-4">
               <OrderStatusBadge status={order.status} />

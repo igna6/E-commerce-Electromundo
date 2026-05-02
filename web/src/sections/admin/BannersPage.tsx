@@ -52,8 +52,13 @@ export default function BannersPage() {
   })
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, data: payload }: { id: number; data: Partial<Banner> }) =>
-      updateBanner(id, payload),
+    mutationFn: ({
+      id,
+      data: payload,
+    }: {
+      id: number
+      data: Partial<Banner>
+    }) => updateBanner(id, payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-banners'] })
       queryClient.invalidateQueries({ queryKey: ['banners'] })
@@ -197,7 +202,9 @@ export default function BannersPage() {
               <input
                 type="text"
                 value={form.buttonText}
-                onChange={(e) => setForm({ ...form, buttonText: e.target.value })}
+                onChange={(e) =>
+                  setForm({ ...form, buttonText: e.target.value })
+                }
                 className="w-full rounded-md border px-3 py-2"
                 placeholder="Ej: Ver productos"
               />
@@ -209,7 +216,9 @@ export default function BannersPage() {
               <input
                 type="text"
                 value={form.buttonLink}
-                onChange={(e) => setForm({ ...form, buttonLink: e.target.value })}
+                onChange={(e) =>
+                  setForm({ ...form, buttonLink: e.target.value })
+                }
                 className="w-full rounded-md border px-3 py-2"
                 placeholder="Ej: /products"
               />
@@ -246,22 +255,31 @@ export default function BannersPage() {
                 type="number"
                 value={form.displayOrder}
                 onChange={(e) =>
-                  setForm({ ...form, displayOrder: parseInt(e.target.value) || 0 })
+                  setForm({
+                    ...form,
+                    displayOrder: parseInt(e.target.value) || 0,
+                  })
                 }
                 className="w-full rounded-md border px-3 py-2"
                 min={0}
               />
-              <p className="text-xs text-gray-400 mt-1">Menor = aparece primero</p>
+              <p className="text-xs text-gray-400 mt-1">
+                Menor = aparece primero
+              </p>
             </div>
             <div className="flex items-end">
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={form.isActive}
-                  onChange={(e) => setForm({ ...form, isActive: e.target.checked })}
+                  onChange={(e) =>
+                    setForm({ ...form, isActive: e.target.checked })
+                  }
                   className="w-4 h-4 rounded border-gray-300"
                 />
-                <span className="text-sm font-medium text-gray-700">Activo</span>
+                <span className="text-sm font-medium text-gray-700">
+                  Activo
+                </span>
               </label>
             </div>
           </div>
@@ -384,7 +402,8 @@ export default function BannersPage() {
 
         {banners.length === 0 && (
           <div className="rounded-lg border bg-white p-8 text-center text-gray-500">
-            No hay banners creados. Crea el primero para que aparezca en el carrusel de la página principal.
+            No hay banners creados. Crea el primero para que aparezca en el
+            carrusel de la página principal.
           </div>
         )}
       </div>

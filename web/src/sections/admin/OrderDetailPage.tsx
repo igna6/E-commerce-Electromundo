@@ -148,9 +148,12 @@ export default function OrderDetailPage() {
                 </dd>
               </div>
               <div>
-                <dt className="text-sm text-muted-foreground">Método de Envío</dt>
+                <dt className="text-sm text-muted-foreground">
+                  Método de Envío
+                </dt>
                 <dd className="font-medium">
-                  {shippingMethodLabels[order.shippingMethod] || order.shippingMethod}
+                  {shippingMethodLabels[order.shippingMethod] ||
+                    order.shippingMethod}
                 </dd>
               </div>
             </dl>
@@ -176,36 +179,57 @@ export default function OrderDetailPage() {
               {order.items.map((item) => (
                 <TableRow key={item.id}>
                   <TableCell>{item.productName}</TableCell>
-                  <TableCell className="text-right">{formatPrice(item.productPrice)}</TableCell>
+                  <TableCell className="text-right">
+                    {formatPrice(item.productPrice)}
+                  </TableCell>
                   <TableCell className="text-right">{item.quantity}</TableCell>
-                  <TableCell className="text-right">{formatPrice(item.lineTotal)}</TableCell>
+                  <TableCell className="text-right">
+                    {formatPrice(item.lineTotal)}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
             <TableFooter className="bg-transparent">
               <TableRow className="border-0">
-                <TableCell colSpan={3} className="text-right text-muted-foreground">
+                <TableCell
+                  colSpan={3}
+                  className="text-right text-muted-foreground"
+                >
                   Subtotal
                 </TableCell>
-                <TableCell className="text-right">{formatPrice(order.subtotal)}</TableCell>
+                <TableCell className="text-right">
+                  {formatPrice(order.subtotal)}
+                </TableCell>
               </TableRow>
               <TableRow className="border-0">
-                <TableCell colSpan={3} className="text-right text-muted-foreground">
+                <TableCell
+                  colSpan={3}
+                  className="text-right text-muted-foreground"
+                >
                   Envío
                 </TableCell>
-                <TableCell className="text-right">{formatPrice(order.shippingCost)}</TableCell>
+                <TableCell className="text-right">
+                  {formatPrice(order.shippingCost)}
+                </TableCell>
               </TableRow>
               <TableRow className="border-0">
-                <TableCell colSpan={3} className="text-right text-muted-foreground">
+                <TableCell
+                  colSpan={3}
+                  className="text-right text-muted-foreground"
+                >
                   IVA (21%)
                 </TableCell>
-                <TableCell className="text-right">{formatPrice(order.tax)}</TableCell>
+                <TableCell className="text-right">
+                  {formatPrice(order.tax)}
+                </TableCell>
               </TableRow>
               <TableRow className="border-0 font-bold">
                 <TableCell colSpan={3} className="text-right">
                   Total
                 </TableCell>
-                <TableCell className="text-right">{formatPrice(order.total)}</TableCell>
+                <TableCell className="text-right">
+                  {formatPrice(order.total)}
+                </TableCell>
               </TableRow>
             </TableFooter>
           </Table>
@@ -224,13 +248,18 @@ export default function OrderDetailPage() {
                 <dd className="font-medium">{formatDate(order.createdAt)}</dd>
               </div>
               <div>
-                <dt className="text-sm text-muted-foreground">Método de Pago</dt>
+                <dt className="text-sm text-muted-foreground">
+                  Método de Pago
+                </dt>
                 <dd className="font-medium">
-                  {paymentMethodLabels[order.paymentMethod] || order.paymentMethod}
+                  {paymentMethodLabels[order.paymentMethod] ||
+                    order.paymentMethod}
                 </dd>
               </div>
               <div>
-                <dt className="text-sm text-muted-foreground">Última Actualización</dt>
+                <dt className="text-sm text-muted-foreground">
+                  Última Actualización
+                </dt>
                 <dd className="font-medium">{formatDate(order.updatedAt)}</dd>
               </div>
             </dl>

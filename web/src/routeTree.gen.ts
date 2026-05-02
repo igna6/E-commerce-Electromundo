@@ -29,6 +29,7 @@ import { Route as AdminProductsRouteImport } from './routes/admin/products'
 import { Route as AdminOrdersRouteImport } from './routes/admin/orders'
 import { Route as AdminLoginRouteImport } from './routes/admin/login'
 import { Route as AdminFlashSaleRouteImport } from './routes/admin/flash-sale'
+import { Route as AdminFeaturedProductsRouteImport } from './routes/admin/featured-products'
 import { Route as AdminDashboardRouteImport } from './routes/admin/dashboard'
 import { Route as AdminCategoriesRouteImport } from './routes/admin/categories'
 import { Route as AdminBannersRouteImport } from './routes/admin/banners'
@@ -137,6 +138,11 @@ const AdminFlashSaleRoute = AdminFlashSaleRouteImport.update({
   path: '/flash-sale',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminFeaturedProductsRoute = AdminFeaturedProductsRouteImport.update({
+  id: '/featured-products',
+  path: '/featured-products',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminDashboardRoute = AdminDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -188,6 +194,7 @@ export interface FileRoutesByFullPath {
   '/admin/banners': typeof AdminBannersRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/dashboard': typeof AdminDashboardRoute
+  '/admin/featured-products': typeof AdminFeaturedProductsRoute
   '/admin/flash-sale': typeof AdminFlashSaleRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/orders': typeof AdminOrdersRouteWithChildren
@@ -214,6 +221,7 @@ export interface FileRoutesByTo {
   '/admin/banners': typeof AdminBannersRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/dashboard': typeof AdminDashboardRoute
+  '/admin/featured-products': typeof AdminFeaturedProductsRoute
   '/admin/flash-sale': typeof AdminFlashSaleRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/orders': typeof AdminOrdersRouteWithChildren
@@ -243,6 +251,7 @@ export interface FileRoutesById {
   '/admin/banners': typeof AdminBannersRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/dashboard': typeof AdminDashboardRoute
+  '/admin/featured-products': typeof AdminFeaturedProductsRoute
   '/admin/flash-sale': typeof AdminFlashSaleRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/orders': typeof AdminOrdersRouteWithChildren
@@ -274,6 +283,7 @@ export interface FileRouteTypes {
     | '/admin/banners'
     | '/admin/categories'
     | '/admin/dashboard'
+    | '/admin/featured-products'
     | '/admin/flash-sale'
     | '/admin/login'
     | '/admin/orders'
@@ -300,6 +310,7 @@ export interface FileRouteTypes {
     | '/admin/banners'
     | '/admin/categories'
     | '/admin/dashboard'
+    | '/admin/featured-products'
     | '/admin/flash-sale'
     | '/admin/login'
     | '/admin/orders'
@@ -328,6 +339,7 @@ export interface FileRouteTypes {
     | '/admin/banners'
     | '/admin/categories'
     | '/admin/dashboard'
+    | '/admin/featured-products'
     | '/admin/flash-sale'
     | '/admin/login'
     | '/admin/orders'
@@ -499,6 +511,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminFlashSaleRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/featured-products': {
+      id: '/admin/featured-products'
+      path: '/featured-products'
+      fullPath: '/admin/featured-products'
+      preLoaderRoute: typeof AdminFeaturedProductsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/dashboard': {
       id: '/admin/dashboard'
       path: '/dashboard'
@@ -583,6 +602,7 @@ interface AdminRouteChildren {
   AdminBannersRoute: typeof AdminBannersRoute
   AdminCategoriesRoute: typeof AdminCategoriesRoute
   AdminDashboardRoute: typeof AdminDashboardRoute
+  AdminFeaturedProductsRoute: typeof AdminFeaturedProductsRoute
   AdminFlashSaleRoute: typeof AdminFlashSaleRoute
   AdminLoginRoute: typeof AdminLoginRoute
   AdminOrdersRoute: typeof AdminOrdersRouteWithChildren
@@ -594,6 +614,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminBannersRoute: AdminBannersRoute,
   AdminCategoriesRoute: AdminCategoriesRoute,
   AdminDashboardRoute: AdminDashboardRoute,
+  AdminFeaturedProductsRoute: AdminFeaturedProductsRoute,
   AdminFlashSaleRoute: AdminFlashSaleRoute,
   AdminLoginRoute: AdminLoginRoute,
   AdminOrdersRoute: AdminOrdersRouteWithChildren,

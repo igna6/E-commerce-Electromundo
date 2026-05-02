@@ -23,10 +23,13 @@ export async function addFeaturedProduct(data: {
   position?: number
   metadata?: Record<string, unknown> | null
 }): Promise<{ data: FeaturedProduct }> {
-  return authApiRequest<{ data: FeaturedProduct }>('/api/admin/featured-products', {
-    method: 'POST',
-    body: JSON.stringify(data),
-  })
+  return authApiRequest<{ data: FeaturedProduct }>(
+    '/api/admin/featured-products',
+    {
+      method: 'POST',
+      body: JSON.stringify(data),
+    },
+  )
 }
 
 export async function updateFeaturedProduct(

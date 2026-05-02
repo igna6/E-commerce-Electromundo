@@ -25,13 +25,17 @@ export const checkoutMachine = setup({
   types: {
     context: {} as CheckoutContext,
     events: {} as CheckoutEvent,
-    input: {} as { items: Array<{ product: { id: number }; quantity: number }> },
+    input: {} as {
+      items: Array<{ product: { id: number }; quantity: number }>
+    },
   },
   actors: {
-    submitOrder: fromPromise(async ({ input }: { input: { formData: CreateOrderPayload } }) => {
-      const response = await createOrder(input.formData)
-      return response.data
-    }),
+    submitOrder: fromPromise(
+      async ({ input }: { input: { formData: CreateOrderPayload } }) => {
+        const response = await createOrder(input.formData)
+        return response.data
+      },
+    ),
   },
 }).createMachine({
   id: 'checkout',

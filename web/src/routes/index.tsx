@@ -1,7 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import Hero from '@/sections/home/Hero'
 import BenefitsBar from '@/sections/home/BenefitsBar'
-import CategoryGrid from '@/sections/home/CategoryGrid'
 import FeaturedProducts from '@/sections/home/FeaturedProducts/FeaturedProducts'
 import FlashSale from '@/sections/home/FlashSale'
 import PromoSection from '@/sections/home/PromoSection'
@@ -17,7 +16,6 @@ function Home() {
     <main className="bg-[#f5f5f5]">
       <Hero />
       <BenefitsBar />
-      <CategoryGrid />
 
       {/* Divider */}
       <div className="container mx-auto px-4 sm:px-6">

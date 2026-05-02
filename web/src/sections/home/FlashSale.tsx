@@ -26,7 +26,9 @@ function FlashSale() {
             </div>
             <div>
               <h2 className="text-xl font-black text-white">FLASH SALE</h2>
-              <p className="text-white/60 text-xs">Ofertas por tiempo limitado</p>
+              <p className="text-white/60 text-xs">
+                Ofertas por tiempo limitado
+              </p>
             </div>
           </div>
 
@@ -83,7 +85,9 @@ function FlashSale() {
                       <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
                         <div
                           className="h-full bg-red-500 rounded-full"
-                          style={{ width: `${Math.min((product.stock / 20) * 100, 100)}%` }}
+                          style={{
+                            width: `${Math.min((product.stock / 20) * 100, 100)}%`,
+                          }}
                         />
                       </div>
                     </div>

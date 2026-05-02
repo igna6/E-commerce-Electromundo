@@ -109,13 +109,19 @@ export default function DashboardPage() {
           <AlertDescription>
             <div className="mt-2 flex gap-4">
               {(stats?.inventory.outOfStock ?? 0) > 0 && (
-                <Badge variant="destructive" className="bg-red-100 text-red-700 hover:bg-red-100 border-transparent">
+                <Badge
+                  variant="destructive"
+                  className="bg-red-100 text-red-700 hover:bg-red-100 border-transparent"
+                >
                   {stats?.inventory.outOfStock} agotado
                   {(stats?.inventory.outOfStock ?? 0) !== 1 ? 's' : ''}
                 </Badge>
               )}
               {(stats?.inventory.lowStock ?? 0) > 0 && (
-                <Badge variant="outline" className="bg-amber-100 text-amber-700 hover:bg-amber-100 border-transparent">
+                <Badge
+                  variant="outline"
+                  className="bg-amber-100 text-amber-700 hover:bg-amber-100 border-transparent"
+                >
                   {stats?.inventory.lowStock} con bajo stock
                 </Badge>
               )}
@@ -128,9 +134,7 @@ export default function DashboardPage() {
                       key={product.id}
                       className="flex items-center justify-between text-sm"
                     >
-                      <span className="text-amber-800">
-                        {product.name}
-                      </span>
+                      <span className="text-amber-800">{product.name}</span>
                       <span
                         className={
                           product.stock === 0

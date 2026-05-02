@@ -9,7 +9,7 @@ function CheckoutLayout() {
   const availableItems = items.filter((item) => item.product.stock > 0)
   const subtotal = availableItems.reduce(
     (sum, item) => sum + item.product.price * item.quantity,
-    0
+    0,
   )
 
   useEffect(() => {

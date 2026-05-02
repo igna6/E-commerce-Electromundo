@@ -26,7 +26,8 @@ export default function AddToCartControls({
   onAddToCart,
   isAdding,
 }: AddToCartControlsProps) {
-  const hasPromotion = product.promotionPrice != null && product.promotionPrice < product.price
+  const hasPromotion =
+    product.promotionPrice != null && product.promotionPrice < product.price
   const effectivePrice = hasPromotion ? product.promotionPrice! : product.price
   const priceWithTax = applyTax(effectivePrice)
   const total = priceWithTax * quantity
@@ -45,9 +46,13 @@ export default function AddToCartControls({
             >
               <Minus size={14} className="text-gray-600" />
             </button>
-            <span className="w-10 text-center font-black text-gray-800">{quantity}</span>
+            <span className="w-10 text-center font-black text-gray-800">
+              {quantity}
+            </span>
             <button
-              onClick={() => onQuantityChange(Math.min(product.stock, quantity + 1))}
+              onClick={() =>
+                onQuantityChange(Math.min(product.stock, quantity + 1))
+              }
               disabled={product.stock === 0 || quantity >= product.stock}
               className="w-8 h-8 rounded-lg bg-white border border-gray-200 hover:bg-gray-100 flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
@@ -67,7 +72,9 @@ export default function AddToCartControls({
         {/* Total */}
         <div className="flex items-center justify-between mb-3 bg-white rounded-xl px-3 py-2 border border-gray-100">
           <span className="text-xs text-gray-500">Total</span>
-          <span className="font-black text-lg text-gray-900">{formatPrice(total)}</span>
+          <span className="font-black text-lg text-gray-900">
+            {formatPrice(total)}
+          </span>
         </div>
 
         {/* Add to cart */}
@@ -107,9 +114,24 @@ export default function AddToCartControls({
       {/* Trust badges */}
       <div className="bg-white border border-gray-100 rounded-2xl p-4 space-y-2.5">
         {[
-          { icon: Shield, color: '#4caf50', bg: '#4caf5018', text: 'Garantía oficial 12 meses' },
-          { icon: RotateCcw, color: '#9c27b0', bg: '#9c27b018', text: 'Devolución gratis en 30 días' },
-          { icon: PackageCheck, color: '#00D4FF', bg: '#00D4FF18', text: 'Producto 100% original' },
+          {
+            icon: Shield,
+            color: '#4caf50',
+            bg: '#4caf5018',
+            text: 'Garantía oficial 12 meses',
+          },
+          {
+            icon: RotateCcw,
+            color: '#9c27b0',
+            bg: '#9c27b018',
+            text: 'Devolución gratis en 30 días',
+          },
+          {
+            icon: PackageCheck,
+            color: '#00D4FF',
+            bg: '#00D4FF18',
+            text: 'Producto 100% original',
+          },
         ].map(({ icon: Icon, color, bg, text }) => (
           <div key={text} className="flex items-center gap-2.5">
             <div

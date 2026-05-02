@@ -10,7 +10,11 @@ type CheckoutStepLayoutProps = {
   children: React.ReactNode
 }
 
-export default function CheckoutStepLayout({ currentStep, stepLabel, children }: CheckoutStepLayoutProps) {
+export default function CheckoutStepLayout({
+  currentStep,
+  stepLabel,
+  children,
+}: CheckoutStepLayoutProps) {
   const { items } = useCart()
   const { items: availableItems, subtotal } = useCheckout()
   const unavailableItems = items.filter((item) => item.product.stock <= 0)

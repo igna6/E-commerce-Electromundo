@@ -11,7 +11,9 @@ import {
 } from '@/services/categories.service'
 
 /** Sort categories: parents first (alphabetical), then subcategories grouped under their parent */
-function sortCategoriesHierarchically(categories: Array<Category>): Array<Category> {
+function sortCategoriesHierarchically(
+  categories: Array<Category>,
+): Array<Category> {
   const parentCategories = categories
     .filter((c) => c.parentCategoryId === null)
     .sort((a, b) => a.name.localeCompare(b.name))
@@ -40,10 +42,14 @@ export default function CategoriesPage() {
   const [editingId, setEditingId] = useState<number | null>(null)
   const [editName, setEditName] = useState('')
   const [editDescription, setEditDescription] = useState('')
-  const [editParentCategoryId, setEditParentCategoryId] = useState<number | null>(null)
+  const [editParentCategoryId, setEditParentCategoryId] = useState<
+    number | null
+  >(null)
   const [newName, setNewName] = useState('')
   const [newDescription, setNewDescription] = useState('')
-  const [newParentCategoryId, setNewParentCategoryId] = useState<number | null>(null)
+  const [newParentCategoryId, setNewParentCategoryId] = useState<number | null>(
+    null,
+  )
   const [isAdding, setIsAdding] = useState(false)
 
   const { data, isLoading, error } = useQuery({
@@ -68,7 +74,11 @@ export default function CategoriesPage() {
       data: payload,
     }: {
       id: number
-      data: { name: string; description: string | null; parentCategoryId: number | null }
+      data: {
+        name: string
+        description: string | null
+        parentCategoryId: number | null
+      }
     }) => updateCategory(id, payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['categories'] })
@@ -87,13 +97,13 @@ export default function CategoriesPage() {
 
   const sortedCategories = useMemo(
     () => sortCategoriesHierarchically(categories),
-    [categories]
+    [categories],
   )
 
   /** Parent categories available for the dropdown (exclude the category being edited) */
   const parentOptions = useMemo(
     () => categories.filter((c) => c.parentCategoryId === null),
-    [categories]
+    [categories],
   )
 
   const handleEdit = (category: Category) => {
@@ -159,7 +169,9 @@ export default function CategoriesPage() {
           <h3 className="mb-4 font-semibold">New Category</h3>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700">Name</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Name
+              </label>
               <input
                 type="text"
                 value={newName}
@@ -169,7 +181,9 @@ export default function CategoriesPage() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Description</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Description
+              </label>
               <textarea
                 value={newDescription}
                 onChange={(e) => setNewDescription(e.target.value)}
@@ -185,7 +199,9 @@ export default function CategoriesPage() {
               <select
                 value={newParentCategoryId ?? ''}
                 onChange={(e) =>
-                  setNewParentCategoryId(e.target.value ? Number(e.target.value) : null)
+                  setNewParentCategoryId(
+                    e.target.value ? Number(e.target.value) : null,
+                  )
                 }
                 className="mt-1 w-full rounded-md border px-3 py-2"
               >
@@ -259,7 +275,7 @@ export default function CategoriesPage() {
                         value={editParentCategoryId ?? ''}
                         onChange={(e) =>
                           setEditParentCategoryId(
-                            e.target.value ? Number(e.target.value) : null
+                            e.target.value ? Number(e.target.value) : null,
                           )
                         }
                         className="w-full rounded-md border px-2 py-1"
@@ -304,8 +320,9 @@ export default function CategoriesPage() {
                     </td>
                     <td className="px-4 py-3 text-gray-500">
                       {category.parentCategoryId !== null
-                        ? categories.find((c) => c.id === category.parentCategoryId)
-                            ?.name ?? '-'
+                        ? (categories.find(
+                            (c) => c.id === category.parentCategoryId,
+                          )?.name ?? '-')
                         : '-'}
                     </td>
                     <td className="px-4 py-3 text-right">

@@ -22,7 +22,9 @@ export async function apiRequest<T>(
     const response = await fetch(url, {
       ...options,
       headers: {
-        ...(options?.body instanceof FormData ? {} : { 'Content-Type': 'application/json' }),
+        ...(options?.body instanceof FormData
+          ? {}
+          : { 'Content-Type': 'application/json' }),
         ...options?.headers,
       },
     })
@@ -35,7 +37,8 @@ export async function apiRequest<T>(
         // Response body may not be JSON
       }
       throw new ApiError(
-        errorData?.error || `HTTP error ${response.status}: ${response.statusText}`,
+        errorData?.error ||
+          `HTTP error ${response.status}: ${response.statusText}`,
         response.status,
         errorData,
       )

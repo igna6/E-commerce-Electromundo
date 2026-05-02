@@ -12,13 +12,20 @@ type CartSummaryProps = {
   total: number
 }
 
-export default function CartSummary({ subtotal, shipping, discount, total }: CartSummaryProps) {
+export default function CartSummary({
+  subtotal,
+  shipping,
+  discount,
+  total,
+}: CartSummaryProps) {
   const [couponCode, setCouponCode] = useState('')
 
   return (
     <div className="lg:col-span-1">
       <div className="bg-white rounded-xl border border-gray-200 p-6 sticky top-24">
-        <h2 className="text-xl font-bold text-brand-dark mb-6">Resumen del Pedido</h2>
+        <h2 className="text-xl font-bold text-brand-dark mb-6">
+          Resumen del Pedido
+        </h2>
 
         {/* Coupon Code */}
         <div className="mb-6">
@@ -46,7 +53,9 @@ export default function CartSummary({ subtotal, shipping, discount, total }: Car
           </div>
           <div className="flex justify-between text-gray-600">
             <span>Envío</span>
-            <span>{shipping == null ? 'A coordinar' : formatPrice(shipping)}</span>
+            <span>
+              {shipping == null ? 'A coordinar' : formatPrice(shipping)}
+            </span>
           </div>
           {discount > 0 && (
             <div className="flex justify-between text-green-600">
@@ -61,7 +70,9 @@ export default function CartSummary({ subtotal, shipping, discount, total }: Car
         {/* Total */}
         <div className="flex justify-between items-center mb-2">
           <span className="text-lg font-semibold text-brand-dark">Total</span>
-          <span className="text-2xl font-bold text-brand-orange">{formatPrice(total)}</span>
+          <span className="text-2xl font-bold text-brand-orange">
+            {formatPrice(total)}
+          </span>
         </div>
         <p className="text-xs text-gray-400 mb-6">IVA incluido</p>
 
@@ -73,12 +84,21 @@ export default function CartSummary({ subtotal, shipping, discount, total }: Car
         >
           <Link to="/checkout">
             Continuar al Checkout
-            <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            <svg
+              className="w-5 h-5 ml-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M14 5l7 7m0 0l-7 7m7-7H3"
+              />
             </svg>
           </Link>
         </Button>
-
       </div>
     </div>
   )

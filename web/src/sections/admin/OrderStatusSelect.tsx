@@ -4,7 +4,10 @@ type OrderStatusSelectProps = {
   isLoading?: boolean
 }
 
-const VALID_TRANSITIONS: Record<string, Array<{ value: string; label: string }> | undefined> = {
+const VALID_TRANSITIONS: Record<
+  string,
+  Array<{ value: string; label: string }> | undefined
+> = {
   pending: [
     { value: 'confirmed', label: 'Confirmar Pedido' },
     { value: 'cancelled', label: 'Cancelar Pedido' },

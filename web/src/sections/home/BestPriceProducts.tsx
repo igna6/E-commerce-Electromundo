@@ -41,7 +41,9 @@ function BestPriceProducts() {
                 Mejores Precios
               </h2>
             </div>
-            <p className="text-slate-500 text-sm">Precios imperdibles todos los días</p>
+            <p className="text-slate-500 text-sm">
+              Precios imperdibles todos los días
+            </p>
           </div>
           <Link
             to="/products"
@@ -60,9 +62,7 @@ function BestPriceProducts() {
               key={product.id}
               product={product}
               categoryName={
-                product.category
-                  ? categoryMap.get(product.category)
-                  : undefined
+                product.category ? categoryMap.get(product.category) : undefined
               }
             />
           ))}

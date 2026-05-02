@@ -94,7 +94,8 @@ function DefaultHero() {
             Tecnología y electrodomésticos al mejor precio
           </h1>
           <p className="text-lg sm:text-xl text-white/80 mb-8 max-w-xl leading-relaxed">
-            Equipá tu hogar con calidad garantizada. Las mejores marcas y atención personalizada.
+            Equipá tu hogar con calidad garantizada. Las mejores marcas y
+            atención personalizada.
           </p>
           <Link
             to="/products"
@@ -181,9 +182,7 @@ function Hero() {
             key={i}
             onClick={() => goTo(i)}
             className={`w-2.5 h-2.5 rounded-full transition-all ${
-              i === current
-                ? 'bg-white w-7'
-                : 'bg-white/50 hover:bg-white/70'
+              i === current ? 'bg-white w-7' : 'bg-white/50 hover:bg-white/70'
             }`}
             aria-label={`Ir al banner ${i + 1}`}
           />

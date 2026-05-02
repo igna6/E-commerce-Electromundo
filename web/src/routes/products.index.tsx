@@ -8,11 +8,13 @@ type ProductsSearch = {
   maxPrice?: number
   sortBy?: string
   inStock?: boolean
+  featured?: boolean
 }
 
 function parseOptionalNumber(value: unknown): number | undefined {
   if (typeof value === 'number') return value
-  if (typeof value === 'string' && !Number.isNaN(Number(value))) return Number(value)
+  if (typeof value === 'string' && !Number.isNaN(Number(value)))
+    return Number(value)
   return undefined
 }
 
@@ -23,7 +25,10 @@ export const Route = createFileRoute('/products/')({
     minPrice: parseOptionalNumber(search.minPrice),
     maxPrice: parseOptionalNumber(search.maxPrice),
     sortBy: typeof search.sortBy === 'string' ? search.sortBy : undefined,
-    inStock: search.inStock === true || search.inStock === 'true' ? true : undefined,
+    inStock:
+      search.inStock === true || search.inStock === 'true' ? true : undefined,
+    featured:
+      search.featured === true || search.featured === 'true' ? true : undefined,
   }),
   component: ProductsPage,
 })

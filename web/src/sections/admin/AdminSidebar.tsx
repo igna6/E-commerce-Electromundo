@@ -6,6 +6,7 @@ const navItems = [
   { to: '/admin/products', label: 'Productos', icon: '🏷️' },
   { to: '/admin/categories', label: 'Categorías', icon: '📁' },
   { to: '/admin/banners', label: 'Banners', icon: '🖼️' },
+  { to: '/admin/featured-products', label: 'Destacados', icon: '⭐' },
   { to: '/admin/flash-sale', label: 'Flash Sale', icon: '⚡' },
 ]
 

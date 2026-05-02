@@ -1,5 +1,14 @@
 import { Link } from '@tanstack/react-router'
-import { Facebook, Instagram, Mail, MapPin, Phone, Shield, Twitter, Youtube } from 'lucide-react'
+import {
+  Facebook,
+  Instagram,
+  Mail,
+  MapPin,
+  Phone,
+  Shield,
+  Twitter,
+  Youtube,
+} from 'lucide-react'
 
 function Footer() {
   const linkClass = 'text-sm text-white/50 hover:text-white transition-colors'
@@ -72,7 +81,11 @@ function Footer() {
                 </Link>
               </li>
               <li>
-                <Link to="/products" search={{ sortBy: 'price-asc', inStock: true }} className={linkClass}>
+                <Link
+                  to="/products"
+                  search={{ sortBy: 'price-asc', inStock: true }}
+                  className={linkClass}
+                >
                   Mejores Precios
                 </Link>
               </li>
@@ -115,10 +128,11 @@ function Footer() {
             </h4>
             <ul className="space-y-3">
               <li className="flex items-start gap-2">
-                <MapPin size={14} className="text-primary flex-shrink-0 mt-0.5" />
-                <span className="text-white/50 text-sm">
-                  Argentina
-                </span>
+                <MapPin
+                  size={14}
+                  className="text-primary flex-shrink-0 mt-0.5"
+                />
+                <span className="text-white/50 text-sm">Argentina</span>
               </li>
               <li className="flex items-center gap-2">
                 <Phone size={14} className="text-primary flex-shrink-0" />
@@ -141,7 +155,8 @@ function Footer() {
       <div className="border-t border-white/10 py-4">
         <div className="container mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-2">
           <p className="text-white/30 text-xs">
-            &copy; {new Date().getFullYear()} ElectroMundo. Todos los derechos reservados.
+            &copy; {new Date().getFullYear()} ElectroMundo. Todos los derechos
+            reservados.
           </p>
           <div className="flex items-center gap-3 text-white/30 text-xs">
             <Shield size={12} className="text-emerald-500" />

@@ -67,8 +67,12 @@ function OrderConfirmationPage() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-brand-dark mb-4">Pedido no encontrado</h1>
-          <p className="text-gray-600 mb-6">{error || 'No se pudo cargar la información del pedido'}</p>
+          <h1 className="text-2xl font-bold text-brand-dark mb-4">
+            Pedido no encontrado
+          </h1>
+          <p className="text-gray-600 mb-6">
+            {error || 'No se pudo cargar la información del pedido'}
+          </p>
           <Button asChild className="bg-brand-blue hover:bg-blue-700">
             <Link to="/">Volver al Inicio</Link>
           </Button>
@@ -83,7 +87,10 @@ function OrderConfirmationPage() {
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-4xl mx-auto px-4 py-4">
           <PageBreadcrumb
-            items={[{ label: 'Inicio', href: '/' }, { label: 'Confirmación de Pedido' }]}
+            items={[
+              { label: 'Inicio', href: '/' },
+              { label: 'Confirmación de Pedido' },
+            ]}
           />
         </div>
       </div>
@@ -92,15 +99,26 @@ function OrderConfirmationPage() {
         {/* Success Message */}
         <div className="bg-white rounded-xl border border-gray-200 p-8 mb-6 text-center">
           <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            <svg
+              className="w-8 h-8 text-green-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M5 13l4 4L19 7"
+              />
             </svg>
           </div>
           <h1 className="text-3xl font-bold text-brand-dark mb-2">
             ¡Gracias por tu pedido!
           </h1>
           <p className="text-gray-600 mb-6">
-            Tu pedido #{formatOrderNumber(order.id)} ha sido registrado correctamente.
+            Tu pedido #{formatOrderNumber(order.id)} ha sido registrado
+            correctamente.
           </p>
 
           {/* WhatsApp Button — Primary CTA */}
@@ -128,14 +146,29 @@ function OrderConfirmationPage() {
             >
               {copied ? (
                 <>
-                  <svg className="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  <svg
+                    className="w-5 h-5 mr-2 text-green-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 13l4 4L19 7"
+                    />
                   </svg>
                   Copiado
                 </>
               ) : (
                 <>
-                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg
+                    className="w-5 h-5 mr-2"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -152,11 +185,15 @@ function OrderConfirmationPage() {
 
         {/* Order Summary */}
         <div className="bg-white rounded-xl border border-gray-200 p-6 md:p-8 mb-6">
-          <h2 className="text-xl font-bold text-brand-dark mb-6">Resumen del Pedido</h2>
+          <h2 className="text-xl font-bold text-brand-dark mb-6">
+            Resumen del Pedido
+          </h2>
 
           {/* Contact Info */}
           <div className="mb-6">
-            <h3 className="font-semibold text-brand-dark mb-2">Datos de Contacto</h3>
+            <h3 className="font-semibold text-brand-dark mb-2">
+              Datos de Contacto
+            </h3>
             <p className="text-gray-600 text-sm">
               {order.firstName} {order.lastName}
             </p>
@@ -166,7 +203,9 @@ function OrderConfirmationPage() {
 
           {/* Delivery Method */}
           <div className="mb-6">
-            <h3 className="font-semibold text-brand-dark mb-2">Método de Entrega</h3>
+            <h3 className="font-semibold text-brand-dark mb-2">
+              Método de Entrega
+            </h3>
             <p className="text-gray-600 text-sm">Retiro en sucursal</p>
           </div>
 
@@ -177,12 +216,16 @@ function OrderConfirmationPage() {
             {order.items.map((item) => (
               <div key={item.id} className="flex justify-between items-center">
                 <div>
-                  <p className="font-medium text-brand-dark">{toTitleCase(item.productName)}</p>
+                  <p className="font-medium text-brand-dark">
+                    {toTitleCase(item.productName)}
+                  </p>
                   <p className="text-sm text-gray-500">
                     {item.quantity} x {formatPrice(item.productPrice)}
                   </p>
                 </div>
-                <p className="font-semibold text-brand-dark">{formatPrice(item.lineTotal)}</p>
+                <p className="font-semibold text-brand-dark">
+                  {formatPrice(item.lineTotal)}
+                </p>
               </div>
             ))}
           </div>
@@ -198,7 +241,9 @@ function OrderConfirmationPage() {
             <Separator className="my-2" />
             <div className="flex justify-between text-lg font-bold">
               <span className="text-brand-dark">Total</span>
-              <span className="text-brand-orange">{formatPrice(order.total)}</span>
+              <span className="text-brand-orange">
+                {formatPrice(order.total)}
+              </span>
             </div>
             <p className="text-xs text-gray-400">IVA incluido</p>
           </div>
@@ -207,7 +252,9 @@ function OrderConfirmationPage() {
         {/* Order Text */}
         <div className="bg-white rounded-xl border border-gray-200 p-6 md:p-8 mb-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-brand-dark">Detalle del Pedido</h2>
+            <h2 className="text-xl font-bold text-brand-dark">
+              Detalle del Pedido
+            </h2>
             <Button
               variant="outline"
               size="sm"
@@ -216,14 +263,29 @@ function OrderConfirmationPage() {
             >
               {copied ? (
                 <>
-                  <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  <svg
+                    className="w-4 h-4 text-green-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 13l4 4L19 7"
+                    />
                   </svg>
                   Copiado
                 </>
               ) : (
                 <>
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -245,16 +307,36 @@ function OrderConfirmationPage() {
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button asChild className="bg-brand-blue hover:bg-blue-700">
             <Link to="/">
-              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+              <svg
+                className="w-5 h-5 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+                />
               </svg>
               Volver al Inicio
             </Link>
           </Button>
           <Button asChild variant="outline">
             <Link to="/products">
-              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+              <svg
+                className="w-5 h-5 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+                />
               </svg>
               Seguir Comprando
             </Link>

@@ -28,20 +28,18 @@ import { useCategories } from '@/hooks/useCategories'
 import { Route } from '@/routes/products.index'
 
 const SORT_MAP: Record<string, GetProductsParams['sortBy'] | undefined> = {
-  featured: undefined,
   'price-low': 'price-asc',
   'price-high': 'price-desc',
   newest: 'newest',
-  rating: undefined,
 }
 
 const SORT_LABELS: Record<string, string> = {
-  featured: 'Destacados',
   'price-low': 'Precio: Menor a Mayor',
   'price-high': 'Precio: Mayor a Menor',
   newest: 'Mas Recientes',
-  rating: 'Mejor Valorados',
 }
+
+const DEFAULT_SORT = 'newest'
 
 const DEFAULT_PRICE_MIN = 0
 const DEFAULT_PRICE_MAX = 500000
@@ -55,6 +53,7 @@ function ProductsPage() {
     maxPrice: maxPriceFromRoute,
     sortBy: sortByFromRoute,
     inStock: inStockFromRoute,
+    featured: featuredFromRoute,
   } = Route.useSearch()
 
   const [searchQuery, setSearchQuery] = useState(searchFromRoute ?? '')
@@ -62,9 +61,11 @@ function ProductsPage() {
 
   // Initialize state from URL params
   const [sortBy, setSortBy] = useState(() => {
-    if (!sortByFromRoute) return 'featured'
-    const entry = Object.entries(SORT_MAP).find(([, v]) => v === sortByFromRoute)
-    return entry ? entry[0] : 'featured'
+    if (!sortByFromRoute) return DEFAULT_SORT
+    const entry = Object.entries(SORT_MAP).find(
+      ([, v]) => v === sortByFromRoute,
+    )
+    return entry ? entry[0] : DEFAULT_SORT
   })
   const [priceRange, setPriceRange] = useState([
     minPriceFromRoute ?? DEFAULT_PRICE_MIN,
@@ -84,6 +85,10 @@ function ProductsPage() {
   useEffect(() => {
     setPage(1)
   }, [categoryFromRoute])
+
+  useEffect(() => {
+    setPage(1)
+  }, [featuredFromRoute])
 
   // Sync filter state to URL search params
   useEffect(() => {
@@ -121,7 +126,9 @@ function ProductsPage() {
   }, [categoriesData])
 
   const categoryName =
-    categoryFromRoute !== undefined ? categoryMap.get(categoryFromRoute) : undefined
+    categoryFromRoute !== undefined
+      ? categoryMap.get(categoryFromRoute)
+      : undefined
 
   const { data, isLoading } = useProducts({
     page,
@@ -132,6 +139,7 @@ function ProductsPage() {
     maxPrice: apiMaxPrice,
     sortBy: mappedSortBy,
     inStock: inStock || undefined,
+    featured: featuredFromRoute,
   })
 
   const handleSortChange = (value: string) => {
@@ -187,8 +195,16 @@ function ProductsPage() {
   }
 
   const clearSort = () => {
-    setSortBy('featured')
+    setSortBy(DEFAULT_SORT)
     setPage(1)
+  }
+
+  const clearFeatured = () => {
+    setPage(1)
+    void navigate({
+      to: '/products',
+      search: (prev) => ({ ...prev, featured: undefined }),
+    })
   }
 
   const hasPriceFilter =
@@ -198,12 +214,13 @@ function ProductsPage() {
     categoryFromRoute !== undefined ||
     hasPriceFilter ||
     inStock ||
-    sortBy !== 'featured'
+    sortBy !== DEFAULT_SORT ||
+    !!featuredFromRoute
 
   const clearFilters = () => {
     setSearchQuery('')
     setPriceRange([DEFAULT_PRICE_MIN, DEFAULT_PRICE_MAX])
-    setSortBy('featured')
+    setSortBy(DEFAULT_SORT)
     setInStock(false)
     setPage(1)
     void navigate({
@@ -273,13 +290,11 @@ function ProductsPage() {
                 <SelectValue placeholder="Ordenar por" />
               </SelectTrigger>
               <SelectContent className="bg-white border-slate-200">
-                <SelectItem value="featured">Destacados</SelectItem>
+                <SelectItem value="newest">Más Recientes</SelectItem>
                 <SelectItem value="price-low">Precio: Menor a Mayor</SelectItem>
                 <SelectItem value="price-high">
                   Precio: Mayor a Menor
                 </SelectItem>
-                <SelectItem value="newest">Más Recientes</SelectItem>
-                <SelectItem value="rating">Mejor Valorados</SelectItem>
               </SelectContent>
             </Select>
 
@@ -330,7 +345,6 @@ function ProductsPage() {
               </SheetContent>
             </Sheet>
           </div>
-
         </div>
 
         {/* Main Content */}
@@ -430,7 +444,7 @@ function ProductsPage() {
                       </button>
                     </span>
                   )}
-                  {sortBy !== 'featured' && (
+                  {sortBy !== DEFAULT_SORT && (
                     <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-sm border border-slate-200">
                       {SORT_LABELS[sortBy] ?? sortBy}
                       <button
@@ -439,6 +453,18 @@ function ProductsPage() {
                         aria-label="Quitar orden"
                       >
                         <X className="w-3 h-3 text-slate-500" />
+                      </button>
+                    </span>
+                  )}
+                  {featuredFromRoute && (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 text-amber-700 text-sm border border-amber-200">
+                      Destacados
+                      <button
+                        onClick={clearFeatured}
+                        className="ml-0.5 p-0.5 rounded-full hover:bg-amber-100 transition-colors"
+                        aria-label="Quitar filtro destacados"
+                      >
+                        <X className="w-3 h-3" />
                       </button>
                     </span>
                   )}
@@ -476,7 +502,11 @@ function ProductsPage() {
                     product={product}
                     viewMode={viewMode}
                     index={index}
-                    categoryName={product.category ? categoryMap.get(product.category) : undefined}
+                    categoryName={
+                      product.category
+                        ? categoryMap.get(product.category)
+                        : undefined
+                    }
                   />
                 ))}
               </div>

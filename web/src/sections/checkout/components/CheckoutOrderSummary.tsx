@@ -11,13 +11,19 @@ type CheckoutOrderSummaryProps = {
   unavailableItems?: Array<CartItem>
 }
 
-export default function CheckoutOrderSummary({ items, subtotal, unavailableItems = [] }: CheckoutOrderSummaryProps) {
+export default function CheckoutOrderSummary({
+  items,
+  subtotal,
+  unavailableItems = [],
+}: CheckoutOrderSummaryProps) {
   const total = applyTax(subtotal)
 
   return (
     <div className="lg:col-span-1">
       <div className="bg-white rounded-xl border border-gray-200 p-6 sticky top-24">
-        <h2 className="text-xl font-bold text-slate-900 mb-4">Resumen del Pedido</h2>
+        <h2 className="text-xl font-bold text-slate-900 mb-4">
+          Resumen del Pedido
+        </h2>
 
         {/* Cart Items */}
         <div className="space-y-4 max-h-64 overflow-y-auto mb-4">
@@ -32,7 +38,12 @@ export default function CheckoutOrderSummary({ items, subtotal, unavailableItems
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-gray-400">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg
+                      className="w-6 h-6"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -60,10 +71,14 @@ export default function CheckoutOrderSummary({ items, subtotal, unavailableItems
 
         {unavailableItems.length > 0 && (
           <div className="p-3 bg-red-50 border border-red-200 rounded-lg mb-4">
-            <p className="text-sm font-medium text-red-700 mb-1">Productos sin stock (no se incluirán):</p>
+            <p className="text-sm font-medium text-red-700 mb-1">
+              Productos sin stock (no se incluirán):
+            </p>
             <ul className="text-sm text-red-600 space-y-1">
               {unavailableItems.map((item) => (
-                <li key={item.product.id} className="line-through">{toTitleCase(item.product.name)}</li>
+                <li key={item.product.id} className="line-through">
+                  {toTitleCase(item.product.name)}
+                </li>
               ))}
             </ul>
           </div>
@@ -71,7 +86,12 @@ export default function CheckoutOrderSummary({ items, subtotal, unavailableItems
 
         <Button asChild variant="link" className="p-0 h-auto text-primary mb-4">
           <Link to="/cart">
-            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg
+              className="w-4 h-4 mr-1"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -98,13 +118,20 @@ export default function CheckoutOrderSummary({ items, subtotal, unavailableItems
         {/* Total */}
         <div className="flex justify-between items-center mb-1">
           <span className="text-lg font-semibold text-slate-900">Total</span>
-          <span className="text-2xl font-bold text-primary">{formatPrice(total)}</span>
+          <span className="text-2xl font-bold text-primary">
+            {formatPrice(total)}
+          </span>
         </div>
         <p className="text-xs text-gray-400 mb-4">IVA incluido</p>
 
         {/* Trust Badge */}
         <div className="flex items-center gap-2 p-3 bg-green-50 rounded-lg text-sm text-green-700">
-          <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg
+            className="w-5 h-5 flex-shrink-0"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
             <path
               strokeLinecap="round"
               strokeLinejoin="round"

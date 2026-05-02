@@ -1,7 +1,13 @@
 import { useRef, useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { AlertCircle, CheckCircle2, FileSpreadsheet, Loader2, Upload } from 'lucide-react'
-import type {ImportResult} from '@/services/products.service';
+import {
+  AlertCircle,
+  CheckCircle2,
+  FileSpreadsheet,
+  Loader2,
+  Upload,
+} from 'lucide-react'
+import type { ImportResult } from '@/services/products.service'
 import {
   Dialog,
   DialogContent,
@@ -10,7 +16,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import {  importProductsCSV } from '@/services/products.service'
+import { importProductsCSV } from '@/services/products.service'
 
 type State = 'idle' | 'previewing' | 'importing' | 'done'
 
@@ -20,7 +26,11 @@ type PreviewRow = {
   stock: string
 }
 
-function parseCSVPreview(content: string): { headers: Array<string>; rows: Array<PreviewRow>; totalRows: number } {
+function parseCSVPreview(content: string): {
+  headers: Array<string>
+  rows: Array<PreviewRow>
+  totalRows: number
+} {
   const lines = content.split(/\r?\n/).filter((l) => l.trim() !== '')
   if (lines.length < 2) return { headers: [], rows: [], totalRows: 0 }
 
@@ -55,10 +65,20 @@ function parseCSVPreview(content: string): { headers: Array<string>; rows: Array
   }
 
   const headers = parseRow(lines[0])
-  const normalize = (s: string) => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-  const itemIdx = headers.findIndex((h) => ['item', 'ítem', 'sku', 'codigo'].includes(normalize(h)))
-  const descIdx = headers.findIndex((h) => ['descripcion', 'descripción', 'nombre', 'name'].includes(normalize(h)))
-  const stockIdx = headers.findIndex((h) => ['existencia', 'stock', 'cantidad'].includes(normalize(h)))
+  const normalize = (s: string) =>
+    s
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+  const itemIdx = headers.findIndex((h) =>
+    ['item', 'ítem', 'sku', 'codigo'].includes(normalize(h)),
+  )
+  const descIdx = headers.findIndex((h) =>
+    ['descripcion', 'descripción', 'nombre', 'name'].includes(normalize(h)),
+  )
+  const stockIdx = headers.findIndex((h) =>
+    ['existencia', 'stock', 'cantidad'].includes(normalize(h)),
+  )
 
   const dataLines = lines.slice(1)
   // Filter out totals row (empty item)
@@ -85,10 +105,16 @@ type ImportProductsDialogProps = {
   onOpenChange: (open: boolean) => void
 }
 
-export default function ImportProductsDialog({ open, onOpenChange }: ImportProductsDialogProps) {
+export default function ImportProductsDialog({
+  open,
+  onOpenChange,
+}: ImportProductsDialogProps) {
   const [state, setState] = useState<State>('idle')
   const [file, setFile] = useState<File | null>(null)
-  const [preview, setPreview] = useState<{ rows: Array<PreviewRow>; totalRows: number } | null>(null)
+  const [preview, setPreview] = useState<{
+    rows: Array<PreviewRow>
+    totalRows: number
+  } | null>(null)
   const [result, setResult] = useState<ImportResult | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const queryClient = useQueryClient()
@@ -141,7 +167,8 @@ export default function ImportProductsDialog({ open, onOpenChange }: ImportProdu
         <DialogHeader>
           <DialogTitle>Importar Productos desde CSV</DialogTitle>
           <DialogDescription>
-            Subí un archivo CSV exportado del listado de existencias. Columnas esperadas: Ítem, Descripción, Existencia.
+            Subí un archivo CSV exportado del listado de existencias. Columnas
+            esperadas: Ítem, Descripción, Existencia.
           </DialogDescription>
         </DialogHeader>
 
@@ -160,7 +187,9 @@ export default function ImportProductsDialog({ open, onOpenChange }: ImportProdu
                 onChange={handleFileChange}
               />
             </label>
-            <p className="text-xs text-gray-500">Solo archivos .csv (máximo 5MB)</p>
+            <p className="text-xs text-gray-500">
+              Solo archivos .csv (máximo 5MB)
+            </p>
           </div>
         )}
 
@@ -185,8 +214,12 @@ export default function ImportProductsDialog({ open, onOpenChange }: ImportProdu
                 <tbody>
                   {preview.rows.map((row, i) => (
                     <tr key={i} className="border-b last:border-0">
-                      <td className="px-3 py-2 font-mono text-xs">{row.item}</td>
-                      <td className="px-3 py-2 max-w-[300px] truncate">{row.description}</td>
+                      <td className="px-3 py-2 font-mono text-xs">
+                        {row.item}
+                      </td>
+                      <td className="px-3 py-2 max-w-[300px] truncate">
+                        {row.description}
+                      </td>
                       <td className="px-3 py-2 text-right">{row.stock}</td>
                     </tr>
                   ))}
@@ -239,23 +272,33 @@ export default function ImportProductsDialog({ open, onOpenChange }: ImportProdu
 
             <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
               <div className="rounded-md bg-green-50 p-3 text-center">
-                <div className="text-2xl font-bold text-green-700">{result.created}</div>
+                <div className="text-2xl font-bold text-green-700">
+                  {result.created}
+                </div>
                 <div className="text-xs text-green-600">Creados</div>
               </div>
               <div className="rounded-md bg-blue-50 p-3 text-center">
-                <div className="text-2xl font-bold text-blue-700">{result.updated}</div>
+                <div className="text-2xl font-bold text-blue-700">
+                  {result.updated}
+                </div>
                 <div className="text-xs text-blue-600">Actualizados</div>
               </div>
               <div className="rounded-md bg-purple-50 p-3 text-center">
-                <div className="text-2xl font-bold text-purple-700">{result.priceUpdated}</div>
+                <div className="text-2xl font-bold text-purple-700">
+                  {result.priceUpdated}
+                </div>
                 <div className="text-xs text-purple-600">Precios</div>
               </div>
               <div className="rounded-md bg-indigo-50 p-3 text-center">
-                <div className="text-2xl font-bold text-indigo-700">{result.imageUpdated}</div>
+                <div className="text-2xl font-bold text-indigo-700">
+                  {result.imageUpdated}
+                </div>
                 <div className="text-xs text-indigo-600">Imágenes</div>
               </div>
               <div className="rounded-md bg-red-50 p-3 text-center">
-                <div className="text-2xl font-bold text-red-700">{result.errors.length}</div>
+                <div className="text-2xl font-bold text-red-700">
+                  {result.errors.length}
+                </div>
                 <div className="text-xs text-red-600">Errores</div>
               </div>
             </div>

@@ -1,4 +1,10 @@
-import { createContext, useCallback, useContext, useMemo, useState } from 'react'
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from 'react'
 import type { CartItem } from '@/types/cart'
 
 export type CheckoutData = {
@@ -34,7 +40,9 @@ export function CheckoutProvider({
   subtotal: number
 }) {
   const [data, setData] = useState<Partial<CheckoutData>>({})
-  const [completedSteps, setCompletedSteps] = useState<Set<CheckoutStep>>(new Set())
+  const [completedSteps, setCompletedSteps] = useState<Set<CheckoutStep>>(
+    new Set(),
+  )
 
   const updateData = useCallback((partial: Partial<CheckoutData>) => {
     setData((prev) => ({ ...prev, ...partial }))
@@ -50,7 +58,7 @@ export function CheckoutProvider({
       if (stepIndex === 0) return true
       return STEP_ORDER.slice(0, stepIndex).every((s) => completedSteps.has(s))
     },
-    [completedSteps]
+    [completedSteps],
   )
 
   const value = useMemo(
@@ -63,10 +71,22 @@ export function CheckoutProvider({
       items,
       subtotal,
     }),
-    [data, updateData, completedSteps, completeStep, canAccessStep, items, subtotal]
+    [
+      data,
+      updateData,
+      completedSteps,
+      completeStep,
+      canAccessStep,
+      items,
+      subtotal,
+    ],
   )
 
-  return <CheckoutContext.Provider value={value}>{children}</CheckoutContext.Provider>
+  return (
+    <CheckoutContext.Provider value={value}>
+      {children}
+    </CheckoutContext.Provider>
+  )
 }
 
 export function useCheckout() {

@@ -4,7 +4,10 @@ type OrderStatusBadgeProps = {
   status: string
 }
 
-const statusConfig: Record<string, { label: string; className: string } | undefined> = {
+const statusConfig: Record<
+  string,
+  { label: string; className: string } | undefined
+> = {
   pending: {
     label: 'Pendiente',
     className: 'bg-yellow-100 text-yellow-800 hover:bg-yellow-100',
@@ -34,7 +37,10 @@ export default function OrderStatusBadge({ status }: OrderStatusBadgeProps) {
   }
 
   return (
-    <Badge variant="outline" className={`border-transparent ${config.className}`}>
+    <Badge
+      variant="outline"
+      className={`border-transparent ${config.className}`}
+    >
       {config.label}
     </Badge>
   )

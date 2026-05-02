@@ -9,7 +9,8 @@ import { useCart } from '@/contexts/CartContext'
 import { applyTax } from '@/utils/formatPrice'
 
 function CartPage() {
-  const { items, subtotal, totalItems, updateQuantity, removeItem, clearCart } = useCart()
+  const { items, subtotal, totalItems, updateQuantity, removeItem, clearCart } =
+    useCart()
 
   // All values in cents, prices include IVA
   const subtotalWithTax = applyTax(subtotal)
@@ -25,7 +26,9 @@ function CartPage() {
       {/* Breadcrumb */}
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 py-4">
-          <PageBreadcrumb items={[{ label: 'Inicio', href: '/' }, { label: 'Carrito' }]} />
+          <PageBreadcrumb
+            items={[{ label: 'Inicio', href: '/' }, { label: 'Carrito' }]}
+          />
         </div>
       </div>
 
@@ -61,8 +64,18 @@ function CartPage() {
             <div className="flex justify-between items-center pt-4">
               <Button asChild variant="outline" className="gap-2">
                 <Link to="/products">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                    />
                   </svg>
                   Seguir Comprando
                 </Link>
@@ -72,7 +85,12 @@ function CartPage() {
                 variant="ghost"
                 className="text-red-500 hover:text-red-600 hover:bg-red-50"
               >
-                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg
+                  className="w-4 h-4 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"

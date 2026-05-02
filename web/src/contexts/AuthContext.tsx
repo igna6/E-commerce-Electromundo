@@ -1,5 +1,18 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
-import { getMe, login as loginApi, logout as logoutApi, refreshAccessToken } from '@/services/auth.service'
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
+import {
+  getMe,
+  login as loginApi,
+  logout as logoutApi,
+  refreshAccessToken,
+} from '@/services/auth.service'
 
 import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from '@/constants/auth'
 
@@ -95,7 +108,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } finally {
       setIsLoading(false)
     }
-  }, [getAccessToken, getRefreshToken, setTokens, clearTokens, scheduleTokenRefresh])
+  }, [
+    getAccessToken,
+    getRefreshToken,
+    setTokens,
+    clearTokens,
+    scheduleTokenRefresh,
+  ])
 
   useEffect(() => {
     verifyAndLoadUser()
@@ -146,11 +165,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     [user, isLoading, login, logout, getAccessToken],
   )
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  )
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 
 export function useAuth() {

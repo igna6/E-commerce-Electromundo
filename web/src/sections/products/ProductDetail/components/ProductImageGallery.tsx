@@ -50,11 +50,7 @@ export default function ProductImageGallery({
           >
             <Heart
               size={18}
-              className={
-                wished
-                  ? 'fill-red-500 text-red-500'
-                  : 'text-gray-400'
-              }
+              className={wished ? 'fill-red-500 text-red-500' : 'text-gray-400'}
             />
           </button>
           <button className="p-2 bg-white rounded-full shadow-md hover:shadow-lg transition-shadow">
@@ -76,11 +72,7 @@ export default function ProductImageGallery({
                   : 'border-transparent hover:border-gray-300'
               }`}
             >
-              <img
-                src={img}
-                alt=""
-                className="w-full h-full object-cover"
-              />
+              <img src={img} alt="" className="w-full h-full object-cover" />
             </button>
           ))}
         </div>

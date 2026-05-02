@@ -29,10 +29,7 @@ function TrustBar() {
       <div className="container mx-auto px-4 sm:px-6">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
           {trustItems.map((item) => (
-            <div
-              key={item.title}
-              className="flex items-center gap-3 sm:gap-4"
-            >
+            <div key={item.title} className="flex items-center gap-3 sm:gap-4">
               <div className="flex-shrink-0 w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center">
                 <item.icon className="w-5 h-5 text-slate-600" />
               </div>

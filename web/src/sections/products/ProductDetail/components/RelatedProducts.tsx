@@ -9,7 +9,10 @@ type RelatedProductsProps = {
   categoryName?: string
 }
 
-export default function RelatedProducts({ product, categoryName }: RelatedProductsProps) {
+export default function RelatedProducts({
+  product,
+  categoryName,
+}: RelatedProductsProps) {
   const { data: productsData } = useProducts(
     product.category
       ? { page: 1, limit: 5, category: product.category }
@@ -28,7 +31,9 @@ export default function RelatedProducts({ product, categoryName }: RelatedProduc
         <div>
           <div className="flex items-center gap-2 mb-1">
             <div className="w-1 h-6 rounded-full bg-electric-cyan" />
-            <h2 className="text-xl font-black text-gray-900">Productos Relacionados</h2>
+            <h2 className="text-xl font-black text-gray-900">
+              Productos Relacionados
+            </h2>
           </div>
           <p className="text-gray-500 text-sm">También te puede interesar</p>
         </div>

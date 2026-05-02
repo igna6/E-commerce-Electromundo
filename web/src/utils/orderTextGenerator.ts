@@ -84,7 +84,9 @@ export function generateOrderText(order: OrderData): string {
   lines.push('PRODUCTOS')
   for (const item of order.items) {
     lines.push(`- ${item.productName}`)
-    lines.push(`  Cantidad: ${item.quantity} x ${formatCurrency(item.productPrice)}`)
+    lines.push(
+      `  Cantidad: ${item.quantity} x ${formatCurrency(item.productPrice)}`,
+    )
     lines.push(`  Subtotal: ${formatCurrency(item.lineTotal)}`)
   }
   lines.push('')

@@ -11,6 +11,7 @@ export type GetProductsParams = {
   maxPrice?: number
   sortBy?: 'newest' | 'price-asc' | 'price-desc' | 'name'
   inStock?: boolean
+  featured?: boolean
 }
 
 export type ProductsResponse = PaginatedResponse<Product> & {
@@ -24,18 +25,22 @@ export type ProductsResponse = PaginatedResponse<Product> & {
 }
 
 export async function getProducts(
-  params: GetProductsParams = {}
+  params: GetProductsParams = {},
 ): Promise<ProductsResponse> {
   const queryParams = new URLSearchParams()
 
   if (params.page) queryParams.append('page', params.page.toString())
   if (params.limit) queryParams.append('limit', params.limit.toString())
   if (params.search) queryParams.append('search', params.search)
-  if (params.category) queryParams.append('category', params.category.toString())
-  if (params.minPrice !== undefined) queryParams.append('minPrice', params.minPrice.toString())
-  if (params.maxPrice !== undefined) queryParams.append('maxPrice', params.maxPrice.toString())
+  if (params.category)
+    queryParams.append('category', params.category.toString())
+  if (params.minPrice !== undefined)
+    queryParams.append('minPrice', params.minPrice.toString())
+  if (params.maxPrice !== undefined)
+    queryParams.append('maxPrice', params.maxPrice.toString())
   if (params.sortBy) queryParams.append('sortBy', params.sortBy)
   if (params.inStock) queryParams.append('inStock', 'true')
+  if (params.featured) queryParams.append('featured', 'true')
 
   const queryString = queryParams.toString()
   const endpoint = `/api/products${queryString ? `?${queryString}` : ''}`
@@ -72,7 +77,7 @@ export async function updateProduct(
     image: string | null
     category: number | null
     stock: number
-  }>
+  }>,
 ): Promise<{ data: Product }> {
   return authApiRequest<{ data: Product }>(`/api/products/${id}`, {
     method: 'PUT',

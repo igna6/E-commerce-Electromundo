@@ -12,11 +12,17 @@ type RefreshResponse = {
   refreshToken: string
 }
 
-export async function login(email: string, password: string): Promise<LoginResponse> {
-  const response = await apiRequest<{ data: LoginResponse }>('/api/auth/login', {
-    method: 'POST',
-    body: JSON.stringify({ email, password }),
-  })
+export async function login(
+  email: string,
+  password: string,
+): Promise<LoginResponse> {
+  const response = await apiRequest<{ data: LoginResponse }>(
+    '/api/auth/login',
+    {
+      method: 'POST',
+      body: JSON.stringify({ email, password }),
+    },
+  )
   return response.data
 }
 
@@ -27,11 +33,16 @@ export async function logout(refreshToken: string): Promise<void> {
   })
 }
 
-export async function refreshAccessToken(refreshToken: string): Promise<RefreshResponse> {
-  const response = await apiRequest<{ data: RefreshResponse }>('/api/auth/refresh', {
-    method: 'POST',
-    body: JSON.stringify({ refreshToken }),
-  })
+export async function refreshAccessToken(
+  refreshToken: string,
+): Promise<RefreshResponse> {
+  const response = await apiRequest<{ data: RefreshResponse }>(
+    '/api/auth/refresh',
+    {
+      method: 'POST',
+      body: JSON.stringify({ refreshToken }),
+    },
+  )
   return response.data
 }
 

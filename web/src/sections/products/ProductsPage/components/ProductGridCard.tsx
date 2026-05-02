@@ -15,7 +15,12 @@ type ProductGridCardProps = {
   categoryName?: string
 }
 
-function ProductGridCard({ product, viewMode, index = 0, categoryName }: ProductGridCardProps) {
+function ProductGridCard({
+  product,
+  viewMode,
+  index = 0,
+  categoryName,
+}: ProductGridCardProps) {
   const [quantity, setQuantity] = useState(1)
   const [isAdding, setIsAdding] = useState(false)
   const { addItem } = useCart()
@@ -82,7 +87,9 @@ function ProductGridCard({ product, viewMode, index = 0, categoryName }: Product
               </Link>
             </div>
             <div className="text-right flex-shrink-0">
-              <p className="text-primary font-bold text-xl">{formatPrice(applyTax(product.price))}</p>
+              <p className="text-primary font-bold text-xl">
+                {formatPrice(applyTax(product.price))}
+              </p>
             </div>
           </div>
           {product.description && (
@@ -133,7 +140,6 @@ function ProductGridCard({ product, viewMode, index = 0, categoryName }: Product
               </>
             )}
           </Button>
-
         </div>
       </div>
     </div>

@@ -35,12 +35,17 @@ function ProductDetail() {
     return map
   }, [categories])
 
-  const categoryName = product?.category ? categoryMap.get(product.category) : undefined
+  const categoryName = product?.category
+    ? categoryMap.get(product.category)
+    : undefined
 
   const images = product?.image ? [product.image] : []
-  const hasPromotion = product?.promotionPrice != null && product.promotionPrice < product.price
+  const hasPromotion =
+    product?.promotionPrice != null && product.promotionPrice < product.price
   const discount = hasPromotion
-    ? Math.round(((product.price - product.promotionPrice!) / product.price) * 100)
+    ? Math.round(
+        ((product.price - product.promotionPrice!) / product.price) * 100,
+      )
     : 0
 
   const handleAddToCart = () => {
@@ -69,7 +74,12 @@ function ProductDetail() {
     { label: 'Inicio', href: '/' },
     { label: 'Productos', href: '/products' },
     ...(product.category && categoryName
-      ? [{ label: toTitleCase(categoryName), href: `/products?category=${product.category}` }]
+      ? [
+          {
+            label: toTitleCase(categoryName),
+            href: `/products?category=${product.category}`,
+          },
+        ]
       : []),
     { label: toTitleCase(product.name) },
   ]

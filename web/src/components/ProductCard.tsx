@@ -30,14 +30,16 @@ function ProductCard({ product, categoryName }: ProductCardProps) {
     setWished(!wished)
   }
 
-  const hasPromotion = product.promotionPrice != null && product.promotionPrice < product.price
+  const hasPromotion =
+    product.promotionPrice != null && product.promotionPrice < product.price
   const effectivePrice = hasPromotion ? product.promotionPrice! : product.price
   const priceWithTax = applyTax(effectivePrice)
   const originalPriceWithTax = hasPromotion ? applyTax(product.price) : null
   const discount = hasPromotion
-    ? Math.round(((product.price - product.promotionPrice!) / product.price) * 100)
+    ? Math.round(
+        ((product.price - product.promotionPrice!) / product.price) * 100,
+      )
     : 0
-  const installmentPrice = Math.round(priceWithTax / 12)
 
   return (
     <Link
@@ -88,7 +90,6 @@ function ProductCard({ product, categoryName }: ProductCardProps) {
             className={wished ? 'fill-red-500 text-red-500' : 'text-slate-400'}
           />
         </button>
-
       </div>
 
       {/* Info */}
@@ -114,9 +115,6 @@ function ProductCard({ product, categoryName }: ProductCardProps) {
               </span>
             )}
           </div>
-          <p className="text-xs text-emerald-600 font-semibold">
-            12x {formatPrice(installmentPrice)} sin interés
-          </p>
         </div>
 
         {/* Add to cart */}

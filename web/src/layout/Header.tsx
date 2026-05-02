@@ -8,7 +8,6 @@ import {
   Search,
   ShoppingCart,
   X,
-  Zap,
 } from 'lucide-react'
 import { useCallback, useRef, useState } from 'react'
 import type { CategoryWithChildren } from '@/hooks/useCategories'
@@ -226,10 +225,7 @@ function Header() {
           <Phone size={11} />
           Ventas: {STORE_PHONE_DISPLAY}
         </span>
-        <p className="text-center flex-1 font-medium tracking-wide flex items-center justify-center gap-1.5">
-          <Zap className="w-3.5 h-3.5 text-amber-300" />
-          <span>12 cuotas sin interés con todas las tarjetas</span>
-        </p>
+        <span className="flex-1" />
         <span className="hidden sm:flex items-center gap-1">
           <MapPin size={11} />
           Sucursales

@@ -68,14 +68,22 @@ export default function ProductsTable({
                 {product.sku || '—'}
               </span>
             </TableCell>
-            <TableCell className="px-4 text-sm">{formatPrice(applyTax(product.price))}</TableCell>
+            <TableCell className="px-4 text-sm">
+              {formatPrice(applyTax(product.price))}
+            </TableCell>
             <TableCell className="px-4">
               {product.stock === 0 ? (
-                <Badge variant="destructive" className="bg-red-100 text-red-700 hover:bg-red-100 border-transparent">
+                <Badge
+                  variant="destructive"
+                  className="bg-red-100 text-red-700 hover:bg-red-100 border-transparent"
+                >
                   Agotado
                 </Badge>
               ) : product.stock <= 5 ? (
-                <Badge variant="outline" className="bg-amber-100 text-amber-700 hover:bg-amber-100 border-transparent">
+                <Badge
+                  variant="outline"
+                  className="bg-amber-100 text-amber-700 hover:bg-amber-100 border-transparent"
+                >
                   {product.stock}
                 </Badge>
               ) : (
@@ -85,7 +93,9 @@ export default function ProductsTable({
               )}
             </TableCell>
             <TableCell className="px-4 text-sm text-muted-foreground">
-              {product.category ? (categoryMap[product.category] || `#${product.category}`) : '—'}
+              {product.category
+                ? categoryMap[product.category] || `#${product.category}`
+                : '—'}
             </TableCell>
             <TableCell className="px-4 text-right">
               <div className="flex items-center justify-end gap-2">

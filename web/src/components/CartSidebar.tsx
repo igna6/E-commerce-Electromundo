@@ -65,7 +65,11 @@ function CartSidebar({ children }: CartSidebarProps) {
               asChild
               className="bg-primary hover:bg-primary/90 text-white font-semibold rounded-xl"
             >
-              <Link to="/products" onClick={() => setOpen(false)} className="flex items-center gap-2">
+              <Link
+                to="/products"
+                onClick={() => setOpen(false)}
+                className="flex items-center gap-2"
+              >
                 <Zap className="w-4 h-4" />
                 Explorar Productos
               </Link>
@@ -116,7 +120,9 @@ function CartSidebar({ children }: CartSidebarProps) {
                       <div className="flex items-center justify-between mt-3">
                         <div className="flex items-center rounded-lg border border-slate-200 bg-white overflow-hidden">
                           <button
-                            onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
+                            onClick={() =>
+                              updateQuantity(item.product.id, item.quantity - 1)
+                            }
                             className="px-2.5 py-1.5 text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-colors"
                           >
                             <Minus className="w-3.5 h-3.5" />
@@ -125,7 +131,9 @@ function CartSidebar({ children }: CartSidebarProps) {
                             {item.quantity}
                           </span>
                           <button
-                            onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
+                            onClick={() =>
+                              updateQuantity(item.product.id, item.quantity + 1)
+                            }
                             className="px-2.5 py-1.5 text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-colors"
                           >
                             <Plus className="w-3.5 h-3.5" />
@@ -162,7 +170,9 @@ function CartSidebar({ children }: CartSidebarProps) {
                   variant="outline"
                   className="flex-1 border-slate-200 text-slate-600 hover:bg-slate-100 hover:text-slate-900 rounded-xl"
                 >
-                  <Link to="/cart" onClick={() => setOpen(false)}>Ver Carrito</Link>
+                  <Link to="/cart" onClick={() => setOpen(false)}>
+                    Ver Carrito
+                  </Link>
                 </Button>
                 <Button
                   asChild

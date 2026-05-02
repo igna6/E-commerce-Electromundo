@@ -25,9 +25,6 @@ function PaymentMethods() {
               {method}
             </span>
           ))}
-          <span className="text-xs text-emerald-600 font-semibold ml-2">
-            ✓ 12 cuotas sin interés
-          </span>
         </div>
       </div>
     </section>

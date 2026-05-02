@@ -1,16 +1,16 @@
 import { useMemo } from 'react'
 import { Link } from '@tanstack/react-router'
 import { ChevronRight } from 'lucide-react'
+import { useQuery } from '@tanstack/react-query'
 import ProductsLoading from './components/ProductsLoading'
 import ProductCard from '@/components/ProductCard'
-import { useProducts } from '@/hooks/useProducts'
 import { useCategories } from '@/hooks/useCategories'
+import { getFeaturedProducts } from '@/services/featuredProducts.service'
 
 function FeaturedProducts() {
-  const { data, isLoading } = useProducts({
-    page: 1,
-    limit: 10,
-    sortBy: 'newest',
+  const { data, isLoading } = useQuery({
+    queryKey: ['featured-products', 'home'],
+    queryFn: () => getFeaturedProducts('home'),
   })
   const { data: categoriesData } = useCategories()
 
@@ -19,7 +19,7 @@ function FeaturedProducts() {
     return new Map(categoriesData.map((c) => [c.id, c.name]))
   }, [categoriesData])
 
-  const products = data?.data ?? []
+  const products = (data?.data ?? []).map((item) => item.product)
 
   if (isLoading) {
     return <ProductsLoading />
@@ -39,10 +39,13 @@ function FeaturedProducts() {
                 Productos Destacados
               </h2>
             </div>
-            <p className="text-slate-500 text-sm">Los más elegidos de la semana</p>
+            <p className="text-slate-500 text-sm">
+              Los más elegidos de la semana
+            </p>
           </div>
           <Link
             to="/products"
+            search={{ featured: true }}
             className="hidden sm:flex items-center gap-1 text-sm font-semibold text-primary hover:underline transition-colors"
           >
             Ver todos
@@ -52,11 +55,13 @@ function FeaturedProducts() {
 
         {/* Product grid */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
-          {products.slice(0, 5).map((product) => (
+          {products.map((product) => (
             <ProductCard
               key={product.id}
               product={product}
-              categoryName={product.category ? categoryMap.get(product.category) : undefined}
+              categoryName={
+                product.category ? categoryMap.get(product.category) : undefined
+              }
             />
           ))}
         </div>
@@ -65,9 +70,10 @@ function FeaturedProducts() {
         <div className="mt-6 text-center sm:hidden">
           <Link
             to="/products"
+            search={{ featured: true }}
             className="inline-flex items-center gap-2 px-6 py-3 bg-primary hover:bg-primary/90 text-white font-semibold rounded-lg transition-colors"
           >
-            Ver todos los productos
+            Ver todos los destacados
             <ChevronRight size={16} />
           </Link>
         </div>

@@ -6,7 +6,9 @@ export type CategoryWithChildren = Category & {
   children: Array<CategoryWithChildren>
 }
 
-function buildCategoryTree(categories: Array<Category>): Array<CategoryWithChildren> {
+function buildCategoryTree(
+  categories: Array<Category>,
+): Array<CategoryWithChildren> {
   const map = new Map<number, CategoryWithChildren>()
   const roots: Array<CategoryWithChildren> = []
 

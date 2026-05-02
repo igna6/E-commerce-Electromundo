@@ -9,7 +9,11 @@ type CartItemRowProps = {
   onRemove: (productId: number) => void
 }
 
-export default function CartItemRow({ item, onUpdateQuantity, onRemove }: CartItemRowProps) {
+export default function CartItemRow({
+  item,
+  onUpdateQuantity,
+  onRemove,
+}: CartItemRowProps) {
   return (
     <div className="bg-white rounded-xl border border-gray-200 p-4 md:p-6 hover:shadow-md transition-shadow">
       <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
@@ -28,7 +32,12 @@ export default function CartItemRow({ item, onUpdateQuantity, onRemove }: CartIt
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center text-gray-400">
-                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg
+                  className="w-8 h-8"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -47,10 +56,17 @@ export default function CartItemRow({ item, onUpdateQuantity, onRemove }: CartIt
             >
               {toTitleCase(item.product.name)}
             </Link>
-            <p className="text-sm text-gray-500 mt-1">SKU: EM-{item.product.id.toString().padStart(6, '0')}</p>
+            <p className="text-sm text-gray-500 mt-1">
+              SKU: EM-{item.product.id.toString().padStart(6, '0')}
+            </p>
             <div className="flex items-center gap-2 mt-2">
               <button className="text-sm text-gray-500 hover:text-brand-blue transition-colors flex items-center gap-1">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -65,7 +81,12 @@ export default function CartItemRow({ item, onUpdateQuantity, onRemove }: CartIt
                 onClick={() => onRemove(item.product.id)}
                 className="text-sm text-red-500 hover:text-red-600 transition-colors flex items-center gap-1"
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -91,22 +112,46 @@ export default function CartItemRow({ item, onUpdateQuantity, onRemove }: CartIt
         <div className="md:col-span-2 flex items-center justify-center">
           <div className="flex items-center border border-gray-200 rounded-lg">
             <button
-              onClick={() => onUpdateQuantity(item.product.id, item.quantity - 1)}
+              onClick={() =>
+                onUpdateQuantity(item.product.id, item.quantity - 1)
+              }
               className="px-3 py-1.5 text-gray-600 hover:bg-gray-100 transition-colors rounded-l-lg"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M20 12H4"
+                />
               </svg>
             </button>
             <span className="px-4 py-1.5 border-x border-gray-200 font-medium min-w-[3rem] text-center">
               {item.quantity}
             </span>
             <button
-              onClick={() => onUpdateQuantity(item.product.id, item.quantity + 1)}
+              onClick={() =>
+                onUpdateQuantity(item.product.id, item.quantity + 1)
+              }
               className="px-3 py-1.5 text-gray-600 hover:bg-gray-100 transition-colors rounded-r-lg"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 4v16m8-8H4"
+                />
               </svg>
             </button>
           </div>

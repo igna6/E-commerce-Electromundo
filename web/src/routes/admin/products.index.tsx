@@ -30,13 +30,12 @@ function ProductsIndexComponent() {
     queryFn: getCategories,
   })
 
-  const categoryMap = (categoriesData?.data ?? []).reduce<Record<number, string>>(
-    (acc, cat) => {
-      acc[cat.id] = cat.name
-      return acc
-    },
-    {}
-  )
+  const categoryMap = (categoriesData?.data ?? []).reduce<
+    Record<number, string>
+  >((acc, cat) => {
+    acc[cat.id] = cat.name
+    return acc
+  }, {})
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['products', { page, limit: 20, search: debouncedSearch }],
@@ -56,7 +55,9 @@ function ProductsIndexComponent() {
   })
 
   const handleDelete = (id: number) => {
-    if (window.confirm('¿Estás seguro de que quieres eliminar este producto?')) {
+    if (
+      window.confirm('¿Estás seguro de que quieres eliminar este producto?')
+    ) {
       deleteMutation.mutate(id)
     }
   }
@@ -118,8 +119,18 @@ function ProductsIndexComponent() {
             }}
             className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
           >
-            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            <svg
+              className="h-4 w-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
         )}
