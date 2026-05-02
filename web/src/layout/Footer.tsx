@@ -1,14 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import {
-  Facebook,
-  Instagram,
-  Mail,
-  MapPin,
-  Phone,
-  Shield,
-  Twitter,
-  Youtube,
-} from 'lucide-react'
+import { Instagram, Mail, MapPin, Phone, Shield } from 'lucide-react'
 
 function Footer() {
   const linkClass = 'text-sm text-white/50 hover:text-white transition-colors'
@@ -52,15 +43,14 @@ function Footer() {
               Tu tienda de electrónica y tecnología de confianza.
             </p>
             <div className="flex gap-3">
-              {[Facebook, Instagram, Twitter, Youtube].map((Icon, i) => (
-                <a
-                  key={i}
-                  href="#"
-                  className="w-8 h-8 rounded-lg bg-white/10 hover:bg-primary flex items-center justify-center transition-colors"
-                >
-                  <Icon size={15} />
-                </a>
-              ))}
+              <a
+                href="https://www.instagram.com/electromundohogar"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-8 h-8 rounded-lg bg-white/10 hover:bg-primary flex items-center justify-center transition-colors"
+              >
+                <Instagram size={16} />
+              </a>
             </div>
           </div>
 
@@ -78,15 +68,6 @@ function Footer() {
               <li>
                 <Link to="/products" className={linkClass}>
                   Productos
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/products"
-                  search={{ sortBy: 'price-asc', inStock: true }}
-                  className={linkClass}
-                >
-                  Mejores Precios
                 </Link>
               </li>
               <li>
@@ -145,7 +126,7 @@ function Footer() {
               <li className="flex items-center gap-2">
                 <Mail size={14} className="text-primary flex-shrink-0" />
                 <span className="text-white/50 text-sm">
-                  contacto@electromundo.com
+                  electromundohogar1@gmail.com
                 </span>
               </li>
             </ul>

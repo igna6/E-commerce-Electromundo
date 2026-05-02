@@ -1,14 +1,5 @@
 import { Link, useNavigate } from '@tanstack/react-router'
-import {
-  ChevronDown,
-  Heart,
-  MapPin,
-  Menu,
-  Phone,
-  Search,
-  ShoppingCart,
-  X,
-} from 'lucide-react'
+import { ChevronDown, Heart, Menu, Search, ShoppingCart, X } from 'lucide-react'
 import { useCallback, useRef, useState } from 'react'
 import type { CategoryWithChildren } from '@/hooks/useCategories'
 import CartSidebar from '@/components/CartSidebar'
@@ -20,7 +11,6 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { Input } from '@/components/ui/input'
-import { STORE_PHONE_DISPLAY } from '@/constants/config'
 
 function useHoverPopover(closeDelay = 150) {
   const [open, setOpen] = useState(false)
@@ -219,19 +209,6 @@ function Header() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50">
-      {/* Top announcement bar */}
-      <div className="bg-[#0097a7] text-white text-xs py-1.5 px-4 flex items-center justify-between">
-        <span className="hidden sm:flex items-center gap-1">
-          <Phone size={11} />
-          Ventas: {STORE_PHONE_DISPLAY}
-        </span>
-        <span className="flex-1" />
-        <span className="hidden sm:flex items-center gap-1">
-          <MapPin size={11} />
-          Sucursales
-        </span>
-      </div>
-
       {/* Main header */}
       <div className="bg-primary px-4 py-3">
         <div className="container mx-auto flex items-center gap-4">
@@ -317,7 +294,7 @@ function Header() {
 
       {/* Category nav - desktop */}
       {!categoriesLoading && categoryTree && categoryTree.length > 0 && (
-        <div className="hidden sm:block bg-[#007c8a]">
+        <div className="hidden sm:block bg-[#007c8a] p-2">
           <div className="container mx-auto px-4 sm:px-6">
             <nav className="flex items-center overflow-x-auto scrollbar-hide">
               {categoryTree.slice(0, 8).map((category) => (

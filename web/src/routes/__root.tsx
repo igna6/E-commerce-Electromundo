@@ -60,7 +60,7 @@ function RootContent({ children }: { children: React.ReactNode }) {
     <>
       {!isAdminRoute && <Header />}
       {/* Spacer for fixed header: announcement (28px) + main bar (56px) + mobile search (40px on <md) + cat nav (40px on sm+) */}
-      {!isAdminRoute && <div className="h-[164px] sm:h-[164px] md:h-[134px]" />}
+      {!isAdminRoute && <div className="h-[150px] sm:h-[164px] md:h-[115px]" />}
       {children}
       {!isAdminRoute && <Footer />}
       {!isAdminRoute && <FloatingWhatsApp />}
