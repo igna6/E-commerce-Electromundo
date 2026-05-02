@@ -9,9 +9,10 @@ export type GetProductsParams = {
   category?: number
   minPrice?: number
   maxPrice?: number
-  sortBy?: 'newest' | 'price-asc' | 'price-desc' | 'name'
+  sortBy?: 'newest' | 'price-asc' | 'price-desc' | 'name' | 'discount-desc'
   inStock?: boolean
   featured?: boolean
+  hasPromotion?: boolean
 }
 
 export type ProductsResponse = PaginatedResponse<Product> & {
@@ -41,6 +42,7 @@ export async function getProducts(
   if (params.sortBy) queryParams.append('sortBy', params.sortBy)
   if (params.inStock) queryParams.append('inStock', 'true')
   if (params.featured) queryParams.append('featured', 'true')
+  if (params.hasPromotion) queryParams.append('hasPromotion', 'true')
 
   const queryString = queryParams.toString()
   const endpoint = `/api/products${queryString ? `?${queryString}` : ''}`

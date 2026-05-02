@@ -132,7 +132,9 @@ function Footer() {
                   size={14}
                   className="text-primary flex-shrink-0 mt-0.5"
                 />
-                <span className="text-white/50 text-sm">Argentina</span>
+                <span className="text-white/50 text-sm">
+                  Villa Ramallo, Buenos Aires
+                </span>
               </li>
               <li className="flex items-center gap-2">
                 <Phone size={14} className="text-primary flex-shrink-0" />

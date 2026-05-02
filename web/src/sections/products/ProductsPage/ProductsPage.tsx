@@ -31,12 +31,14 @@ const SORT_MAP: Record<string, GetProductsParams['sortBy'] | undefined> = {
   'price-low': 'price-asc',
   'price-high': 'price-desc',
   newest: 'newest',
+  'discount-desc': 'discount-desc',
 }
 
 const SORT_LABELS: Record<string, string> = {
   'price-low': 'Precio: Menor a Mayor',
   'price-high': 'Precio: Mayor a Menor',
   newest: 'Mas Recientes',
+  'discount-desc': 'Mayor descuento',
 }
 
 const DEFAULT_SORT = 'newest'
@@ -54,6 +56,7 @@ function ProductsPage() {
     sortBy: sortByFromRoute,
     inStock: inStockFromRoute,
     featured: featuredFromRoute,
+    hasPromotion: hasPromotionFromRoute,
   } = Route.useSearch()
 
   const [searchQuery, setSearchQuery] = useState(searchFromRoute ?? '')
@@ -140,6 +143,7 @@ function ProductsPage() {
     sortBy: mappedSortBy,
     inStock: inStock || undefined,
     featured: featuredFromRoute,
+    hasPromotion: hasPromotionFromRoute,
   })
 
   const handleSortChange = (value: string) => {
@@ -203,7 +207,7 @@ function ProductsPage() {
     setPage(1)
     void navigate({
       to: '/products',
-      search: (prev) => ({ ...prev, featured: undefined }),
+      search: ({ featured, ...prev }) => ({ ...prev }),
     })
   }
 

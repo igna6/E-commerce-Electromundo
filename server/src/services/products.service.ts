@@ -1,4 +1,4 @@
-import { and, asc, count, desc, eq, gt, gte, ilike, inArray, isNull, lte, or } from 'drizzle-orm'
+import { and, asc, count, desc, eq, gt, gte, ilike, inArray, isNotNull, isNull, lte, or, sql } from 'drizzle-orm'
 import db from '../db/db.ts'
 import { featuredProductsTable, productsTable } from '../db/schema.ts'
 import { NotFoundError } from '../utils/errors.ts'
@@ -15,6 +15,7 @@ export type ProductFilters = {
   sortBy?: string | undefined
   inStock?: boolean | undefined
   featured?: boolean | undefined
+  hasPromotion?: boolean | undefined
 }
 
 export async function getProductById(id: number) {
@@ -32,7 +33,7 @@ export async function getProductById(id: number) {
 }
 
 export async function listProducts(filters: ProductFilters) {
-  const { page, limit, search, category, minPrice, maxPrice, sortBy = 'newest', inStock, featured } = filters
+  const { page, limit, search, category, minPrice, maxPrice, sortBy = 'newest', inStock, featured, hasPromotion } = filters
   const offset = (page - 1) * limit
 
   const conditions = [isNull(productsTable.deletedAt)]
@@ -79,6 +80,11 @@ export async function listProducts(filters: ProductFilters) {
     conditions.push(gt(productsTable.stock, 0))
   }
 
+  if (hasPromotion) {
+    conditions.push(isNotNull(productsTable.promotionPrice))
+    conditions.push(sql`${productsTable.promotionPrice} < ${productsTable.price}`)
+  }
+
   let orderBy
   switch (sortBy) {
     case 'price-asc':
@@ -89,6 +95,9 @@ export async function listProducts(filters: ProductFilters) {
       break
     case 'name':
       orderBy = asc(productsTable.name)
+      break
+    case 'discount-desc':
+      orderBy = desc(sql`(${productsTable.price} - COALESCE(${productsTable.promotionPrice}, ${productsTable.price}))::float / NULLIF(${productsTable.price}, 0)`)
       break
     case 'newest':
     default:

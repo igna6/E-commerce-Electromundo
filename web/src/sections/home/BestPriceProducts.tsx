@@ -9,8 +9,9 @@ function BestPriceProducts() {
   const { data, isLoading } = useProducts({
     page: 1,
     limit: 10,
-    sortBy: 'price-asc',
+    sortBy: 'discount-desc',
     inStock: true,
+    hasPromotion: true,
   })
 
   const { data: categories } = useCategories()
@@ -47,7 +48,7 @@ function BestPriceProducts() {
           </div>
           <Link
             to="/products"
-            search={{ sortBy: 'price-asc', inStock: true }}
+            search={{ sortBy: 'discount-desc', inStock: true, hasPromotion: true }}
             className="hidden sm:flex items-center gap-1 text-sm font-semibold text-amber-500 hover:underline transition-colors"
           >
             Ver más
@@ -72,7 +73,7 @@ function BestPriceProducts() {
         <div className="mt-6 text-center sm:hidden">
           <Link
             to="/products"
-            search={{ sortBy: 'price-asc', inStock: true }}
+            search={{ sortBy: 'discount-desc', inStock: true, hasPromotion: true }}
             className="inline-flex items-center gap-2 px-6 py-3 bg-amber-500 hover:bg-amber-600 text-white font-semibold rounded-lg transition-colors"
           >
             Ver todos los productos

@@ -43,11 +43,6 @@ const faqs = [
       'Todos nuestros productos cuentan con la garantía legal establecida por la Ley de Defensa del Consumidor. Además, muchos productos incluyen garantía del fabricante. Los plazos y condiciones específicas de garantía se detallan en la descripción de cada producto.',
   },
   {
-    question: '¿Hacen envíos a todo el país?',
-    answer:
-      'Sí, realizamos envíos a todas las provincias de la República Argentina a través de servicios de logística confiables. Los tiempos y costos de envío varían según la zona de destino.',
-  },
-  {
     question: '¿Puedo retirar mi compra en persona?',
     answer:
       'Sí, ofrecemos la opción de retiro sin costo en nuestro punto de entrega. Al coordinar tu compra por WhatsApp, indicá que preferís retiro en persona y te enviaremos la dirección y los horarios de atención.',

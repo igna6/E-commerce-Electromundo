@@ -20,6 +20,7 @@ export const productListQuerySchema = paginationQuerySchema.extend({
   sortBy: z.string().default('newest'),
   inStock: z.enum(['true', 'false']).default('false').transform(v => v === 'true'),
   featured: z.enum(['true', 'false']).default('false').transform(v => v === 'true'),
+  hasPromotion: z.enum(['true', 'false']).default('false').transform(v => v === 'true'),
 })
 
 export const orderListQuerySchema = paginationQuerySchema.extend({

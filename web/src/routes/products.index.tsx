@@ -9,6 +9,7 @@ type ProductsSearch = {
   sortBy?: string
   inStock?: boolean
   featured?: boolean
+  hasPromotion?: boolean
 }
 
 function parseOptionalNumber(value: unknown): number | undefined {
@@ -29,6 +30,10 @@ export const Route = createFileRoute('/products/')({
       search.inStock === true || search.inStock === 'true' ? true : undefined,
     featured:
       search.featured === true || search.featured === 'true' ? true : undefined,
+    hasPromotion:
+      search.hasPromotion === true || search.hasPromotion === 'true'
+        ? true
+        : undefined,
   }),
   component: ProductsPage,
 })

@@ -1,15 +1,10 @@
-import { Lock, MessageCircle, ShieldCheck, Truck } from 'lucide-react'
+import { Lock, MessageCircle, ShieldCheck } from 'lucide-react'
 
 const trustItems = [
   {
     icon: Lock,
     title: 'Compra segura',
     description: 'Protegemos tus datos',
-  },
-  {
-    icon: Truck,
-    title: 'Envíos a todo el país',
-    description: 'Llegamos a donde estés',
   },
   {
     icon: MessageCircle,
@@ -27,7 +22,7 @@ function TrustBar() {
   return (
     <section className="bg-white border-t border-slate-200 py-8 lg:py-10">
       <div className="container mx-auto px-4 sm:px-6">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 lg:gap-8">
           {trustItems.map((item) => (
             <div key={item.title} className="flex items-center gap-3 sm:gap-4">
               <div className="flex-shrink-0 w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center">
