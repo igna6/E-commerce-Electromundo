@@ -81,6 +81,9 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
                 to="/admin/orders/$orderId"
                 params={{ orderId: String(order.id) }}
                 className="text-blue-600 hover:underline"
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
               >
                 Ver detalles
               </Link>

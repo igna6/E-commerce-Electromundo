@@ -20,3 +20,7 @@ Thumbs.db
 
 .wwebjs_auth/
 .wwebjs_cache/
+
+yarn.lock
+package-lock.json
+node_modules/
