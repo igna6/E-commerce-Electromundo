@@ -78,7 +78,7 @@ export default function BannersPage() {
   const handleEdit = (banner: Banner) => {
     setEditingId(banner.id)
     setForm({
-      title: banner.title,
+      title: banner.title || '',
       subtitle: banner.subtitle || '',
       buttonText: banner.buttonText || '',
       buttonLink: banner.buttonLink || '',

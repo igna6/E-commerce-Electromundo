@@ -17,6 +17,29 @@ export default function ProductImageGallery({
   discount,
 }: ProductImageGalleryProps) {
   const [wished, setWished] = useState(false)
+  
+  const handleShare = async () => {
+  // Verificamos si el navegador soporta la función nativa de compartir
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: 'Electromundo',
+        text: '¡Mira este increíble producto!',
+        url: window.location.href, // Esto comparte la URL actual. Si tienes una URL específica del producto, ponla aquí.
+      });
+    } catch (error) {
+      console.log('Error al compartir', error);
+    }
+  } else {
+    // Plan B: Si el navegador no soporta compartir (ej. algunas PC viejas), copiamos el link al portapapeles
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      alert('¡Enlace copiado al portapapeles!'); // Aquí puedes usar un Toast en lugar de un alert si tienes uno en tu proyecto
+    } catch (error) {
+      console.log('Error al copiar', error);
+    }
+  }
+};
 
   return (
     <div className="flex flex-col gap-3">
@@ -53,7 +76,10 @@ export default function ProductImageGallery({
               className={wished ? 'fill-red-500 text-red-500' : 'text-gray-400'}
             />
           </button>
-          <button className="p-2 bg-white rounded-full shadow-md hover:shadow-lg transition-shadow">
+          <button 
+            onClick={handleShare} 
+            className="p-2 bg-white rounded-full shadow-md hover:shadow-lg transition-shadow"
+>
             <Share2 size={18} className="text-gray-400" />
           </button>
         </div>
